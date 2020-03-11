@@ -1,0 +1,5 @@
+_ReSharper.Caches/
+.vs/
+*.csproj.user
+bin
+obj
