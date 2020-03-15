@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Krompaco.RecordCollector.Content.IO;
+using Krompaco.RecordCollector.Web.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Krompaco.RecordCollector.Web.Controllers
@@ -7,13 +10,21 @@ namespace Krompaco.RecordCollector.Web.Controllers
     {
         private readonly ILogger<HomeController> logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConfiguration config;
+
+        private readonly FileService fileService;
+
+        public HomeController(ILogger<HomeController> logger, IConfiguration config)
         {
             this.logger = logger;
+            this.config = config;
+
+            this.fileService = new FileService(this.config.GetAppSettingsContentRootPath());
         }
 
         public IActionResult Index()
         {
+            var allFiles = this.fileService.GetAllFiles();
             return this.View();
         }
     }

@@ -3,3 +3,4 @@ _ReSharper.Caches/
 *.csproj.user
 bin
 obj
+appsettings.Development.json
