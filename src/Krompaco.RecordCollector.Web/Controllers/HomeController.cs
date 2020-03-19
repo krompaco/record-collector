@@ -24,7 +24,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         public IActionResult Index()
         {
-            var allFiles = this.fileService.GetAllFiles();
+            var allFiles = this.fileService.GetAllFileFullNames();
             return this.View();
         }
     }

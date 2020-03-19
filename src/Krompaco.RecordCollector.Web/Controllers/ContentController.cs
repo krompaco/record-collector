@@ -23,24 +23,24 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.fileService = new FileService(this.config.GetAppSettingsContentRootPath());
         }
 
-        [HttpGet]
-        public IActionResult Files(string path)
-        {
-            var filesPath = Path.Combine("files", path);
-            var physicalPath = this.fileService.GetPhysicalPath(filesPath);
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            contentTypeProvider.TryGetContentType(physicalPath, out var contentType);
-            return this.PhysicalFile(physicalPath, contentType);
-        }
+        ////[HttpGet]
+        ////public IActionResult Files(string path)
+        ////{
+        ////    var filesPath = Path.Combine("files", path);
+        ////    var physicalPath = this.fileService.GetPhysicalPath(filesPath);
+        ////    var contentTypeProvider = new FileExtensionContentTypeProvider();
+        ////    contentTypeProvider.TryGetContentType(physicalPath, out var contentType);
+        ////    return this.PhysicalFile(physicalPath, contentType);
+        ////}
 
-        [HttpGet]
-        public IActionResult Images(string path)
-        {
-            var filesPath = Path.Combine("images", path);
-            var physicalPath = this.fileService.GetPhysicalPath(filesPath);
-            var contentTypeProvider = new FileExtensionContentTypeProvider();
-            contentTypeProvider.TryGetContentType(physicalPath, out var contentType);
-            return this.PhysicalFile(physicalPath, contentType);
-        }
+        ////[HttpGet]
+        ////public IActionResult Images(string path)
+        ////{
+        ////    var filesPath = Path.Combine("images", path);
+        ////    var physicalPath = this.fileService.GetPhysicalPath(filesPath);
+        ////    var contentTypeProvider = new FileExtensionContentTypeProvider();
+        ////    contentTypeProvider.TryGetContentType(physicalPath, out var contentType);
+        ////    return this.PhysicalFile(physicalPath, contentType);
+        ////}
     }
 }

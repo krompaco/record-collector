@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Krompaco.RecordCollector.Content.Models;
 
 namespace Krompaco.RecordCollector.Content.IO
 {
@@ -25,21 +26,33 @@ namespace Krompaco.RecordCollector.Content.IO
             this.contentRoot = contentRoot;
         }
 
-        public IEnumerable<string> GetAllFiles()
+        public string[] GetAllFileFullNames()
         {
             var di = new DirectoryInfo(this.contentRoot);
             var files = di.EnumerateFiles("*.*", SearchOption.AllDirectories);
-
-
-
-            return files.Select(x => x.FullName);
+            return files.Select(x => x.FullName).ToArray();
         }
 
-        public string GetPhysicalPath(string path)
+        public IFile GetFile(string fullName)
         {
-            var partlyLocalPath = path?.Replace("/", Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)) ?? string.Empty;
-            var physicalPath = Path.Combine(this.contentRoot, partlyLocalPath);
-            return physicalPath;
+            if (string.IsNullOrWhiteSpace(fullName))
+            {
+                throw new NullReferenceException("Don't send null or empty fullName");
+            }
+
+            if (fullName.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
+                || fullName.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase))
+            {
+                return new ListPage();
+            }
+
+            if (fullName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                || fullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+            {
+                return new SinglePage();
+            }
+
+            return null;
         }
     }
 }

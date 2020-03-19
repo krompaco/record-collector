@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
-    public class List
+    public interface IFile
     {
+        string FullName { get; set; }
     }
 }

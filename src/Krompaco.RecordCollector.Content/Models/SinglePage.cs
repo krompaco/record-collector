@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
-    public class Single
+    public class SinglePage : IFile
     {
         public string Type { get; set; }
 
@@ -58,5 +58,7 @@ namespace Krompaco.RecordCollector.Content.Models
         public Dictionary<string, string> CustomStringProperties { get; set; }
 
         public Dictionary<string, List<string>> CustomArrayProperties { get; set; }
+
+        public string FullName { get; set; }
     }
 }

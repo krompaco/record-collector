@@ -4,13 +4,9 @@ using System.Text;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
-    public class PageResource : IFile
+    public class FileResource : IFile
     {
-        public string ResourceType { get; set; }
-
         public string Name { get; set; }
-
-        public string Title { get; set; }
 
         public Uri Permalink { get; set; }
 
