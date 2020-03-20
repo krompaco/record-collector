@@ -5,68 +5,85 @@ using Xunit;
 
 namespace Krompaco.RecordCollector.Content.Tests
 {
-    public class TomlTests
+    public class JsonTests
     {
         [Fact]
         public void ParserTest()
         {
-            string input = @"
- +++
-title =  ""About"" 
- categories = [""Development"", ""VIM""]
-date = ""2012-04-06""
-description = ""spf13-vim is a cross platform distribution of vim plugins and resources for Vim.""
-slug = ""spf13-vim-3-0-release-and-new-website""
-testint = 1
-images = [""site-feature-image.jpg""]
-testbool = false
-teststring = ""What?""
-testdate = ""2012-04-06""
-testarray = [""Development"", ""VIM""]
-tags = ["".vimrc"", ""plugins"", ""spf13-vim"", ""vim""]
-
-[[resources]]
-  name = ""header""
-  src = ""images/sunset.jpg""
-
-[[resources]]
-  src = ""documents/photo_specs.pdf""
-  title = ""Photo Specifications""
-  [resources.params]
-    icon = ""photo""
-
-[[resources]]
-  src = ""documents/guide.pdf""
-  title = ""Instruction Guide""
-
-[[resources]]
-  src = ""documents/checklist.pdf""
-  title = ""Document Checklist""
-
-[[resources]]
-  src = ""documents/payment.docx""
-  title = ""Proof of Payment""
-
-[[resources]]
-  name = ""pdf-file-:counter""
-  src = ""**.pdf""
-  [resources.params]
-    icon = ""pdf""
-
-[[resources]]
-  src = ""**.docx""
-  [resources.params]
-    icon = ""word""
-
-[cascade]
-  banner = ""images/typewriter.jpg""
-  tags = ["".vimrc"", ""plugins"", ""spf13-vim"", ""vim""]
-+++ 
+            string input = @"{
+       ""categories"": [
+      ""Development"",
+      ""VIM""
+   ],
+   ""date"": ""2012-04-06"",
+""images"": [""site-feature-image.jpg""],
+""testint"": 1,
+""testbool"": false,
+""teststring"": ""What?"",
+""cascade"": {
+      ""banner"": ""images/typewriter.jpg"",
+ ""tags"": [
+      "".vimrc"",
+      ""plugins"",
+      ""spf13-vim"",
+      ""vim""
+   ]
+   },
+""testdate"": ""2012-04-06"",
+""testarray"": [""Development"", ""VIM""],
+   ""description"": ""spf13-vim is a cross platform distribution of vim plugins and resources for Vim."",
+   ""slug"": ""spf13-vim-3-0-release-and-new-website"",
+   ""tags"": [
+      "".vimrc"",
+      ""plugins"",
+      ""spf13-vim"",
+      ""vim""
+   ],
+   ""title"": ""About"",
+   ""resources"": [
+      {
+         ""name"": ""header"",
+         ""src"": ""images/sunset.jpg""
+      },
+      {
+         ""params"": {
+            ""icon"": ""photo""
+         },
+         ""src"": ""documents/photo_specs.pdf"",
+         ""title"": ""Photo Specifications""
+      },
+      {
+         ""src"": ""documents/guide.pdf"",
+         ""title"": ""Instruction Guide""
+      },
+      {
+         ""src"": ""documents/checklist.pdf"",
+         ""title"": ""Document Checklist""
+      },
+      {
+         ""src"": ""documents/payment.docx"",
+         ""title"": ""Proof of Payment""
+      },
+      {
+         ""name"": ""pdf-file-:counter"",
+         ""params"": {
+            ""icon"": ""pdf""
+         },
+         ""src"": ""**.pdf""
+      },
+      {
+         ""params"": {
+            ""icon"": ""word""
+         },
+         ""src"": ""**.docx""
+      }
+   ]
+}
 
 Lorem ipsum";
 
             using TextReader sr = new StringReader(input);
-            var parser = new TomlParser(sr);
+            var parser = new JsonParser(sr);
             var single = parser.GetAsSinglePage();
 
             Assert.Equal("About", single.Title);

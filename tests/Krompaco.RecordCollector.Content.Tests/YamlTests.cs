@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Krompaco.RecordCollector.Content.Tests
 {
-    public class TomlTests
+    public class YamlTests
     {
         [Fact]
         public void ParserTest()
@@ -66,7 +66,7 @@ tags = ["".vimrc"", ""plugins"", ""spf13-vim"", ""vim""]
 Lorem ipsum";
 
             using TextReader sr = new StringReader(input);
-            var parser = new TomlParser(sr);
+            var parser = new YamlParser(sr);
             var single = parser.GetAsSinglePage();
 
             Assert.Equal("About", single.Title);

@@ -47,6 +47,8 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             {
                 CustomArrayProperties = new Dictionary<string, List<string>>(),
                 CustomStringProperties = new Dictionary<string, string>(),
+                FileResources = new List<FileResource>(),
+                PageResources = new List<PageResource>(),
             };
 
             var doc = Toml.Parse(fm.TrimEnd('\r', '\n'));
@@ -74,6 +76,43 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 ////cascade
                 ////    a map of Front Matter keys whose values are passed down to the page’s descendents unless overwritten by self or a closer ancestor’s cascade. See Front Matter Cascade for details.
+                if (key.Equals("cascade", StringComparison.OrdinalIgnoreCase))
+                {
+                    var cascadeTable = (TomlTable)table["cascade"];
+
+                    foreach (var cascadeKey in cascadeTable.Keys)
+                    {
+                        if (single.Cascade == null)
+                        {
+                            single.Cascade = new CascadeVariables
+                            {
+                                CustomArrayProperties = new Dictionary<string, List<string>>(),
+                                CustomStringProperties = new Dictionary<string, string>()
+                            };
+                        }
+
+                        try
+                        {
+                            var stringValues = ((TomlArray)cascadeTable[cascadeKey]).Select(x => x.ToString()).ToList();
+                            single.Cascade.CustomArrayProperties.Add(cascadeKey, stringValues);
+                            continue;
+                        }
+                        catch (Exception)
+                        {
+                        }
+
+                        try
+                        {
+                            var stringValue = cascadeTable[cascadeKey].ToString();
+                            single.Cascade.CustomStringProperties.Add(cascadeKey, stringValue);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+
+                    continue;
+                }
 
                 if (key.Equals("categories", StringComparison.OrdinalIgnoreCase))
                 {
@@ -126,9 +165,20 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 ////images
                 ////    an array of paths to images related to the page; used by internal templates such as _internal/twitter_cards.html.
+                if (key.Equals("images", StringComparison.OrdinalIgnoreCase))
+                {
+                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString()).ToList();
+                    single.Images = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
+                    continue;
+                }
 
                 ////isCJKLanguage
                 ////    if true, Hugo will explicitly treat the content as a CJK language; both .Summary and .WordCount work properly in CJK languages.
+                if (key.Equals("isCJKLanguage", StringComparison.OrdinalIgnoreCase))
+                {
+                    single.IsCjkLanguage = (bool)table[key];
+                    continue;
+                }
 
                 ////keywords
                 ////    the meta keywords for the content.
@@ -163,11 +213,13 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                     continue;
                 }
 
-                ////markup
-                ////    experimental; specify "rst" for reStructuredText (requiresrst2html) or "md" (default) for Markdown.
-
                 ////outputs
                 ////    allows you to specify output formats specific to the content. See output formats.
+                if (key.Equals("outputs", StringComparison.OrdinalIgnoreCase))
+                {
+                    single.Outputs = (string)table[key];
+                    continue;
+                }
 
                 ////publishDate
                 ////    if in the future, content will not be rendered unless the --buildFuture flag is passed to hugo.
@@ -180,9 +232,71 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 ////resources
                 ////    used for configuring page bundle resources. See Page Resources.
+                if (key.Equals("resources", StringComparison.OrdinalIgnoreCase))
+                {
+                    var resourcesTables = ((TomlTableArray)table["resources"]).Select(x => x);
+
+                    foreach (var resourcesTable in resourcesTables)
+                    {
+                        var fileResource = new FileResource
+                        {
+                            Params = new Dictionary<string, string>(),
+                        };
+
+                        foreach (var resourcesKey in resourcesTable.Keys)
+                        {
+                            ////Name
+                            ////    Default value is the filename (relative to the owning page). Can be set in front matter.
+                            if (resourcesKey.Equals("name", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fileResource.Name = (string)resourcesTable[resourcesKey];
+                                continue;
+                            }
+
+                            ////Permalink
+                            ////    The absolute URL to the resource. Resources of type page will have no value.
+                            if (resourcesKey.Equals("src", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fileResource.Permalink = new Uri((string)resourcesTable[resourcesKey], UriKind.RelativeOrAbsolute);
+                                continue;
+                            }
+
+                            ////    Title
+                            ////    Default value is the same as .Name. Can be set in front matter.
+                            if (resourcesKey.Equals("title", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fileResource.Title = (string)resourcesTable[resourcesKey];
+                                continue;
+                            }
+
+                            if (!resourcesKey.Equals("params", StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue;
+                            }
+
+                            var paramsTable = (TomlTable)resourcesTable[resourcesKey];
+
+                            foreach (var paramsKey in paramsTable.Keys)
+                            {
+                                var stringValue = paramsTable[paramsKey].ToString();
+                                fileResource.Params.Add(paramsKey, stringValue);
+                            }
+                        }
+
+                        single.FileResources.Add(fileResource);
+                    }
+
+                    continue;
+                }
 
                 ////series
                 ////    an array of series this page belongs to, as a subset of the series taxonomy; used by the opengraph internal template to populate og:see_also.
+                if (key.Equals("series", StringComparison.OrdinalIgnoreCase))
+                {
+                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString()).ToList();
+                    single.Series = stringValues;
+                    continue;
+                }
 
                 ////slug
                 ////    appears as the tail of the output URL. A value specified in front matter will override the segment of the URL based on the filename.
@@ -194,6 +308,11 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 ////summary
                 ////    text used when providing a summary of the article in the .Summary page variable; details available in the content-summaries section.
+                if (key.Equals("summary", StringComparison.OrdinalIgnoreCase))
+                {
+                    single.Summary = (string)table[key];
+                    continue;
+                }
 
                 if (key.Equals("tags", StringComparison.OrdinalIgnoreCase))
                 {
@@ -229,6 +348,12 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 ////videos
                 ////    an array of paths to videos related to the page; used by the opengraph internal template to populate og:video.
+                if (key.Equals("videos", StringComparison.OrdinalIgnoreCase))
+                {
+                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString()).ToList();
+                    single.Videos = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
+                    continue;
+                }
 
                 ////weight
                 ////    used for ordering your content in lists. Lower weight gets higher precedence. So content with lower weight will come first.

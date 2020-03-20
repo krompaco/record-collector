@@ -37,9 +37,13 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string Content { get; set; }
 
+        public string Outputs { get; set; }
+
         public bool Draft { get; set; }
 
         public bool Headless { get; set; }
+
+        public bool IsCjkLanguage { get; set; }
 
         public List<Uri> Audio { get; set; }
 
@@ -53,11 +57,15 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public List<PageResource> PageResources { get; set; }
 
+        public List<FileResource> FileResources { get; set; }
+
         public int Weight { get; set; }
 
         public Dictionary<string, string> CustomStringProperties { get; set; }
 
         public Dictionary<string, List<string>> CustomArrayProperties { get; set; }
+
+        public CascadeVariables Cascade { get; set; }
 
         public string FullName { get; set; }
     }
