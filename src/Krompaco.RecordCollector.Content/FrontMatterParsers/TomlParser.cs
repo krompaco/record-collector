@@ -8,16 +8,18 @@ using Tomlyn.Model;
 
 namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 {
-    public class TomlParser
+    public class TomlParser<TModel> : ParserBase
+        where TModel : SinglePage, new()
     {
         private readonly TextReader tr;
 
-        public TomlParser(TextReader tr)
+        public TomlParser(TextReader tr, string fullName)
         {
             this.tr = tr;
+            this.FullName = fullName;
         }
 
-        public SinglePage GetAsSinglePage()
+        public TModel GetAsSinglePage()
         {
             var fm = string.Empty;
             var frontMatterOpened = false;
@@ -43,12 +45,13 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 }
             }
 
-            var single = new SinglePage
+            var single = new TModel
             {
                 CustomArrayProperties = new Dictionary<string, List<string>>(),
                 CustomStringProperties = new Dictionary<string, string>(),
                 FileResources = new List<FileResource>(),
                 PageResources = new List<PageResource>(),
+                ContentTextReader = this.tr,
             };
 
             var doc = Toml.Parse(fm.TrimEnd('\r', '\n'));

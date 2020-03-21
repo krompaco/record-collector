@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
@@ -11,5 +12,7 @@ namespace Krompaco.RecordCollector.Content.Models
         public Dictionary<string, string> Params { get; set; }
 
         public string FullName { get; set; }
+
+        public Uri RelativeUrl { get; set; }
     }
 }

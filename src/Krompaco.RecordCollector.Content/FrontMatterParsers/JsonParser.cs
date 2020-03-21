@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -7,16 +8,18 @@ using Krompaco.RecordCollector.Content.Models;
 
 namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 {
-    public class JsonParser
+    public class JsonParser<TModel> : ParserBase
+        where TModel : SinglePage, new()
     {
         private readonly TextReader tr;
 
-        public JsonParser(TextReader tr)
+        public JsonParser(TextReader tr, string fullName)
         {
             this.tr = tr;
+            this.FullName = fullName;
         }
 
-        public SinglePage GetAsSinglePage()
+        public TModel GetAsSinglePage()
         {
             var fm = string.Empty;
 
@@ -40,12 +43,13 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 fm += line + "\r\n";
             }
 
-            var single = new SinglePage
+            var single = new TModel
             {
                 CustomArrayProperties = new Dictionary<string, List<string>>(),
                 CustomStringProperties = new Dictionary<string, string>(),
                 FileResources = new List<FileResource>(),
                 PageResources = new List<PageResource>(),
+                ContentTextReader = this.tr,
             };
 
             var options = new JsonDocumentOptions { AllowTrailingCommas = true };
@@ -113,7 +117,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 ////    the datetime assigned to this page. This is usually fetched from the date field in front matter, but this behaviour is configurable.
                 if (property.Name.Equals("date", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.Date = property.Value.TryGetDateTime(out var date) ? date.Date : DateTime.MinValue;
+                    single.Date = DateTime.Parse(property.Value.GetRawText().TrimStart('\"').TrimEnd('\"'), CultureInfo.InvariantCulture);
                     continue;
                 }
 
@@ -129,7 +133,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 ////    if true, the content will not be rendered unless the --buildDrafts flag is passed to the hugo command.
                 if (property.Name.Equals("draft", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.Draft = property.Value.GetBoolean();
+                    single.Draft = bool.Parse(property.Value.GetRawText().TrimStart('\"').TrimEnd('\"'));
                     continue;
                 }
 
@@ -145,7 +149,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 ////    if true, sets a leaf bundle to be headless.
                 if (property.Name.Equals("headless", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.Headless = property.Value.GetBoolean();
+                    single.Headless = bool.Parse(property.Value.GetRawText().TrimStart('\"').TrimEnd('\"'));
                     continue;
                 }
 
@@ -162,7 +166,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 ////    if true, Hugo will explicitly treat the content as a CJK language; both .Summary and .WordCount work properly in CJK languages.
                 if (property.Name.Equals("isCJKLanguage", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.IsCjkLanguage = property.Value.GetBoolean();
+                    single.IsCjkLanguage = bool.Parse(property.Value.GetRawText().TrimStart('\"').TrimEnd('\"'));
                     continue;
                 }
 
@@ -342,7 +346,10 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 ////    used for ordering your content in lists. Lower weight gets higher precedence. So content with lower weight will come first.
                 if (property.Name.Equals("weight", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.Weight = property.Value.GetInt32();
+                    single.Weight = int.Parse(
+                        property.Value.GetRawText().TrimStart('\"').TrimEnd('\"'),
+                        NumberStyles.Integer,
+                        NumberFormatInfo.CurrentInfo);
                     continue;
                 }
 

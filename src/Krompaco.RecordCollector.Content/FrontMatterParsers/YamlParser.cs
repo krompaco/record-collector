@@ -4,16 +4,18 @@ using YamlDotNet.Serialization;
 
 namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 {
-    public class YamlParser
+    public class YamlParser<TModel> : ParserBase
+        where TModel : SinglePage, new()
     {
         private readonly TextReader tr;
 
-        public YamlParser(TextReader tr)
+        public YamlParser(TextReader tr, string fullName)
         {
             this.tr = tr;
+            this.FullName = fullName;
         }
 
-        public SinglePage GetAsSinglePage()
+        public TModel GetAsSinglePage()
         {
             var fm = string.Empty;
             var frontMatterOpened = false;
@@ -47,8 +49,9 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 .Build();
             var json = serializer.Serialize(yamlObject);
             using TextReader sr = new StringReader(json);
-            var jsonParser = new JsonParser(sr);
+            var jsonParser = new JsonParser<TModel>(sr, this.FullName);
             var single = jsonParser.GetAsSinglePage();
+            single.ContentTextReader = this.tr;
             return single;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Krompaco.RecordCollector.Content.FrontMatterParsers;
+using Krompaco.RecordCollector.Content.Models;
 using Xunit;
 
 namespace Krompaco.RecordCollector.Content.Tests
@@ -8,7 +9,7 @@ namespace Krompaco.RecordCollector.Content.Tests
     public class JsonTests
     {
         [Fact]
-        public void ParserTest()
+        public async void ParserTest()
         {
             string input = @"{
        ""categories"": [
@@ -79,11 +80,10 @@ namespace Krompaco.RecordCollector.Content.Tests
       }
    ]
 }
-
 Lorem ipsum";
 
             using TextReader sr = new StringReader(input);
-            var parser = new JsonParser(sr);
+            var parser = new JsonParser<SinglePage>(sr, string.Empty);
             var single = parser.GetAsSinglePage();
 
             Assert.Equal("About", single.Title);
@@ -104,6 +104,9 @@ Lorem ipsum";
             Assert.Equal("vim", single.Tags[3]);
             Assert.Equal("images/typewriter.jpg", single.Cascade.CustomStringProperties["banner"]);
             Assert.Equal(".vimrc", single.Cascade.CustomArrayProperties["tags"][0]);
+
+            var content = await single.ContentTextReader.ReadToEndAsync();
+            Assert.Equal("Lorem ipsum", content);
         }
     }
 }

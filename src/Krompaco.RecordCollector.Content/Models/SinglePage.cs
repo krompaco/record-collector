@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
@@ -25,6 +26,8 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public Uri Url { get; set; }
 
+        public Uri RelativeUrl { get; set; }
+
         public string Layout { get; set; }
 
         public List<string> Tags { get; set; }
@@ -35,7 +38,7 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string Summary { get; set; }
 
-        public string Content { get; set; }
+        public TextReader ContentTextReader { get; set; }
 
         public string Outputs { get; set; }
 

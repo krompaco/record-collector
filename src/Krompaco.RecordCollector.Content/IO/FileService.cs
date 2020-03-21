@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Krompaco.RecordCollector.Content.FrontMatterParsers;
 using Krompaco.RecordCollector.Content.Models;
 
 namespace Krompaco.RecordCollector.Content.IO
@@ -31,7 +33,7 @@ namespace Krompaco.RecordCollector.Content.IO
             return files.Select(x => x.FullName).ToArray();
         }
 
-        public IFile GetFile(string fullName)
+        public IFile GetAsFileModel(string fullName)
         {
             if (string.IsNullOrWhiteSpace(fullName))
             {
@@ -41,16 +43,83 @@ namespace Krompaco.RecordCollector.Content.IO
             if (fullName.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
                 || fullName.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase))
             {
-                return new ListPage();
+                var sr = new StreamReader(fullName);
+                var typeDetector = new TypeDetector(sr);
+                ListPage list = null;
+
+                switch (typeDetector.GetFrontMatterType())
+                {
+                    case FrontMatterType.Json:
+                        var jsonParser = new JsonParser<ListPage>(sr, fullName);
+                        list = jsonParser.GetAsSinglePage();
+                        break;
+                    case FrontMatterType.Yaml:
+                        var yamlParser = new YamlParser<ListPage>(sr, fullName);
+                        list = yamlParser.GetAsSinglePage();
+                        break;
+                    default:
+                        var tomlParser = new TomlParser<ListPage>(sr, fullName);
+                        list = tomlParser.GetAsSinglePage();
+                        break;
+                }
+
+                list.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
+                list.FullName = fullName;
+                return list;
             }
 
             if (fullName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
                 || fullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
             {
-                return new SinglePage();
+                var sr = new StreamReader(fullName);
+                var typeDetector = new TypeDetector(sr);
+                SinglePage single = null;
+
+                switch (typeDetector.GetFrontMatterType())
+                {
+                    case FrontMatterType.Json:
+                        var jsonParser = new JsonParser<SinglePage>(sr, fullName);
+                        single = jsonParser.GetAsSinglePage();
+                        break;
+                    case FrontMatterType.Yaml:
+                        var yamlParser = new YamlParser<SinglePage>(sr, fullName);
+                        single = yamlParser.GetAsSinglePage();
+                        break;
+                    default:
+                        var tomlParser = new TomlParser<SinglePage>(sr, fullName);
+                        single = tomlParser.GetAsSinglePage();
+                        break;
+                }
+
+                single.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
+                single.FullName = fullName;
+                return single;
             }
 
-            return null;
+            var fileResource = new FileResource();
+            fileResource.Name = fileResource.Title = new FileInfo(fullName).Name;
+            fileResource.FullName = fullName;
+            fileResource.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
+            return fileResource;
+        }
+
+        private Uri GetRelativeUrlFromFullName(string fullName)
+        {
+            var rootRemoved = fullName.Replace(this.contentRoot, string.Empty);
+            rootRemoved = rootRemoved.TrimStart('/', '\\');
+
+            if (rootRemoved.Contains('\\'))
+            {
+                rootRemoved = rootRemoved.Replace('\\', '/');
+            }
+
+            rootRemoved = Regex.Replace(
+                rootRemoved,
+                @"(\.md|\.html)",
+                "/",
+                RegexOptions.IgnoreCase);
+
+            return new Uri("/" + rootRemoved, UriKind.Relative);
         }
     }
 }

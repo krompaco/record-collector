@@ -1,0 +1,11 @@
+﻿@using Markdig
+@model SinglePageViewModel
+
+<div>
+	<h1>@Model.Title</h1>
+	@if (Model.CurrentPage.Date != DateTime.MinValue)
+	{
+		<em>@Model.CurrentPage.Date.ToString("yyyy-MM-dd")</em>
+	}
+	@Html.Raw(Markdown.ToHtml(Model.CurrentPage.ContentTextReader.ReadToEnd(), Model.MarkdownPipeline))
+</div>

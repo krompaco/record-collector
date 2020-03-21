@@ -37,18 +37,9 @@ namespace Krompaco.RecordCollector.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "images",
-                    pattern: "images/{**path}",
-                    defaults: new { controller = "Content", action = "Images" });
-
-                endpoints.MapControllerRoute(
                     name: "files",
-                    pattern: "files/{**path}",
+                    pattern: "{**path}",
                     defaults: new { controller = "Content", action = "Files" });
-
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
             if (env != null)
