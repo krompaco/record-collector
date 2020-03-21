@@ -54,6 +54,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     .WithMeta()
                     .GetViewModel();
 
+                listViewModel.Title = "Welcome";
+
                 return this.View("List", listViewModel);
             }
 
@@ -63,7 +65,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
             if (!path.EndsWith('/')
                 && path.Contains('.', StringComparison.Ordinal))
             {
-                var foundFullName = this.allFiles.First(x => x.EndsWith(physicalPath, StringComparison.InvariantCultureIgnoreCase));
+                var foundFullName = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.InvariantCultureIgnoreCase));
+
+                if (foundFullName == null)
+                {
+                    return this.NotFound();
+                }
+
                 var contentTypeProvider = new FileExtensionContentTypeProvider();
                 contentTypeProvider.TryGetContentType(foundFullName, out var contentType);
                 return this.PhysicalFile(foundFullName, contentType);
@@ -71,12 +79,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
             // Page
             physicalPath = physicalPath.TrimEnd(Path.DirectorySeparatorChar) + ".md";
-            var foundPage = this.allFiles.First(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+            var foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
 
             if (foundPage == null)
             {
                 physicalPath = physicalPath.Replace(".md", ".html", StringComparison.OrdinalIgnoreCase);
-                foundPage = this.allFiles.First(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
             }
 
             if (foundPage == null)
@@ -84,9 +92,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.NotFound();
             }
 
-            var singlePage = this.fileService.GetAsFileModel(foundPage) as SinglePage;
-
-            if (singlePage == null)
+            if (!(this.fileService.GetAsFileModel(foundPage) is SinglePage singlePage))
             {
                 return this.NotFound();
             }
