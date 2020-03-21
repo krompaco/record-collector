@@ -10,7 +10,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 {
     public class TomlParser
     {
-        private TextReader tr;
+        private readonly TextReader tr;
 
         public TomlParser(TextReader tr)
         {

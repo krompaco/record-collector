@@ -1,8 +1,6 @@
-﻿using System.IO;
-using Krompaco.RecordCollector.Content.IO;
+﻿using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 

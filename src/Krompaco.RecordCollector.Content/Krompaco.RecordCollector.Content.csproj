@@ -16,6 +16,7 @@
     </PackageReference>
     <PackageReference Include="System.Text.Json" Version="4.7.1" />
     <PackageReference Include="Tomlyn" Version="0.1.2" />
+    <PackageReference Include="YamlDotNet" Version="8.1.0" />
   </ItemGroup>
 
 </Project>

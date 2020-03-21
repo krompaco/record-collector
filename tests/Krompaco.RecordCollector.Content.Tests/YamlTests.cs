@@ -11,57 +11,56 @@ namespace Krompaco.RecordCollector.Content.Tests
         public void ParserTest()
         {
             string input = @"
- +++
-title =  ""About"" 
- categories = [""Development"", ""VIM""]
-date = ""2012-04-06""
-description = ""spf13-vim is a cross platform distribution of vim plugins and resources for Vim.""
-slug = ""spf13-vim-3-0-release-and-new-website""
-testint = 1
-images = [""site-feature-image.jpg""]
-testbool = false
-teststring = ""What?""
-testdate = ""2012-04-06""
-testarray = [""Development"", ""VIM""]
-tags = ["".vimrc"", ""plugins"", ""spf13-vim"", ""vim""]
-
-[[resources]]
-  name = ""header""
-  src = ""images/sunset.jpg""
-
-[[resources]]
-  src = ""documents/photo_specs.pdf""
-  title = ""Photo Specifications""
-  [resources.params]
-    icon = ""photo""
-
-[[resources]]
-  src = ""documents/guide.pdf""
-  title = ""Instruction Guide""
-
-[[resources]]
-  src = ""documents/checklist.pdf""
-  title = ""Document Checklist""
-
-[[resources]]
-  src = ""documents/payment.docx""
-  title = ""Proof of Payment""
-
-[[resources]]
-  name = ""pdf-file-:counter""
-  src = ""**.pdf""
-  [resources.params]
-    icon = ""pdf""
-
-[[resources]]
-  src = ""**.docx""
-  [resources.params]
-    icon = ""word""
-
-[cascade]
-  banner = ""images/typewriter.jpg""
-  tags = ["".vimrc"", ""plugins"", ""spf13-vim"", ""vim""]
-+++ 
+---
+title: About
+categories:
+  - Development
+  - VIM
+date: '2012-04-06'
+description: spf13-vim is a cross platform distribution of vim plugins and resources for Vim.
+slug: spf13-vim-3-0-release-and-new-website
+testint: 1
+images:
+  - site-feature-image.jpg
+testbool: false
+teststring: What?
+testdate: '2012-04-06'
+testarray:
+  - Development
+  - VIM
+tags:
+  - .vimrc
+  - plugins
+  - spf13-vim
+  - vim
+resources:
+  - name: header
+    src: images/sunset.jpg
+  - src: documents/photo_specs.pdf
+    title: Photo Specifications
+    params:
+      icon: photo
+  - src: documents/guide.pdf
+    title: Instruction Guide
+  - src: documents/checklist.pdf
+    title: Document Checklist
+  - src: documents/payment.docx
+    title: Proof of Payment
+  - name: 'pdf-file-:counter'
+    src: '**.pdf'
+    params:
+      icon: pdf
+  - src: '**.docx'
+    params:
+      icon: word
+cascade:
+  banner: images/typewriter.jpg
+  tags:
+    - .vimrc
+    - plugins
+    - spf13-vim
+    - vim
+--- 
 
 Lorem ipsum";
 
