@@ -1,21 +1,23 @@
 ﻿@model ListPageViewModel
 
 <div>
-	<h1>Welcome</h1>
-	<ul>
-		@foreach (var sp in Model.CurrentPage.Children)
-		{
-			<li>
-
-				<h2>
-					@if (sp.Date != DateTime.MinValue)
-					{
-						@(sp.Date.ToString("yyyy-MM-dd") + ": ")
-					}
-					<a href="@sp.RelativeUrl">@sp.Title</a>
-				</h2>
-				@*@Html.Raw(Markdown.ToHtml(sp.ContentTextReader.ReadToEnd(), Model.MarkdownPipeline))*@
-			</li>
-		}
-	</ul>
+	<h1>@Model.Title</h1>
+	@if (Model.CurrentPage.Children.Count > 0)
+	{
+		<ul>
+			@foreach (var sp in Model.CurrentPage.Children)
+			{
+				<li>
+					<h2>
+						@if (sp.Date != DateTime.MinValue)
+						{
+							@(sp.Date.ToString("yyyy-MM-dd") + ": ")
+						}
+						<a href="@sp.RelativeUrl">@sp.Title</a>
+					</h2>
+					@*@Html.Raw(Markdown.ToHtml(sp.ContentTextReader.ReadToEnd(), Model.MarkdownPipeline))*@
+				</li>
+			}
+		</ul>
+	}
 </div>

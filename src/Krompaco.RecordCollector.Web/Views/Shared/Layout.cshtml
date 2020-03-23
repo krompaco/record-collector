@@ -8,6 +8,46 @@
 	<link rel="stylesheet" href="~/css/site.css?v=2" />
 </head>
 <body>
+	<div role="navigation">
+		@if (Model.RootCultures.Count > 0)
+		{
+		<ul>
+			@if (Model.CurrentPath == "/")
+			{
+				<li><span>Home</span></li>
+			}
+			else
+			{
+				<li><a role="menuitem" href="/">Home</a></li>
+			}
+
+			@foreach (var c in Model.RootCultures)
+			{
+				<li>
+					@if (Model.CurrentPath != "/" && c.Equals(Model.CurrentCulture))
+					{
+						@c.NativeName
+					}
+					else
+					{
+						<a role="menuitem" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName</a>
+					}
+				</li>
+			}
+		</ul>
+		}
+		else
+		{
+			if (Model.CurrentPath == "/")
+			{
+				<span>Home</span>
+			}
+			else
+			{
+				<a role="menuitem" href="/">Home</a>
+			}
+		}
+	</div>
 	<div role="main">
 		@RenderBody()
 	</div>

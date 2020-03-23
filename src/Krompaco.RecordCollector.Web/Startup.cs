@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Krompaco.RecordCollector.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Krompaco.RecordCollector.Web
 {
@@ -20,14 +24,31 @@ namespace Krompaco.RecordCollector.Web
 #pragma warning disable CA1822 // Mark members as static
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
+
+                // TODO: This is the place to set the default culture
+                options.DefaultRequestCulture = new RequestCulture(culture: "en-US", uiCulture: "en-US");
+
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+                options.RequestCultureProviders.Clear();
+                options.RequestCultureProviders.Add(new CustomRequestCultureProvider(this.Configuration));
+            });
+
             services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         // ReSharper disable once UnusedMember.Global
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
 #pragma warning restore CA1822 // Mark members as static
         {
+            logger.LogInformation("Inside Configure method.");
+
+            app.UseRequestLocalization();
+
             app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
@@ -44,7 +65,7 @@ namespace Krompaco.RecordCollector.Web
 
             if (env != null)
             {
-                Console.WriteLine($"In {env.EnvironmentName} using {this.Configuration.GetAppSettingsContentRootPath()}");
+                logger.LogInformation($"In {env.EnvironmentName} using {this.Configuration.GetAppSettingsContentRootPath()}");
             }
         }
     }

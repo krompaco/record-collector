@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Krompaco.RecordCollector.Content.FrontMatterParsers;
+using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
 
 namespace Krompaco.RecordCollector.Content.IO
@@ -31,6 +34,30 @@ namespace Krompaco.RecordCollector.Content.IO
             var di = new DirectoryInfo(this.contentRoot);
             var files = di.EnumerateFiles("*.*", SearchOption.AllDirectories);
             return files.Select(x => x.FullName).ToArray();
+        }
+
+        public string[] GetRootDirectories()
+        {
+            var di = new DirectoryInfo(this.contentRoot);
+            var directories = di.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
+            return directories.Select(x => x.Name).ToArray();
+        }
+
+        public List<CultureInfo> GetRootCultures()
+        {
+            var contentCultureService = new ContentCultureService();
+            var cultures = new List<CultureInfo>();
+            var directories = this.GetRootDirectories();
+
+            foreach (var dirName in directories)
+            {
+                if (contentCultureService.DoesCultureExist(dirName))
+                {
+                    cultures.Add(new CultureInfo(dirName));
+                }
+            }
+
+            return cultures;
         }
 
         public IFile GetAsFileModel(string fullName)
