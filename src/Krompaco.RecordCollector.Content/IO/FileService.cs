@@ -101,6 +101,10 @@ namespace Krompaco.RecordCollector.Content.IO
                 || fullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
             {
                 var sr = new StreamReader(fullName);
+
+                var summaryExtractor = new SummaryExtractor(sr);
+                var summary = summaryExtractor.GetSummaryFromContent();
+
                 var typeDetector = new TypeDetector(sr);
                 SinglePage single = null;
 
@@ -120,8 +124,14 @@ namespace Krompaco.RecordCollector.Content.IO
                         break;
                 }
 
+                if (single.Summary == null)
+                {
+                    single.Summary = summary;
+                }
+
                 single.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
                 single.FullName = fullName;
+
                 return single;
             }
 

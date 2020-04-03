@@ -2,7 +2,7 @@
 
 <div>
 	<h1>@Model.Title</h1>
-	@if (Model.CurrentPage.Children.Count > 0)
+	@if (Model.CurrentPage.ChildPages.Count > 0)
 	{
 		<ul>
 			@foreach (var sp in Model.CurrentPage.ChildPages)
@@ -16,6 +16,7 @@
 						<a href="@sp.RelativeUrl">@sp.Title</a>
 					</h2>
 					@*@Html.Raw(Markdown.ToHtml(sp.ContentTextReader.ReadToEnd(), Model.MarkdownPipeline))*@
+					@sp.Summary
 				</li>
 			}
 		</ul>
