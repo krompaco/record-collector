@@ -14,7 +14,9 @@ namespace Krompaco.RecordCollector.Content.IO
     {
         private readonly string contentRoot;
 
-        public FileService(string contentRoot)
+        private readonly ContentCultureService contentCultureService;
+
+        public FileService(string contentRoot, ContentCultureService contentCultureService)
         {
             if (string.IsNullOrWhiteSpace(contentRoot))
             {
@@ -27,6 +29,7 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             this.contentRoot = contentRoot;
+            this.contentCultureService = contentCultureService;
         }
 
         public string[] GetAllFileFullNames()
@@ -45,13 +48,12 @@ namespace Krompaco.RecordCollector.Content.IO
 
         public List<CultureInfo> GetRootCultures()
         {
-            var contentCultureService = new ContentCultureService();
             var cultures = new List<CultureInfo>();
             var directories = this.GetRootDirectories();
 
             foreach (var dirName in directories)
             {
-                if (contentCultureService.DoesCultureExist(dirName))
+                if (this.contentCultureService.DoesCultureExist(dirName))
                 {
                     cultures.Add(new CultureInfo(dirName));
                 }
@@ -130,8 +132,13 @@ namespace Krompaco.RecordCollector.Content.IO
             return fileResource;
         }
 
-        private Uri GetRelativeUrlFromFullName(string fullName)
+        public Uri GetRelativeUrlFromFullName(string fullName)
         {
+            if (fullName == null)
+            {
+                throw new ArgumentNullException(nameof(fullName));
+            }
+
             var rootRemoved = fullName.Replace(this.contentRoot, string.Empty);
             rootRemoved = rootRemoved.TrimStart('/', '\\');
 

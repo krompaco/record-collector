@@ -5,7 +5,7 @@
 	@if (Model.CurrentPage.Children.Count > 0)
 	{
 		<ul>
-			@foreach (var sp in Model.CurrentPage.Children)
+			@foreach (var sp in Model.CurrentPage.ChildPages)
 			{
 				<li>
 					<h2>

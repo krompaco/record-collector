@@ -33,9 +33,9 @@ namespace Krompaco.RecordCollector.Web.Controllers
         {
             this.logger = logger;
             this.contentRoot = config.GetAppSettingsContentRootPath();
-            this.fileService = new FileService(this.contentRoot);
-            this.allFiles = this.fileService.GetAllFileFullNames();
             this.contentCultureService = new ContentCultureService();
+            this.fileService = new FileService(this.contentRoot, this.contentCultureService);
+            this.allFiles = this.fileService.GetAllFileFullNames();
         }
 
         [HttpGet]
@@ -61,7 +61,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         .GetViewModel();
 
                     rootViewModel.Title = "Root";
-                    rootViewModel.CurrentPage.Children = new List<SinglePage>();
+                    rootViewModel.CurrentPage.ChildPages = new List<SinglePage>();
 
                     return this.View("List", rootViewModel);
                 }
@@ -75,7 +75,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 var listPage = new ListPage
                 {
-                    Children = list,
+                    ChildPages = list,
                 };
 
                 var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, rootCultures)
@@ -113,7 +113,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                     var listPage = new ListPage
                     {
-                        Children = list,
+                        ChildPages = list,
                     };
 
                     var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, rootCultures)

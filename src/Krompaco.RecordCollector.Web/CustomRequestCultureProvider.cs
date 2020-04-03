@@ -21,7 +21,7 @@ namespace Krompaco.RecordCollector.Web
         public CustomRequestCultureProvider(IConfiguration config)
         {
             this.contentCultureService = new ContentCultureService();
-            this.fileService = new FileService(config.GetAppSettingsContentRootPath());
+            this.fileService = new FileService(config.GetAppSettingsContentRootPath(), this.contentCultureService);
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
