@@ -67,10 +67,11 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 }
 
                 var list = this.allFiles
-                    .Where(x => x.Contains(".md", StringComparison.OrdinalIgnoreCase) &&
-                                !x.Contains("index.md", StringComparison.OrdinalIgnoreCase))
+                    .Where(x => (x.Contains(".md", StringComparison.OrdinalIgnoreCase)
+                                    || x.Contains(".html", StringComparison.OrdinalIgnoreCase))
+                                && !x.Contains("index.md", StringComparison.OrdinalIgnoreCase))
                     .Select(x => this.fileService.GetAsFileModel(x) as SinglePage)
-                    .Where(x => x != null)
+                    .Where(x => x?.Title != null)
                     .ToList();
 
                 var listPage = new ListPage

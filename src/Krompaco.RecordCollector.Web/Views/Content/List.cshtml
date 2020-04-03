@@ -1,4 +1,5 @@
-﻿@model ListPageViewModel
+﻿@using Markdig
+@model ListPageViewModel
 
 <div>
 	<h1>@Model.Title</h1>
@@ -15,8 +16,25 @@
 						}
 						<a href="@sp.RelativeUrl">@sp.Title</a>
 					</h2>
-					@*@Html.Raw(Markdown.ToHtml(sp.ContentTextReader.ReadToEnd(), Model.MarkdownPipeline))*@
-					@sp.Summary
+
+					@using (var reader = sp.ContentTextReader)
+					{
+						@Html.Raw(Markdown.ToHtml(reader.ReadToEnd(), Model.MarkdownPipeline))
+					}
+
+					@if (@sp.Summary != null)
+					{
+						if (sp.FullName.EndsWith(".html"))
+						{
+							<h3>The summary</h3>
+							@Html.Raw(sp.Summary)
+						}
+						else
+						{
+							<h3>The summary</h3>
+							<p>@sp.Summary</p>
+						}
+					}
 				</li>
 			}
 		</ul>
