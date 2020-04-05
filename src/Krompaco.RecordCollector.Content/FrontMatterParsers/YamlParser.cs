@@ -51,7 +51,12 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             using TextReader sr = new StringReader(json);
             var jsonParser = new JsonParser<TModel>(sr, this.FullName);
             var single = jsonParser.GetAsSinglePage();
-            single.ContentTextReader = this.tr;
+
+            using (this.tr)
+            {
+                single.Content = this.tr.ReadToEnd();
+            }
+
             return single;
         }
     }

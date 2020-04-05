@@ -68,7 +68,9 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string Summary { get; set; }
 
-        public TextReader ContentTextReader { get; set; }
+        public string Content { get; set; }
+
+        public ContentType ContentType { get; set; }
 
         public string Outputs { get; set; }
 

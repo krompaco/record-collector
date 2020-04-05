@@ -29,6 +29,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly string contentRoot;
 
+        private readonly List<SinglePage> pagesForNavigation;
+
         public ContentController(ILogger<ContentController> logger, IConfiguration config)
         {
             this.logger = logger;
@@ -36,6 +38,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.contentCultureService = new ContentCultureService();
             this.fileService = new FileService(this.contentRoot, this.contentCultureService);
             this.allFiles = this.fileService.GetAllFileFullNames();
+            this.pagesForNavigation = new List<SinglePage>();
         }
 
         [HttpGet]
@@ -46,6 +49,16 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
             var rootCultures = this.fileService.GetRootCultures();
 
+            this.pagesForNavigation.AddRange(this.allFiles
+                .Where(x => (x.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                             || x.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+                            && this.fileService.GetSectionFromFullName(x) == "page")
+                .Select(x => this.fileService.GetAsFileModel(x) as SinglePage)
+                .Where(x => x?.Title != null)
+                .OrderByDescending(x => x.Weight)
+                .ThenBy(x => x.Title)
+                .ToList());
+
             // Start page
             if (path == null)
             {
@@ -53,38 +66,62 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 if (rootCultures.Any())
                 {
-                    var rootPage = new ListPage();
+                    var rootIndexPage = this.fileService.GetIndexPageFullName(this.contentRoot);
+                    ListPage rootPage;
+
+                    if (rootIndexPage != null)
+                    {
+                        rootPage = this.fileService.GetAsFileModel(rootIndexPage.FullName) as ListPage ?? new ListPage();
+                    }
+                    else
+                    {
+                        rootPage = new ListPage();
+                    }
 
                     var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, rootCultures)
                         .WithMarkdownPipeline()
                         .WithMeta(this.Request)
+                        .WithNavigationItems(this.Request, this.pagesForNavigation)
                         .GetViewModel();
 
-                    rootViewModel.Title = "Root";
+                    rootViewModel.Title = rootPage.Title ?? "Root";
                     rootViewModel.CurrentPage.ChildPages = new List<SinglePage>();
 
                     return this.View("List", rootViewModel);
                 }
 
                 var list = this.allFiles
-                    .Where(x => (x.Contains(".md", StringComparison.OrdinalIgnoreCase)
-                                    || x.Contains(".html", StringComparison.OrdinalIgnoreCase))
-                                && !x.Contains("index.md", StringComparison.OrdinalIgnoreCase))
+                    .Where(x => (x.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                                    || x.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+                                && !x.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
+                                && !x.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase))
                     .Select(x => this.fileService.GetAsFileModel(x) as SinglePage)
-                    .Where(x => x?.Title != null)
+                    .Where(x => x?.Title != null
+                                && !x.Section.Equals("page", StringComparison.OrdinalIgnoreCase))
+                    .OrderByDescending(x => x.Date)
                     .ToList();
 
-                var listPage = new ListPage
+                var indexPage = this.fileService.GetIndexPageFullName(this.contentRoot);
+                ListPage listPage;
+
+                if (indexPage != null)
                 {
-                    ChildPages = list,
-                };
+                    listPage = this.fileService.GetAsFileModel(indexPage.FullName) as ListPage ?? new ListPage();
+                }
+                else
+                {
+                    listPage = new ListPage();
+                }
+
+                listPage.ChildPages = list;
 
                 var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, rootCultures)
                     .WithMarkdownPipeline()
                     .WithMeta(this.Request)
+                    .WithNavigationItems(this.Request, this.pagesForNavigation)
                     .GetViewModel();
 
-                listViewModel.Title = "Root";
+                listViewModel.Title = listPage.Title ?? "Root";
 
                 return this.View("List", listViewModel);
             }
@@ -103,23 +140,38 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 {
                     var cultureInfo = new CultureInfo(firstDirectoryInPath);
                     this.logger.LogInformation($"URL part {firstDirectoryInPath} was found as {cultureInfo.EnglishName} culture.");
+                    var cultureRootPath = Path.Combine(this.contentRoot, firstDirectoryInPath);
 
                     var list = this.allFiles
-                        .Where(x => x.StartsWith(Path.Combine(this.contentRoot, firstDirectoryInPath), StringComparison.OrdinalIgnoreCase)
-                                    && x.Contains(".md", StringComparison.OrdinalIgnoreCase)
-                                    && !x.Contains("index.md", StringComparison.OrdinalIgnoreCase))
+                        .Where(x => x.StartsWith(cultureRootPath, StringComparison.OrdinalIgnoreCase)
+                                    && (x.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                                        || x.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+                                    && !x.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
+                                    && !x.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase))
                         .Select(x => this.fileService.GetAsFileModel(x) as SinglePage)
-                        .Where(x => x != null)
+                        .Where(x => x != null
+                                    && !x.Section.Equals("page", StringComparison.OrdinalIgnoreCase))
+                        .OrderByDescending(x => x.Date)
                         .ToList();
 
-                    var listPage = new ListPage
+                    var indexPage = this.fileService.GetIndexPageFullName(cultureRootPath);
+                    ListPage listPage;
+
+                    if (indexPage != null)
                     {
-                        ChildPages = list,
-                    };
+                        listPage = this.fileService.GetAsFileModel(indexPage.FullName) as ListPage ?? new ListPage();
+                    }
+                    else
+                    {
+                        listPage = new ListPage();
+                    }
+
+                    listPage.ChildPages = list;
 
                     var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, rootCultures)
                         .WithMarkdownPipeline()
                         .WithMeta(this.Request)
+                        .WithNavigationItems(this.Request, this.pagesForNavigation)
                         .GetViewModel();
 
                     listViewModel.Title = cultureInfo.NativeName;
@@ -146,7 +198,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.PhysicalFile(foundFullName, contentType);
             }
 
-            // Page
+            // Post
             physicalPath = physicalPath.TrimEnd(Path.DirectorySeparatorChar) + ".md";
             var foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
 
@@ -169,6 +221,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, rootCultures)
                 .WithMarkdownPipeline()
                 .WithMeta(this.Request)
+                .WithNavigationItems(this.Request, this.pagesForNavigation)
                 .GetViewModel();
 
             return this.View("Single", singleViewModel);

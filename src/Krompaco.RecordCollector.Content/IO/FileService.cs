@@ -39,11 +39,18 @@ namespace Krompaco.RecordCollector.Content.IO
             return files.Select(x => x.FullName).ToArray();
         }
 
-        public string[] GetRootDirectories()
+        public List<DirectoryInfo> GetRootDirectories()
         {
             var di = new DirectoryInfo(this.contentRoot);
             var directories = di.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-            return directories.Select(x => x.Name).ToArray();
+            return directories.ToList();
+        }
+
+        public FileInfo GetIndexPageFullName(string directoryFullName)
+        {
+            var di = new DirectoryInfo(directoryFullName);
+            var directories = di.EnumerateFiles("_index.*", SearchOption.TopDirectoryOnly);
+            return directories.FirstOrDefault();
         }
 
         public List<CultureInfo> GetRootCultures()
@@ -51,15 +58,62 @@ namespace Krompaco.RecordCollector.Content.IO
             var cultures = new List<CultureInfo>();
             var directories = this.GetRootDirectories();
 
-            foreach (var dirName in directories)
+            foreach (var info in directories)
             {
-                if (this.contentCultureService.DoesCultureExist(dirName))
+                if (this.contentCultureService.DoesCultureExist(info.Name))
                 {
-                    cultures.Add(new CultureInfo(dirName));
+                    cultures.Add(new CultureInfo(info.Name));
                 }
             }
 
             return cultures;
+        }
+
+        public List<string> GetSections(CultureInfo culture)
+        {
+            var sections = new List<string>();
+            var rootDirectories = this.GetRootDirectories();
+
+            foreach (var info in rootDirectories)
+            {
+                if (this.contentCultureService.DoesCultureExist(info.Name)
+                    && culture != null
+                    && culture.Name.Equals(info.Name, StringComparison.OrdinalIgnoreCase)
+                    && this.GetRootCultures().Any())
+                {
+                    var directories = info.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
+                    return directories.Select(x => x.Name).ToList();
+                }
+
+                if (!this.contentCultureService.DoesCultureExist(info.Name))
+                {
+                    sections.Add(info.Name);
+                }
+            }
+
+            return sections;
+        }
+
+        public string GetSectionFromFullName(string fullName)
+        {
+            if (fullName == null)
+            {
+                throw new ArgumentNullException(nameof(fullName));
+            }
+
+            var allSections = this.GetSections(null);
+            var name = fullName.Replace(this.contentRoot, string.Empty);
+            var parts = name.Split(Path.DirectorySeparatorChar);
+
+            foreach (var part in parts)
+            {
+                if (allSections.Contains(part))
+                {
+                    return part;
+                }
+            }
+
+            return "/";
         }
 
         public IFile GetAsFileModel(string fullName)
@@ -94,6 +148,7 @@ namespace Krompaco.RecordCollector.Content.IO
 
                 list.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
                 list.FullName = fullName;
+                list.Section = this.GetSectionFromFullName(fullName);
                 return list;
             }
 
@@ -131,6 +186,7 @@ namespace Krompaco.RecordCollector.Content.IO
 
                 single.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
                 single.FullName = fullName;
+                single.Section = this.GetSectionFromFullName(fullName);
 
                 return single;
             }
@@ -139,6 +195,7 @@ namespace Krompaco.RecordCollector.Content.IO
             fileResource.Name = fileResource.Title = new FileInfo(fullName).Name;
             fileResource.FullName = fullName;
             fileResource.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
+            fileResource.Section = this.GetSectionFromFullName(fullName);
             return fileResource;
         }
 

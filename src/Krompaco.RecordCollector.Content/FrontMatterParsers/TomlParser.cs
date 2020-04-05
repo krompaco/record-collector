@@ -51,8 +51,21 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 CustomStringProperties = new Dictionary<string, string>(),
                 FileResources = new List<FileResource>(),
                 PageResources = new List<PageResource>(),
-                ContentTextReader = this.tr,
             };
+
+            using (this.tr)
+            {
+                single.Content = this.tr.ReadToEnd();
+            }
+
+            if (this.FullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+            {
+                single.ContentType = ContentType.Html;
+            }
+            else
+            {
+                single.ContentType = ContentType.Markdown;
+            }
 
             var doc = Toml.Parse(fm.TrimEnd('\r', '\n'));
             var table = doc.ToModel();
@@ -154,7 +167,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 if (key.Equals("expiryDate", StringComparison.OrdinalIgnoreCase))
                 {
                     var dateString = (string)table[key];
-                    single.Date = DateTime.TryParse(dateString, out var date) ? date.Date : DateTime.MaxValue;
+                    single.ExpiryDate = DateTime.TryParse(dateString, out var date) ? date.Date : DateTime.MaxValue;
                     continue;
                 }
 

@@ -49,8 +49,21 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 CustomStringProperties = new Dictionary<string, string>(),
                 FileResources = new List<FileResource>(),
                 PageResources = new List<PageResource>(),
-                ContentTextReader = this.tr,
             };
+
+            using (this.tr)
+            {
+                single.Content = this.tr.ReadToEnd();
+            }
+
+            if (this.FullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+            {
+                single.ContentType = ContentType.Html;
+            }
+            else
+            {
+                single.ContentType = ContentType.Markdown;
+            }
 
             var options = new JsonDocumentOptions { AllowTrailingCommas = true };
 
@@ -141,7 +154,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                 ////    the datetime at which the content should no longer be published by Hugo; expired content will not be rendered unless the --buildExpired flag is passed to the hugo command.
                 if (property.Name.Equals("expiryDate", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.Date = property.Value.TryGetDateTime(out var date) ? date.Date : DateTime.MaxValue;
+                    single.ExpiryDate = property.Value.TryGetDateTime(out var date) ? date.Date : DateTime.MaxValue;
                     continue;
                 }
 

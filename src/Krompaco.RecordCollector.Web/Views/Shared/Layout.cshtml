@@ -1,51 +1,67 @@
 ﻿@model LayoutViewModel
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@Model.CurrentCulture.Name">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@Model.Title - Krompaco.RecordCollector.Web</title>
-	<link rel="stylesheet" href="~/css/site.css?v=2" />
+	<link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
 	<div role="navigation">
 		@if (Model.RootCultures.Count > 0)
 		{
-		<ul>
-			@if (Model.CurrentPath == "/")
-			{
-				<li><span>Home</span></li>
-			}
-			else
-			{
-				<li><a role="menuitem" href="/">Home</a></li>
-			}
+			<ul>
+				@if (Model.CurrentPath == "/")
+				{
+					<li>Home</li>
+				}
+				else
+				{
+					<li><a role="menuitem" href="/">Home</a></li>
+				}
 
-			@foreach (var c in Model.RootCultures)
-			{
-				<li>
-					@if (Model.CurrentPath != "/" && c.Equals(Model.CurrentCulture))
-					{
-						@c.NativeName
-					}
-					else
-					{
-						<a role="menuitem" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName</a>
-					}
-				</li>
-			}
-		</ul>
+				@foreach (var c in Model.RootCultures)
+				{
+					<li>
+						@if (Model.CurrentPath != "/" && c.Equals(Model.CurrentCulture))
+						{
+							@c.NativeName
+						}
+						else
+						{
+							<a lang="@c.Name" role="menuitem" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName</a>
+						}
+					</li>
+				}
+			</ul>
 		}
 		else
 		{
-			if (Model.CurrentPath == "/")
-			{
-				<span>Home</span>
-			}
-			else
-			{
-				<a role="menuitem" href="/">Home</a>
-			}
+			<ul>
+				@if (Model.CurrentPath == "/")
+				{
+					<li>Home</li>
+				}
+				else
+				{
+					<li><a role="menuitem" href="/">Home</a></li>
+				}
+
+				@foreach (var ni in Model.NavigationItems)
+				{
+					<li>
+						@if (ni.IsSelected)
+						{
+							@ni.Text
+						}
+						else
+						{
+							<a role="menuitem" href="@ni.RelativeUrl">@ni.Text</a>
+						}
+					</li>
+				}
+			</ul>
 		}
 	</div>
 	<div role="main">

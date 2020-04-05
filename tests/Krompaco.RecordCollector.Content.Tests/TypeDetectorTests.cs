@@ -10,7 +10,7 @@ namespace Krompaco.RecordCollector.Content.Tests
     public class TypeDetectorTests
     {
         [Fact]
-        public async void DetectYamlTest()
+        public void DetectYamlTest()
         {
             var input = @"
 ---
@@ -23,15 +23,14 @@ Lorem ipsum";
             using TextReader sr = new StringReader(input);
             var parser = new YamlParser<SinglePage>(sr, string.Empty);
             var single = parser.GetAsSinglePage();
-            var content = await single.ContentTextReader.ReadToEndAsync();
 
             Assert.Equal(FrontMatterType.Yaml, typeDetector.GetFrontMatterType());
             Assert.Equal("About", single.Title);
-            Assert.Equal("Lorem ipsum", content);
+            Assert.Equal("Lorem ipsum", single.Content);
         }
 
         [Fact]
-        public async void DetectTomlTest()
+        public void DetectTomlTest()
         {
             var input = @"
 +++
@@ -44,15 +43,14 @@ Lorem ipsum";
             using TextReader sr = new StringReader(input);
             var parser = new TomlParser<SinglePage>(sr, string.Empty);
             var single = parser.GetAsSinglePage();
-            var content = await single.ContentTextReader.ReadToEndAsync();
 
             Assert.Equal(FrontMatterType.Toml, typeDetector.GetFrontMatterType());
             Assert.Equal("About", single.Title);
-            Assert.Equal("Lorem ipsum", content);
+            Assert.Equal("Lorem ipsum", single.Content);
         }
 
         [Fact]
-        public async void DetectJsonTest()
+        public void DetectJsonTest()
         {
             var input = @"{
        ""categories"": [
@@ -72,11 +70,10 @@ Lorem ipsum";
             using TextReader sr = new StringReader(input);
             var parser = new JsonParser<SinglePage>(sr, string.Empty);
             var single = parser.GetAsSinglePage();
-            var content = await single.ContentTextReader.ReadToEndAsync();
 
             Assert.Equal(FrontMatterType.Json, typeDetector.GetFrontMatterType());
             Assert.Equal("About", single.Title);
-            Assert.Equal("Lorem ipsum", content);
+            Assert.Equal("Lorem ipsum", single.Content);
         }
 
         [Fact]

@@ -9,7 +9,7 @@ namespace Krompaco.RecordCollector.Content.Tests
     public class YamlTests
     {
         [Fact]
-        public async void ParserTest()
+        public void ParserTest()
         {
             string input = @"
 ---
@@ -86,9 +86,7 @@ Lorem ipsum";
             Assert.Equal("vim", single.Tags[3]);
             Assert.Equal("images/typewriter.jpg", single.Cascade.CustomStringProperties["banner"]);
             Assert.Equal(".vimrc", single.Cascade.CustomArrayProperties["tags"][0]);
-
-            var content = await single.ContentTextReader.ReadToEndAsync();
-            Assert.Equal("Lorem ipsum", content);
+            Assert.Equal("Lorem ipsum", single.Content);
         }
     }
 }

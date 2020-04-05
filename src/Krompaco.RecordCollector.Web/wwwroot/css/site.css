@@ -6,7 +6,6 @@
 	font-named-instance: 'Regular';
 	src: url(inter-roman.var.woff2) format('woff2');
 }
-
 @font-face {
 	font-family: 'Inter var';
 	font-weight: 100 900;
@@ -15,8 +14,37 @@
 	font-named-instance: 'Italic';
 	src: url(inter-italic.var.woff2) format('woff2');
 }
-
 body {
+	margin: 40px auto;
+	max-width: 650px;
+	line-height: 1.6;
+	color: #444;
+	padding: 0 10px;
 	font-family: 'Inter var', sans-serif;
 	font-size: 1rem;
+}
+h1, h2, h3 {
+	line-height: 1.2
+}
+table {
+	border-collapse: collapse;
+	border: 1px solid #808080;
+}
+caption {
+	padding: 6px 10px;
+	border: 1px solid #808080;
+	border-bottom: 0;
+}
+th, td {
+	padding: 6px 10px;
+	border: 1px solid #808080;
+}
+img, table {
+	max-width: 100%;
+}
+hr {
+	margin: 2rem 0;
+}
+pre, code {
+	overflow: auto;
 }

@@ -1,4 +1,5 @@
-﻿@using Markdig
+﻿@using Krompaco.RecordCollector.Content.Models
+@using Markdig
 @model SinglePageViewModel
 
 <div>
@@ -8,8 +9,12 @@
 		<em>@Model.CurrentPage.Date.ToString("yyyy-MM-dd")</em>
 	}
 
-	@using (var reader = Model.CurrentPage.ContentTextReader)
+	@if (Model.CurrentPage.ContentType == ContentType.Markdown)
 	{
-		@Html.Raw(Markdown.ToHtml(reader.ReadToEnd(), Model.MarkdownPipeline))
+		@Html.Raw(Markdown.ToHtml(Model.CurrentPage.Content, Model.MarkdownPipeline))
+	}
+	else
+	{
+		@Html.Raw(Model.CurrentPage.Content)
 	}
 </div>

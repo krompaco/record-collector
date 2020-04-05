@@ -10,7 +10,7 @@ namespace Krompaco.RecordCollector.Content.Tests
     public class SummaryExtractorTests
     {
         [Fact]
-        public async void SummaryFromFileWithYamlFrontMatterTest()
+        public void SummaryFromFileWithYamlFrontMatterTest()
         {
             string input = @"
 ---
@@ -39,7 +39,6 @@ Lorem ipsum";
             var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
 
             var summary = extractor.GetSummaryFromContent();
-            var content = await single.ContentTextReader.ReadToEndAsync();
 
             Assert.Equal(@"Summary.
 
@@ -50,11 +49,11 @@ That can be on another line.
 
 That can be on another line.
 <!--more-->
-Lorem ipsum", content);
+Lorem ipsum", single.Content);
         }
 
         [Fact]
-        public async void SummaryFromFileWithTomlFrontMatterTest()
+        public void SummaryFromFileWithTomlFrontMatterTest()
         {
             string input = @"
  +++
@@ -79,7 +78,6 @@ Lorem ipsum";
             var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
 
             var summary = extractor.GetSummaryFromContent();
-            var content = await single.ContentTextReader.ReadToEndAsync();
 
             Assert.Equal(@"Summary.
 
@@ -90,11 +88,11 @@ That can be on another line.
 
 That can be on another line.
 <!--more-->
-Lorem ipsum", content);
+Lorem ipsum", single.Content);
         }
 
         [Fact]
-        public async void SummaryFromFileWithJsonFrontMatterTest()
+        public void SummaryFromFileWithJsonFrontMatterTest()
         {
             string input = @"{
        ""categories"": [
@@ -121,7 +119,6 @@ Lorem ipsum";
             var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
 
             var summary = extractor.GetSummaryFromContent();
-            var content = await single.ContentTextReader.ReadToEndAsync();
 
             Assert.Equal(@"Summary.
 
@@ -132,7 +129,7 @@ That can be on another line.
 
 That can be on another line.
 <!--more-->
-Lorem ipsum", content);
+Lorem ipsum", single.Content);
         }
     }
 }

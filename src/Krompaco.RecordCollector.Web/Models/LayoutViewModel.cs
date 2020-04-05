@@ -16,5 +16,7 @@ namespace Krompaco.RecordCollector.Web.Models
         public CultureInfo CurrentCulture { get; set; }
 
         public MarkdownPipeline MarkdownPipeline { get; set; }
+
+        public List<MenuItemViewModel> NavigationItems { get; set; }
     }
 }
