@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
@@ -8,6 +9,8 @@ namespace Krompaco.RecordCollector.Content.Models
         string FullName { get; set; }
 
         string Section { get; set; }
+
+        CultureInfo Culture { get; set; }
 
         Uri RelativeUrl { get; set; }
 

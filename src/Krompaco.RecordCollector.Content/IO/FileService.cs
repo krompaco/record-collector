@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Krompaco.RecordCollector.Content.FrontMatterParsers;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Krompaco.RecordCollector.Content.IO
 {
@@ -16,7 +19,19 @@ namespace Krompaco.RecordCollector.Content.IO
 
         private readonly ContentCultureService contentCultureService;
 
-        public FileService(string contentRoot, ContentCultureService contentCultureService)
+        private readonly ILogger logger;
+
+        private readonly object allFileModelsLock = new object();
+
+        private string[] allFilesField = null;
+
+        private List<DirectoryInfo> rootDirectoriesField = null;
+
+        private List<CultureInfo> rootCulturesField = null;
+
+        private List<string> sectionsField = null;
+
+        public FileService(string contentRoot, ContentCultureService contentCultureService, ILogger logger)
         {
             if (string.IsNullOrWhiteSpace(contentRoot))
             {
@@ -30,20 +45,57 @@ namespace Krompaco.RecordCollector.Content.IO
 
             this.contentRoot = contentRoot;
             this.contentCultureService = contentCultureService;
+            this.logger = logger;
+        }
+
+        public bool IsSupportedPageFile(string fileName)
+        {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            var isSupported = fileName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                               || fileName.EndsWith(".html", StringComparison.OrdinalIgnoreCase);
+            return isSupported;
+        }
+
+        public bool IsListPartialPageFile(string fileName)
+        {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            var isListPage = fileName.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
+                              || fileName.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase);
+            return isListPage;
         }
 
         public string[] GetAllFileFullNames()
         {
+            if (this.allFilesField != null)
+            {
+                return this.allFilesField;
+            }
+
             var di = new DirectoryInfo(this.contentRoot);
             var files = di.EnumerateFiles("*.*", SearchOption.AllDirectories);
-            return files.Select(x => x.FullName).ToArray();
+            this.allFilesField = files.Select(x => x.FullName).ToArray();
+            return this.allFilesField;
         }
 
         public List<DirectoryInfo> GetRootDirectories()
         {
+            if (this.rootDirectoriesField != null)
+            {
+                return this.rootDirectoriesField;
+            }
+
             var di = new DirectoryInfo(this.contentRoot);
             var directories = di.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-            return directories.ToList();
+            this.rootDirectoriesField = directories.ToList();
+            return this.rootDirectoriesField;
         }
 
         public FileInfo GetIndexPageFullName(string directoryFullName)
@@ -55,6 +107,11 @@ namespace Krompaco.RecordCollector.Content.IO
 
         public List<CultureInfo> GetRootCultures()
         {
+            if (this.rootCulturesField != null)
+            {
+                return this.rootCulturesField;
+            }
+
             var cultures = new List<CultureInfo>();
             var directories = this.GetRootDirectories();
 
@@ -66,15 +123,20 @@ namespace Krompaco.RecordCollector.Content.IO
                 }
             }
 
-            return cultures;
+            this.rootCulturesField = cultures;
+            return this.rootCulturesField;
         }
 
         public List<string> GetSections(CultureInfo culture)
         {
-            var sections = new List<string>();
-            var rootDirectories = this.GetRootDirectories();
+            if (this.sectionsField != null)
+            {
+                return this.sectionsField;
+            }
 
-            foreach (var info in rootDirectories)
+            var sections = new List<string>();
+
+            foreach (var info in this.GetRootDirectories())
             {
                 if (this.contentCultureService.DoesCultureExist(info.Name)
                     && culture != null
@@ -91,7 +153,8 @@ namespace Krompaco.RecordCollector.Content.IO
                 }
             }
 
-            return sections;
+            this.sectionsField = sections;
+            return this.sectionsField;
         }
 
         public string GetSectionFromFullName(string fullName)
@@ -114,6 +177,82 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             return "/";
+        }
+
+        public List<IFile> GetAllFileModels()
+        {
+            var allFiles = this.GetAllFileFullNames();
+            var rootCultures = this.GetRootCultures();
+            var allFileModels = new List<IFile>();
+            this.logger.LogInformation($"Files to process: {allFiles.Length}");
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            if (rootCultures.Any())
+            {
+                var rootIndexPage = this.GetIndexPageFullName(this.contentRoot);
+                ListPage rootPage;
+
+                if (rootIndexPage != null)
+                {
+                    rootPage = this.GetAsFileModel(rootIndexPage.FullName) as ListPage ?? new ListPage();
+                    var temp = allFiles.ToList();
+                    temp.Remove(rootIndexPage.FullName);
+                    allFiles = temp.ToArray();
+                }
+                else
+                {
+                    rootPage = new ListPage();
+                    rootPage.FullName = string.Empty;
+                }
+
+                rootPage.ChildPages = new List<SinglePage>();
+                allFileModels.Add(rootPage);
+            }
+
+            Parallel.ForEach(allFiles, (currentFullName) =>
+            {
+                if (this.IsListPartialPageFile(currentFullName))
+                {
+                    if (!(this.GetAsFileModel(currentFullName) is ListPage listPage))
+                    {
+                        return;
+                    }
+
+                    lock (this.allFileModelsLock)
+                    {
+                        allFileModels.Add(listPage);
+                    }
+                }
+                else if (this.IsSupportedPageFile(currentFullName))
+                {
+                    if (!(this.GetAsFileModel(currentFullName) is SinglePage singlePage))
+                    {
+                        return;
+                    }
+
+                    lock (this.allFileModelsLock)
+                    {
+                        allFileModels.Add(singlePage);
+                    }
+                }
+
+                if (!(this.GetAsFileModel(currentFullName) is FileResource fileResource))
+                {
+                    return;
+                }
+
+                lock (this.allFileModelsLock)
+                {
+                    allFileModels.Add(fileResource);
+                }
+            });
+
+            stopwatch.Stop();
+            this.logger.LogInformation($"Time to process files: {stopwatch.Elapsed.TotalMilliseconds} ms");
+
+            return allFileModels;
         }
 
         public IFile GetAsFileModel(string fullName)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using Krompaco.RecordCollector.Web.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,6 +6,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Krompaco.RecordCollector.Web
 {
@@ -24,6 +23,8 @@ namespace Krompaco.RecordCollector.Web
 #pragma warning disable CA1822 // Mark members as static
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHostedService<FileSystemWatcherService>();
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
@@ -57,6 +58,11 @@ namespace Krompaco.RecordCollector.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "content-table",
+                    pattern: "content-table",
+                    defaults: new { controller = "Content", action = "Table" });
+
                 endpoints.MapControllerRoute(
                     name: "files",
                     pattern: "{**path}",
