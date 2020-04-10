@@ -29,6 +29,8 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string Section { get; set; }
 
+        public string ClosestSectionDirectory { get; set; }
+
         public CultureInfo Culture { get; set; }
 
         public Uri RelativeUrl { get; set; }
@@ -53,7 +55,7 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public IFile Parent { get; set; }
 
-        public List<IFile> Children { get; set; }
+        public List<SinglePage> Siblings { get; set; }
 
         public List<IFile> Ancestors { get; set; }
 

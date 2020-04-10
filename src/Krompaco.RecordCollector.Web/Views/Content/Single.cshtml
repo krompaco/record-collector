@@ -17,4 +17,18 @@
 	{
 		@Html.Raw(Model.CurrentPage.Content)
 	}
+
+	<h2>Siblings</h2>
+	<ol>
+		@foreach (var sp in Model.CurrentPage.Siblings)
+		{
+			<li>
+				@if (sp.Date != DateTime.MinValue)
+				{
+					@(sp.Date.ToString("yyyy-MM-dd") + ": ")
+				}
+				<a href="@sp.RelativeUrl">@sp.Title</a>
+			</li>
+		}
+	</ol>
 </div>

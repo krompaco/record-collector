@@ -17,6 +17,8 @@ namespace Krompaco.RecordCollector.Content.IO
     {
         private readonly string contentRoot;
 
+        private readonly DirectoryInfo contentRootDirectoryInfo;
+
         private readonly ContentCultureService contentCultureService;
 
         private readonly ILogger logger;
@@ -44,6 +46,7 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             this.contentRoot = contentRoot;
+            this.contentRootDirectoryInfo = new DirectoryInfo(this.contentRoot);
             this.contentCultureService = contentCultureService;
             this.logger = logger;
         }
@@ -227,14 +230,16 @@ namespace Krompaco.RecordCollector.Content.IO
                 }
                 else if (this.IsSupportedPageFile(currentFullName))
                 {
-                    if (!(this.GetAsFileModel(currentFullName) is SinglePage singlePage))
+                    var fileModel = this.GetAsFileModel(currentFullName);
+
+                    if (fileModel.GetType() != typeof(SinglePage))
                     {
                         return;
                     }
 
                     lock (this.allFileModelsLock)
                     {
-                        allFileModels.Add(singlePage);
+                        allFileModels.Add(fileModel);
                     }
                 }
 
@@ -249,6 +254,11 @@ namespace Krompaco.RecordCollector.Content.IO
                 }
             });
 
+            Parallel.ForEach(allFileModels, (currentModel) =>
+                {
+                    currentModel.Siblings = this.GetSiblings(currentModel, allFileModels);
+                });
+
             stopwatch.Stop();
             this.logger.LogInformation($"Time to process files: {stopwatch.Elapsed.TotalMilliseconds} ms");
 
@@ -262,8 +272,7 @@ namespace Krompaco.RecordCollector.Content.IO
                 throw new NullReferenceException("Don't send null or empty fullName");
             }
 
-            if (fullName.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
-                || fullName.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase))
+            if (this.IsListPartialPageFile(fullName))
             {
                 var sr = new StreamReader(fullName);
                 var typeDetector = new TypeDetector(sr);
@@ -288,11 +297,13 @@ namespace Krompaco.RecordCollector.Content.IO
                 list.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
                 list.FullName = fullName;
                 list.Section = this.GetSectionFromFullName(fullName);
+
                 return list;
             }
 
-            if (fullName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
-                || fullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
+            if (!this.IsListPartialPageFile(fullName)
+                && (fullName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                    || fullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase)))
             {
                 var sr = new StreamReader(fullName);
 
@@ -326,6 +337,8 @@ namespace Krompaco.RecordCollector.Content.IO
                 single.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
                 single.FullName = fullName;
                 single.Section = this.GetSectionFromFullName(fullName);
+                single.IsPage = true;
+                single.ClosestSectionDirectory = this.GetNestedSectionDirectory(fullName);
 
                 return single;
             }
@@ -335,6 +348,7 @@ namespace Krompaco.RecordCollector.Content.IO
             fileResource.FullName = fullName;
             fileResource.RelativeUrl = this.GetRelativeUrlFromFullName(fullName);
             fileResource.Section = this.GetSectionFromFullName(fullName);
+
             return fileResource;
         }
 
@@ -360,6 +374,48 @@ namespace Krompaco.RecordCollector.Content.IO
                 RegexOptions.IgnoreCase);
 
             return new Uri("/" + rootRemoved, UriKind.Relative);
+        }
+
+        private List<SinglePage> GetSiblings(IFile current, List<IFile> allFileModels)
+        {
+            return allFileModels
+                .Where(x =>
+                    x.GetType() == typeof(SinglePage)
+                    && x.Section == current.Section
+                    && x.ClosestSectionDirectory != null
+                    && current.ClosestSectionDirectory != null
+                    && x.ClosestSectionDirectory.Equals(
+                        current.ClosestSectionDirectory,
+                        StringComparison.OrdinalIgnoreCase))
+                .Select(x => x as SinglePage)
+                .Where(x => !x.Headless)
+                .ToList();
+        }
+
+        private string GetNestedSectionDirectory(string fullName)
+        {
+            var fileInfo = new FileInfo(fullName);
+            var directoryName = fileInfo.DirectoryName;
+            string nestedSection = null;
+
+            while (nestedSection == null)
+            {
+                var directoryInfo = new DirectoryInfo(directoryName);
+
+                if (this.GetIndexPageFullName(directoryName) != null)
+                {
+                    nestedSection = directoryInfo.FullName;
+                }
+
+                directoryName = directoryInfo.Parent.FullName;
+
+                if (this.contentRootDirectoryInfo.FullName.Equals(directoryName, StringComparison.OrdinalIgnoreCase))
+                {
+                    nestedSection = this.contentRootDirectoryInfo.FullName;
+                }
+            }
+
+            return nestedSection;
         }
     }
 }

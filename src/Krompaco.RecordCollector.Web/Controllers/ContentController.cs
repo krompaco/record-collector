@@ -192,11 +192,11 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     var cultureRootPath = Path.Combine(this.contentRoot, firstDirectoryInPath);
 
                     var list = this.allFileModels
-                        .Where(x => x is SinglePage
+                        .Where(x => x.GetType() == typeof(SinglePage)
                                     && x.FullName.StartsWith(cultureRootPath, StringComparison.OrdinalIgnoreCase)
-                                    && !this.fileService.IsListPartialPageFile(x.FullName)
                                     && !x.Section.Equals("page", StringComparison.OrdinalIgnoreCase))
                         .Select(x => x as SinglePage)
+                        .Where(x => !x.Headless)
                         .OrderByDescending(x => x.Date)
                         .ToList();
 
