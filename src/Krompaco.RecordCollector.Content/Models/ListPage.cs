@@ -4,6 +4,6 @@ namespace Krompaco.RecordCollector.Content.Models
 {
     public class ListPage : SinglePage
     {
-        public List<SinglePage> ChildPages { get; set; }
+        public List<SinglePage> DescendantPages { get; set; }
     }
 }

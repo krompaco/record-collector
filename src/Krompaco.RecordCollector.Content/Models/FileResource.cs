@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
-    public class FileResource : IFile
+    public class FileResource : IRecordCollectorFile
     {
         public string Name { get; set; }
 
@@ -38,13 +38,13 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public bool IsPage { get; set; }
 
-        public IFile Parent { get; set; }
+        public IRecordCollectorFile Parent { get; set; }
 
         public List<SinglePage> Siblings { get; set; }
 
-        public List<IFile> Ancestors { get; set; }
+        public List<IRecordCollectorFile> Ancestors { get; set; }
 
-        public List<IFile> Descendants { get; set; }
+        public List<IRecordCollectorFile> Descendants { get; set; }
 
         public int Level { get; set; }
 

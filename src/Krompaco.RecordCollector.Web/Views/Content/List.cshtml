@@ -14,11 +14,11 @@
 		@Html.Raw(Model.CurrentPage.Content)
 	}
 
-	@if (Model.CurrentPage.ChildPages.Count > 0)
+	@if (Model.CurrentPage.DescendantPages.Count > 0)
 	{
 		<h2>Posts</h2>
 		<ul>
-			@foreach (var sp in Model.CurrentPage.ChildPages)
+			@foreach (var sp in Model.CurrentPage.DescendantPages)
 			{
 				<li>
 					<h3>

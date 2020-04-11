@@ -39,7 +39,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly List<SinglePage> pagesForNavigation;
 
-        private readonly List<IFile> allFileModels;
+        private readonly List<IRecordCollectorFile> allFileModels;
 
         private readonly Stopwatch stopwatch;
 
@@ -56,7 +56,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.rootCultures = this.fileService.GetRootCultures();
             this.allFiles = this.fileService.GetAllFileFullNames();
 
-            if (!memoryCache.TryGetValue(AllFilesCacheKey, out List<IFile> allFileModelsFromCache))
+            if (!memoryCache.TryGetValue(AllFilesCacheKey, out List<IRecordCollectorFile> allFileModelsFromCache))
             {
                 lock (AllFilesLock)
                 {
@@ -130,7 +130,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         .GetViewModel();
 
                     rootViewModel.Title = rootPage.Title ?? "Select Language";
-                    rootViewModel.CurrentPage.ChildPages = new List<SinglePage>();
+                    rootViewModel.CurrentPage.DescendantPages = new List<SinglePage>();
 
                     this.LogTime();
                     return this.View("List", rootViewModel);
@@ -161,7 +161,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     listPage = new ListPage();
                 }
 
-                listPage.ChildPages = list;
+                listPage.DescendantPages = list;
 
                 var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures)
                     .WithMarkdownPipeline()
@@ -216,7 +216,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         listPage = new ListPage();
                     }
 
-                    listPage.ChildPages = list;
+                    listPage.DescendantPages = list;
 
                     var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures)
                         .WithMarkdownPipeline()
