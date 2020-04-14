@@ -59,9 +59,9 @@ namespace Krompaco.RecordCollector.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "content-table",
-                    pattern: "content-table",
-                    defaults: new { controller = "Content", action = "Table" });
+                    name: "rc-content-report",
+                    pattern: "rc-content-report",
+                    defaults: new { controller = "Content", action = "Report" });
 
                 endpoints.MapControllerRoute(
                     name: "files",

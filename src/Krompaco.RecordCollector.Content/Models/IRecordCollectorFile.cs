@@ -8,6 +8,8 @@ namespace Krompaco.RecordCollector.Content.Models
     {
         string FullName { get; set; }
 
+        string Title { get; set; }
+
         string Section { get; set; }
 
         string ClosestSectionDirectory { get; set; }
@@ -34,11 +36,11 @@ namespace Krompaco.RecordCollector.Content.Models
 
         bool IsPage { get; set; }
 
-        IRecordCollectorFile Parent { get; set; }
+        SinglePage Parent { get; set; }
 
         List<SinglePage> Siblings { get; set; }
 
-        List<IRecordCollectorFile> Ancestors { get; set; }
+        List<SinglePage> Ancestors { get; set; }
 
         List<IRecordCollectorFile> Descendants { get; set; }
 

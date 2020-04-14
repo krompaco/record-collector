@@ -51,6 +51,14 @@ namespace Krompaco.RecordCollector.Content.IO
             this.logger = logger;
         }
 
+        public bool IsSameDirectory(string path1, string path2)
+        {
+            path1 = path1.TrimEnd(Path.DirectorySeparatorChar);
+            path2 = path2.TrimEnd(Path.DirectorySeparatorChar);
+
+            return path1.Equals(path2, StringComparison.OrdinalIgnoreCase);
+        }
+
         public bool IsSupportedPageFile(string fileName)
         {
             if (fileName == null)
@@ -73,6 +81,18 @@ namespace Krompaco.RecordCollector.Content.IO
             var isListPage = fileName.EndsWith("_index.md", StringComparison.OrdinalIgnoreCase)
                               || fileName.EndsWith("_index.html", StringComparison.OrdinalIgnoreCase);
             return isListPage;
+        }
+
+        public bool IsIndexPage(string fileName)
+        {
+            if (fileName == null)
+            {
+                throw new ArgumentNullException(nameof(fileName));
+            }
+
+            var isIndexPage = fileName.Equals("index.md", StringComparison.OrdinalIgnoreCase)
+                             || fileName.Equals("index.html", StringComparison.OrdinalIgnoreCase);
+            return isIndexPage;
         }
 
         public string[] GetAllFileFullNames()
@@ -101,11 +121,20 @@ namespace Krompaco.RecordCollector.Content.IO
             return this.rootDirectoriesField;
         }
 
-        public FileInfo GetIndexPageFullName(string directoryFullName)
+        public FileInfo GetListPartialPageFileInfo(string directoryFullName)
         {
             var di = new DirectoryInfo(directoryFullName);
-            var directories = di.EnumerateFiles("_index.*", SearchOption.TopDirectoryOnly);
-            return directories.FirstOrDefault();
+            var partials = di.EnumerateFiles("_index.*", SearchOption.TopDirectoryOnly);
+            return partials.FirstOrDefault(x => this.IsListPartialPageFile(x.Name));
+        }
+
+        public FileInfo GetIndexPageFileInfo(string directoryFullName)
+        {
+            var di = new DirectoryInfo(directoryFullName);
+            var directories = di.EnumerateFiles("index.*", SearchOption.TopDirectoryOnly);
+            return directories.FirstOrDefault(x =>
+                        this.IsSupportedPageFile(x.Name)
+                        && x.Name.StartsWith("index.", StringComparison.OrdinalIgnoreCase));
         }
 
         public List<CultureInfo> GetRootCultures()
@@ -192,7 +221,7 @@ namespace Krompaco.RecordCollector.Content.IO
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var rootIndexPage = this.GetIndexPageFullName(this.contentRoot);
+            var rootIndexPage = this.GetListPartialPageFileInfo(this.contentRoot);
             ListPage rootPage;
 
             if (rootIndexPage != null)
@@ -271,10 +300,11 @@ namespace Krompaco.RecordCollector.Content.IO
 
                     if (currentModel is ListPage listPage)
                     {
-                        listPage.DescendantPages = this.GetDescendantPages(currentModel, allFileModels);
+                        listPage.DescendantPages = this.GetDescendantSinglePages(currentModel, allFileModels);
                     }
 
                     currentModel.Parent = this.GetParent(currentModel, allFileModels);
+                    currentModel.Descendants = this.GetDescendants(currentModel, allFileModels);
                 });
 
             Parallel.ForEach(allFileModels, (currentModel) =>
@@ -325,8 +355,7 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             if (!this.IsListPartialPageFile(fullName)
-                && (fullName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
-                    || fullName.EndsWith(".html", StringComparison.OrdinalIgnoreCase)))
+                && this.IsSupportedPageFile(fullName))
             {
                 var sr = new StreamReader(fullName);
 
@@ -390,11 +419,33 @@ namespace Krompaco.RecordCollector.Content.IO
                 rootRemoved = rootRemoved.Replace('\\', '/');
             }
 
+            var fileInfo = new FileInfo(fullName);
+
+            if (this.IsIndexPage(fileInfo.Name))
+            {
+                rootRemoved = Regex.Replace(
+                    rootRemoved,
+                    @"(index\.md|index\.html)",
+                    string.Empty,
+                    RegexOptions.IgnoreCase);
+
+                return new Uri("/" + rootRemoved, UriKind.Relative);
+            }
+
             rootRemoved = Regex.Replace(
                 rootRemoved,
                 @"(\.md|\.html)",
                 "/",
                 RegexOptions.IgnoreCase);
+
+            if (rootRemoved.Equals("_index/", StringComparison.OrdinalIgnoreCase))
+            {
+                rootRemoved = Regex.Replace(
+                    rootRemoved,
+                    @"_index\/",
+                    string.Empty,
+                    RegexOptions.IgnoreCase);
+            }
 
             return new Uri("/" + rootRemoved, UriKind.Relative);
         }
@@ -419,62 +470,93 @@ namespace Krompaco.RecordCollector.Content.IO
                 .ToList();
         }
 
-        public List<SinglePage> GetDescendantPages(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
+        public List<SinglePage> GetDescendantSinglePages(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
         {
-            var fileInfo = new FileInfo(current.FullName);
-            var directoryName = fileInfo.DirectoryName;
-
-            return allFileModels
+            return this.GetDescendants(current, allFileModels)
                 .Where(x =>
-                    x.GetType() == typeof(SinglePage)
-                    && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase))
+                    x.GetType() == typeof(SinglePage))
                 .Select(x => (SinglePage)x)
                 .Where(x => !x.Headless)
                 .OrderByDescending(x => x.Date)
                 .ToList();
         }
 
-        public IRecordCollectorFile GetParent(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
+        public List<IRecordCollectorFile> GetDescendants(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
         {
-            ////if (string.IsNullOrWhiteSpace(current.FullName))
-            ////{
-            ////    return allFileModels.FirstOrDefault(x => x.Level == 1);
-            ////}
+            var fileInfo = new FileInfo(current.FullName);
+            var directoryName = fileInfo.DirectoryName;
 
-            ////var fileInfo = new FileInfo(current.FullName);
-            ////var directoryName = fileInfo.Directory.FullName;
-            ////IRecordCollectorFile parent = null;
-
-            ////while (parent == null)
-            ////{
-            ////    if (this.IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))
-            ////    {
-            ////        return allFileModels.FirstOrDefault(x => x.Level == 1);
-            ////    }
-
-            ////    var directoryInfo = new DirectoryInfo(directoryName);
-            ////    var indexPageFileInfo = this.GetIndexPageFullName(directoryInfo.Parent.FullName);
-
-            ////    if (indexPageFileInfo != null)
-            ////    {
-            ////        parent = allFileModels.FirstOrDefault(x => x.FullName.Equals(indexPageFileInfo.FullName, StringComparison.OrdinalIgnoreCase));
-            ////    }
-
-            ////    if (this.IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryInfo.Parent.FullName))
-            ////    {
-            ////        return allFileModels.FirstOrDefault(x => x.Level == 1);
-            ////    }
-
-            ////    directoryName = directoryInfo.Parent.FullName;
-            ////}
-
-            ////return parent;
-            return null;
+            return allFileModels
+                .Where(x =>
+                    ((this.IsListPartialPageFile(current.FullName)
+                        && !x.FullName.Equals(current.FullName, StringComparison.OrdinalIgnoreCase)
+                        && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase))
+                     || (!this.IsListPartialPageFile(current.FullName)
+                          && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
+                          && !this.IsSameDirectory(new FileInfo(x.FullName).DirectoryName, directoryName)))
+                    && !this.IsSameDirectory(new FileInfo(x.FullName).DirectoryName, current.FullName))
+                .ToList();
         }
 
-        public List<IRecordCollectorFile> GetAncestors(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
+        public SinglePage GetParent(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
         {
-            var ancestors = new List<IRecordCollectorFile>();
+            if (string.IsNullOrWhiteSpace(current.FullName))
+            {
+                return null;
+            }
+
+            if (current.Level == 1)
+            {
+                return null;
+            }
+
+            var fileInfo = new FileInfo(current.FullName);
+            var directoryName = fileInfo.Directory.FullName;
+
+            while (true)
+            {
+                if (this.IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))
+                {
+                    return (SinglePage)allFileModels.FirstOrDefault(x => x.Level == 1);
+                }
+
+                var directoryInfo = new DirectoryInfo(directoryName);
+                var indexPageFileInfo = this.GetListPartialPageFileInfo(directoryInfo.Parent.FullName);
+
+                if (indexPageFileInfo != null)
+                {
+                    return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(indexPageFileInfo.FullName, StringComparison.OrdinalIgnoreCase));
+                }
+
+                var supportedFiles = directoryInfo.Parent.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly)
+                    .Where(x => this.IsSupportedPageFile(x.Name))
+                    .ToList();
+
+                foreach (var fi in supportedFiles)
+                {
+                    if (this.IsIndexPage(fi.Name) || this.IsListPartialPageFile(fi.Name))
+                    {
+                        return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
+                    }
+
+                    if (supportedFiles.Count == 1)
+                    {
+                        return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
+                    }
+                }
+
+                if (this.IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryInfo.Parent.FullName))
+                {
+                    return (SinglePage)allFileModels.FirstOrDefault(x => x.Level == 1);
+                }
+
+                directoryName = directoryInfo.Parent.FullName;
+            }
+        }
+
+        public List<SinglePage> GetAncestors(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
+        {
+            var ancestors = new List<SinglePage>();
 
             while (true)
             {
@@ -485,11 +567,9 @@ namespace Krompaco.RecordCollector.Content.IO
                 }
                 else
                 {
-                    break;
+                    return ancestors;
                 }
             }
-
-            return ancestors;
         }
 
         public string GetNestedSectionDirectory(string fullName)
@@ -502,7 +582,7 @@ namespace Krompaco.RecordCollector.Content.IO
             {
                 var directoryInfo = new DirectoryInfo(directoryName);
 
-                if (this.GetIndexPageFullName(directoryName) != null)
+                if (this.GetListPartialPageFileInfo(directoryName) != null)
                 {
                     nestedSection = directoryInfo.FullName;
                 }
@@ -516,14 +596,6 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             return nestedSection;
-        }
-
-        public bool IsSameDirectory(string path1, string path2)
-        {
-            path1 = path1.TrimEnd(Path.DirectorySeparatorChar);
-            path2 = path2.TrimEnd(Path.DirectorySeparatorChar);
-
-            return path1.Equals(path2, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

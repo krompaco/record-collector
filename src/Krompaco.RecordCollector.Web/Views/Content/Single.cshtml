@@ -3,6 +3,11 @@
 @model SinglePageViewModel
 
 <div>
+	@foreach (var a in Model.CurrentPage.Ancestors)
+	{
+		<div><a href="@a.RelativeUrl">@a.Title</a></div>
+	}
+
 	<h1>@Model.Title</h1>
 	@if (Model.CurrentPage.Date != DateTime.MinValue)
 	{

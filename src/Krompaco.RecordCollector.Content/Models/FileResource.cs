@@ -38,11 +38,11 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public bool IsPage { get; set; }
 
-        public IRecordCollectorFile Parent { get; set; }
+        public SinglePage Parent { get; set; }
 
         public List<SinglePage> Siblings { get; set; }
 
-        public List<IRecordCollectorFile> Ancestors { get; set; }
+        public List<SinglePage> Ancestors { get; set; }
 
         public List<IRecordCollectorFile> Descendants { get; set; }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
@@ -79,10 +80,33 @@ namespace Krompaco.RecordCollector.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Table(string path)
+        public IActionResult Report()
         {
             this.LogTime();
-            return this.Json(this.allFileModels);
+            var sb = new StringBuilder();
+
+            foreach (var fm in this.allFileModels)
+            {
+                sb.AppendLine($"{fm.Title} {fm.FullName}");
+                sb.AppendLine($"{fm.Level} {fm.GetType()} {fm.RelativeUrl}");
+                sb.AppendLine($"Ancestors: {fm.Ancestors.Count}");
+                sb.AppendLine($"Siblings: {fm.Siblings.Count}");
+                sb.AppendLine($"Descendants: {fm.Descendants.Count}");
+                sb.AppendLine($"ClosestSectionDirectory: {fm.ClosestSectionDirectory}");
+                sb.AppendLine($"Section: {fm.Section}");
+                sb.AppendLine($"Parent: {fm.Parent?.RelativeUrl.ToString() ?? "n/a"}");
+
+                if (fm is SinglePage)
+                {
+                    var sp = (SinglePage)fm;
+                    sb.AppendLine($"Content length: {sp.Content.Length}");
+                    sb.AppendLine($"Date: {sp.Date}");
+                }
+
+                sb.AppendLine();
+            }
+
+            return this.Content(sb.ToString(), "text/plain");
         }
 
         [HttpGet]
@@ -107,7 +131,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 if (this.rootCultures.Any())
                 {
-                    var rootIndexPage = this.fileService.GetIndexPageFullName(this.contentRoot);
+                    var rootIndexPage = this.fileService.GetListPartialPageFileInfo(this.contentRoot);
                     ListPage rootPage;
 
                     if (rootIndexPage != null)
@@ -144,7 +168,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     .OrderByDescending(x => x.Date)
                     .ToList();
 
-                var indexPage = this.fileService.GetIndexPageFullName(this.contentRoot);
+                var indexPage = this.fileService.GetListPartialPageFileInfo(this.contentRoot);
 
                 ListPage listPage;
 
@@ -200,7 +224,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         .OrderByDescending(x => x.Date)
                         .ToList();
 
-                    var indexPage = this.fileService.GetIndexPageFullName(cultureRootPath);
+                    var indexPage = this.fileService.GetListPartialPageFileInfo(cultureRootPath);
                     ListPage listPage;
 
                     if (indexPage != null)
@@ -258,7 +282,19 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
             if (foundPage == null)
             {
+                physicalPath = physicalPath.Replace(".md", Path.DirectorySeparatorChar + "index.md", StringComparison.OrdinalIgnoreCase);
+                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (foundPage == null)
+            {
                 physicalPath = physicalPath.Replace(".md", ".html", StringComparison.OrdinalIgnoreCase);
+                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (foundPage == null)
+            {
+                physicalPath = physicalPath.Replace(".html", Path.DirectorySeparatorChar + "index.html", StringComparison.OrdinalIgnoreCase);
                 foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
             }
 
