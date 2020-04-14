@@ -227,27 +227,55 @@ namespace Krompaco.RecordCollector.Content.IO
             if (rootIndexPage != null)
             {
                 rootPage = this.GetAsFileModel(rootIndexPage.FullName) as ListPage ?? new ListPage();
-                rootPage.Level = 1;
+                rootPage.Level = rootCultures.Any() ? 0 : 1;
                 var temp = allFiles.ToList();
                 temp.Remove(rootIndexPage.FullName);
                 allFiles = temp.ToArray();
+                rootPage.RelativeUrl = new Uri("/", UriKind.Relative);
             }
             else
             {
                 rootPage = new ListPage();
                 rootPage.Level = rootCultures.Any() ? 0 : 1;
                 rootPage.FullName = string.Empty;
+                rootPage.IsVirtual = true;
+                rootPage.RelativeUrl = new Uri("/", UriKind.Relative);
             }
 
             rootPage.DescendantPages = new List<SinglePage>();
             allFileModels.Add(rootPage);
 
-            var allButRoot = allFiles.Where(x =>
-                !x.Equals(
-                    rootPage.FullName,
-                    StringComparison.OrdinalIgnoreCase));
+            foreach (var culture in rootCultures)
+            {
+                var cultureRootPath = Path.Combine(this.contentRoot, culture.Name);
 
-            Parallel.ForEach(allButRoot, (currentFullName) =>
+                var cultureRootIndexPage = this.GetListPartialPageFileInfo(cultureRootPath);
+                ListPage cultureRootPage;
+
+                if (cultureRootIndexPage != null)
+                {
+                    cultureRootPage = this.GetAsFileModel(cultureRootIndexPage.FullName) as ListPage ?? new ListPage();
+                    cultureRootPage.Level = 1;
+                    var temp = allFiles.ToList();
+                    temp.Remove(cultureRootPage.FullName);
+                    allFiles = temp.ToArray();
+                }
+                else
+                {
+                    cultureRootPage = new ListPage();
+                    cultureRootPage.Level = 1;
+                    cultureRootPage.FullName = string.Empty;
+                    cultureRootPage.Title = culture.DisplayName;
+                    cultureRootPage.IsVirtual = true;
+                }
+
+                cultureRootPage.Culture = culture;
+                cultureRootPage.RelativeUrl = new Uri("/" + culture.Name + "/", UriKind.Relative);
+                cultureRootPage.DescendantPages = new List<SinglePage>();
+                allFileModels.Add(cultureRootPage);
+            }
+
+            Parallel.ForEach(allFiles, (currentFullName) =>
             {
                 if (this.IsListPartialPageFile(currentFullName))
                 {
@@ -438,7 +466,7 @@ namespace Krompaco.RecordCollector.Content.IO
                 "/",
                 RegexOptions.IgnoreCase);
 
-            if (rootRemoved.Equals("_index/", StringComparison.OrdinalIgnoreCase))
+            if (rootRemoved.EndsWith("_index/", StringComparison.OrdinalIgnoreCase))
             {
                 rootRemoved = Regex.Replace(
                     rootRemoved,
@@ -483,6 +511,16 @@ namespace Krompaco.RecordCollector.Content.IO
 
         public List<IRecordCollectorFile> GetDescendants(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
         {
+            if (string.IsNullOrWhiteSpace(current.FullName))
+            {
+                var rootWithCulturePath = this.GetRootCultures().Any() && current.Culture != null ? Path.Combine(this.contentRoot, current.Culture.Name) : this.contentRoot;
+
+                return allFileModels
+                    .Where(x =>
+                        x.FullName.StartsWith(rootWithCulturePath, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+            }
+
             var fileInfo = new FileInfo(current.FullName);
             var directoryName = fileInfo.DirectoryName;
 

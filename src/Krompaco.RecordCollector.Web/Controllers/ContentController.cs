@@ -99,7 +99,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 if (fm is SinglePage)
                 {
                     var sp = (SinglePage)fm;
-                    sb.AppendLine($"Content length: {sp.Content.Length}");
+                    sb.AppendLine($"Content length: {sp.Content?.Length ?? 0}");
                     sb.AppendLine($"Date: {sp.Date}");
                 }
 
@@ -116,6 +116,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var culture = rqf.RequestCulture.Culture;
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
 
+            // Sample navigation
             this.pagesForNavigation.AddRange(this.allFileModels
                 .Where(x => x.Section == "page")
                 .Select(x => x as SinglePage)
@@ -129,24 +130,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
             {
                 this.logger.LogInformation("Path is null so must mean root/startpage.");
 
+                var rootPage = this.allFileModels
+                                   .Where(x => x.RelativeUrl.ToString() == "/")
+                                   .Select(x => x as ListPage)
+                                   .FirstOrDefault() ?? new ListPage();
+
                 if (this.rootCultures.Any())
                 {
-                    var rootIndexPage = this.fileService.GetListPartialPageFileInfo(this.contentRoot);
-                    ListPage rootPage;
-
-                    if (rootIndexPage != null)
-                    {
-                        rootPage = this.allFileModels
-                                       .Where(x => x.FullName.Equals(rootIndexPage.FullName, StringComparison.OrdinalIgnoreCase)
-                                                   && x is ListPage)
-                                       .Select(x => x as ListPage)
-                                       .FirstOrDefault() ?? new ListPage();
-                    }
-                    else
-                    {
-                        rootPage = new ListPage();
-                    }
-
                     var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures)
                         .WithMarkdownPipeline()
                         .WithMeta(this.Request)
@@ -160,40 +150,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     return this.View("List", rootViewModel);
                 }
 
-                var list = this.allFileModels
-                    .OfType<SinglePage>()
-                    .Where(x => x?.Title != null
-                                && !this.fileService.IsListPartialPageFile(x.FullName)
-                                && !x.Section.Equals("page", StringComparison.OrdinalIgnoreCase))
-                    .OrderByDescending(x => x.Date)
-                    .ToList();
-
-                var indexPage = this.fileService.GetListPartialPageFileInfo(this.contentRoot);
-
-                ListPage listPage;
-
-                if (indexPage != null)
-                {
-                    listPage = this.allFileModels
-                                   .Where(x => x.FullName.Equals(indexPage.FullName, StringComparison.OrdinalIgnoreCase)
-                                               && x is ListPage)
-                                   .Select(x => x as ListPage)
-                                   .FirstOrDefault() ?? new ListPage();
-                }
-                else
-                {
-                    listPage = new ListPage();
-                }
-
-                listPage.DescendantPages = list;
-
-                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures)
+                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures)
                     .WithMarkdownPipeline()
                     .WithMeta(this.Request)
                     .WithNavigationItems(this.Request, this.pagesForNavigation)
                     .GetViewModel();
 
-                listViewModel.Title = listPage.Title ?? "Posts";
+                listViewModel.Title = rootPage.Title ?? "Posts";
 
                 this.LogTime();
                 return this.View("List", listViewModel);
@@ -213,34 +176,11 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 {
                     var cultureInfo = new CultureInfo(firstDirectoryInPath);
                     this.logger.LogInformation($"URL part {firstDirectoryInPath} was found as {cultureInfo.EnglishName} culture.");
-                    var cultureRootPath = Path.Combine(this.contentRoot, firstDirectoryInPath);
 
-                    var list = this.allFileModels
-                        .Where(x => x.GetType() == typeof(SinglePage)
-                                    && x.FullName.StartsWith(cultureRootPath, StringComparison.OrdinalIgnoreCase)
-                                    && !x.Section.Equals("page", StringComparison.OrdinalIgnoreCase))
-                        .Select(x => x as SinglePage)
-                        .Where(x => !x.Headless)
-                        .OrderByDescending(x => x.Date)
-                        .ToList();
-
-                    var indexPage = this.fileService.GetListPartialPageFileInfo(cultureRootPath);
-                    ListPage listPage;
-
-                    if (indexPage != null)
-                    {
-                        listPage = this.allFileModels
-                                       .Where(x => x.FullName.Equals(indexPage.FullName, StringComparison.OrdinalIgnoreCase)
-                                                   && x is ListPage)
+                    var listPage = this.allFileModels
+                                       .Where(x => x.RelativeUrl.ToString() == "/" + cultureInfo.Name + "/")
                                        .Select(x => x as ListPage)
                                        .FirstOrDefault() ?? new ListPage();
-                    }
-                    else
-                    {
-                        listPage = new ListPage();
-                    }
-
-                    listPage.DescendantPages = list;
 
                     var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures)
                         .WithMarkdownPipeline()
@@ -248,7 +188,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         .WithNavigationItems(this.Request, this.pagesForNavigation)
                         .GetViewModel();
 
-                    listViewModel.Title = cultureInfo.NativeName;
+                    listViewModel.Title = listPage.Title ?? cultureInfo.NativeName;
 
                     this.LogTime();
                     return this.View("List", listViewModel);
@@ -278,23 +218,41 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
             // Post
             physicalPath = physicalPath.TrimEnd(Path.DirectorySeparatorChar) + ".md";
+            this.logger.LogInformation($"Lookup by {physicalPath}");
             var foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
 
             if (foundPage == null)
             {
-                physicalPath = physicalPath.Replace(".md", Path.DirectorySeparatorChar + "index.md", StringComparison.OrdinalIgnoreCase);
-                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
-            }
-
-            if (foundPage == null)
-            {
                 physicalPath = physicalPath.Replace(".md", ".html", StringComparison.OrdinalIgnoreCase);
+                this.logger.LogInformation($"Lookup by {physicalPath}");
                 foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
             }
 
             if (foundPage == null)
             {
                 physicalPath = physicalPath.Replace(".html", Path.DirectorySeparatorChar + "index.html", StringComparison.OrdinalIgnoreCase);
+                this.logger.LogInformation($"Lookup by {physicalPath}");
+                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (foundPage == null)
+            {
+                physicalPath = physicalPath.Replace(".html", ".md", StringComparison.OrdinalIgnoreCase);
+                this.logger.LogInformation($"Lookup by {physicalPath}");
+                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (foundPage == null)
+            {
+                physicalPath = physicalPath.Replace("index.md", "_index.md", StringComparison.OrdinalIgnoreCase);
+                this.logger.LogInformation($"Lookup by {physicalPath}");
+                foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (foundPage == null)
+            {
+                physicalPath = physicalPath.Replace(".md", ".html", StringComparison.OrdinalIgnoreCase);
+                this.logger.LogInformation($"Lookup by {physicalPath}");
                 foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
             }
 

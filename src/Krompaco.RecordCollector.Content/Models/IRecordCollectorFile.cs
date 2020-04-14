@@ -8,6 +8,8 @@ namespace Krompaco.RecordCollector.Content.Models
     {
         string FullName { get; set; }
 
+        bool IsVirtual { get; set; }
+
         string Title { get; set; }
 
         string Section { get; set; }

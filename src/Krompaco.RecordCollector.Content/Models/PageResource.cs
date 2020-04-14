@@ -14,6 +14,8 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string FullName { get; set; }
 
+        public bool IsVirtual { get; set; }
+
         public string Section { get; set; }
 
         public string ClosestSectionDirectory { get; set; }

@@ -51,5 +51,7 @@ namespace Krompaco.RecordCollector.Content.Models
         public Dictionary<string, string> Params { get; set; }
 
         public string FullName { get; set; }
+
+        public bool IsVirtual { get; set; }
     }
 }

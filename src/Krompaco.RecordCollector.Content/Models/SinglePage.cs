@@ -107,5 +107,7 @@ namespace Krompaco.RecordCollector.Content.Models
         public CascadeVariables Cascade { get; set; }
 
         public string FullName { get; set; }
+
+        public bool IsVirtual { get; set; }
     }
 }
