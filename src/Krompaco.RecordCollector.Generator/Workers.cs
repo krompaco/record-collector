@@ -29,18 +29,17 @@ namespace Krompaco.RecordCollector.Generator
         [Fact]
         public async Task GenerateStaticSite()
         {
-            var outputPath = $"c:\\DevStuff\\temp\\rc-content\\{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+            var outputPath = $"c:\\DevStuff\\temp\\rc-content\\{DateTime.Now:yyyyMMddHHmmss}";
             Directory.CreateDirectory(outputPath);
 
             var client = this.factory.CreateClient();
-
             var allFileModels = this.fileService.GetAllFileModels();
-
             var allRequestTasks = new List<Task<HttpResponseMessage>>();
 
             foreach (var file in allFileModels.Where(x => x is SinglePage))
             {
                 var task = client.GetAsync(file.RelativeUrl);
+                task.Start();
                 allRequestTasks.Add(task);
             }
 
@@ -50,11 +49,16 @@ namespace Krompaco.RecordCollector.Generator
             foreach (var response in responses)
             {
                 i++;
-                response.EnsureSuccessStatusCode(); // Status Code 200-299
+                response.EnsureSuccessStatusCode();
 
-                using var output = File.Create(Path.Combine(outputPath, i + ".html"));
-                using var input = await response.Content.ReadAsStreamAsync().ConfigureAwait(true);
+                var file = allFileModels.Single(x => x.RelativeUrl.ToString() == response.RequestMessage.RequestUri.AbsolutePath);
+                Console.WriteLine($"Found {file.RelativeUrl}");
+
+                await using var output = File.Create(Path.Combine(outputPath, i + ".html"));
+                await using var input = await response.Content.ReadAsStreamAsync().ConfigureAwait(true);
                 input.CopyTo(output);
+                input.Dispose();
+                output.Dispose();
             }
         }
     }
