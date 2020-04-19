@@ -64,6 +64,11 @@ namespace Krompaco.RecordCollector.Web
                     defaults: new { controller = "Content", action = "Report" });
 
                 endpoints.MapControllerRoute(
+                    name: "rc-content-properties",
+                    pattern: "rc-content-properties",
+                    defaults: new { controller = "Content", action = "Properties" });
+
+                endpoints.MapControllerRoute(
                     name: "files",
                     pattern: "{**path}",
                     defaults: new { controller = "Content", action = "Files" });

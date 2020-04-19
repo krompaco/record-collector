@@ -28,6 +28,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly ILogger<ContentController> logger;
 
+        private readonly IConfiguration config;
+
         private readonly FileService fileService;
 
         private readonly ContentCultureService contentCultureService;
@@ -47,11 +49,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
         public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache)
         {
             this.logger = logger;
+            this.config = config;
 
             this.stopwatch = new Stopwatch();
             this.stopwatch.Start();
 
-            this.contentRoot = config.GetAppSettingsContentRootPath();
+            this.contentRoot = this.config.GetAppSettingsContentRootPath();
             this.contentCultureService = new ContentCultureService();
             this.fileService = new FileService(this.contentRoot, this.contentCultureService, logger);
             this.rootCultures = this.fileService.GetRootCultures();
@@ -107,6 +110,20 @@ namespace Krompaco.RecordCollector.Web.Controllers
             }
 
             return this.Content(sb.ToString(), "text/plain");
+        }
+
+        [HttpGet]
+        public IActionResult Properties()
+        {
+            this.LogTime();
+
+            var model = new ContentProperties
+            {
+                ContentRootPath = this.contentRoot,
+                StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath()
+            };
+
+            return this.Json(model);
         }
 
         [HttpGet]

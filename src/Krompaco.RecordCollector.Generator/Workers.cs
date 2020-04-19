@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Krompaco.RecordCollector.Content.IO;
@@ -16,23 +17,33 @@ namespace Krompaco.RecordCollector.Generator
 {
     public class Workers : IClassFixture<WebApplicationFactory<Web.Startup>>
     {
-        private readonly WebApplicationFactory<Web.Startup> factory;
+        private readonly HttpClient client;
 
-        private readonly FileService fileService;
+        private FileService fileService;
 
         public Workers(WebApplicationFactory<Web.Startup> factory)
         {
-            this.factory = factory;
-            this.fileService = new FileService("C:\\DevStuff\\github\\docsy-example\\content", new ContentCultureService(), NullLogger.Instance);
+            if (factory == null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            this.client = factory.CreateClient();
         }
 
         [Fact]
         public async Task GenerateStaticSite()
         {
-            var outputPath = $"c:\\DevStuff\\temp\\rc-content\\{DateTime.Now:yyyyMMddHHmmss}";
+            var contentProperties = await this.GetContentProperties().ConfigureAwait(true);
+
+            this.fileService = new FileService(
+                contentProperties.ContentRootPath,
+                new ContentCultureService(),
+                NullLogger.Instance);
+
+            var outputPath = contentProperties.StaticSiteRootPath;
             Directory.CreateDirectory(outputPath);
 
-            var client = this.factory.CreateClient();
             var allFileModels = this.fileService.GetAllFileModels();
             var allRequestTasks = new List<Task<HttpResponseMessage>>();
 
@@ -59,6 +70,27 @@ namespace Krompaco.RecordCollector.Generator
                 input.Dispose();
                 output.Dispose();
             }
+        }
+
+        private async Task<ContentProperties> GetContentProperties()
+        {
+            var contentPropertiesResponse = await this.client
+                .GetAsync("/rc-content-properties/")
+                .ConfigureAwait(true);
+
+            var contentPropertiesJson = await contentPropertiesResponse
+                .Content
+                .ReadAsStringAsync()
+                .ConfigureAwait(true);
+
+            var contentProperties = JsonSerializer.Deserialize<ContentProperties>(
+                contentPropertiesJson,
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                });
+
+            return contentProperties;
         }
     }
 }

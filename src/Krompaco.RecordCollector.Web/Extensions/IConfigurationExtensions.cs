@@ -6,8 +6,14 @@ namespace Krompaco.RecordCollector.Web.Extensions
     {
         public static string GetAppSettingsContentRootPath(this IConfiguration config)
         {
-            var contentRootPath = config.GetValue<string>("AppSettings:ContentRootPath");
-            return contentRootPath;
+            var path = config.GetValue<string>("AppSettings:ContentRootPath");
+            return path;
+        }
+
+        public static string GetAppSettingsStaticSiteRootPath(this IConfiguration config)
+        {
+            var path = config.GetValue<string>("AppSettings:StaticSiteRootPath");
+            return path;
         }
     }
 }
