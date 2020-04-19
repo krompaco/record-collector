@@ -39,7 +39,6 @@ namespace Krompaco.RecordCollector.Generator
             foreach (var file in allFileModels.Where(x => x is SinglePage))
             {
                 var task = client.GetAsync(file.RelativeUrl);
-                task.Start();
                 allRequestTasks.Add(task);
             }
 
