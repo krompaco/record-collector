@@ -11,6 +11,7 @@ using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.ModelBuilders;
 using Krompaco.RecordCollector.Web.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
@@ -27,6 +28,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
         public static readonly object AllFilesLock = new object();
 
         private readonly ILogger<ContentController> logger;
+
+        private readonly IWebHostEnvironment env;
 
         private readonly IConfiguration config;
 
@@ -46,10 +49,11 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly Stopwatch stopwatch;
 
-        public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache)
+        public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env)
         {
             this.logger = logger;
             this.config = config;
+            this.env = env;
 
             this.stopwatch = new Stopwatch();
             this.stopwatch.Start();
@@ -120,7 +124,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var model = new ContentProperties
             {
                 ContentRootPath = this.contentRoot,
-                StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath()
+                StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath(),
+                EnvironmentProjectWebRootPath = this.env.WebRootPath,
             };
 
             return this.Json(model);

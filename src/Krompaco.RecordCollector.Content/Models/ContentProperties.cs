@@ -9,5 +9,7 @@ namespace Krompaco.RecordCollector.Content.Models
         public string ContentRootPath { get; set; }
 
         public string StaticSiteRootPath { get; set; }
+
+        public string EnvironmentProjectWebRootPath { get; set; }
     }
 }
