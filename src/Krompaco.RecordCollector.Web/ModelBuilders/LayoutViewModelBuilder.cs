@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Models;
 using Markdig;

@@ -33,8 +33,6 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly IConfiguration config;
 
-        private readonly FileService fileService;
-
         private readonly ContentCultureService contentCultureService;
 
         private readonly List<CultureInfo> rootCultures;
@@ -60,9 +58,9 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
             this.contentRoot = this.config.GetAppSettingsContentRootPath();
             this.contentCultureService = new ContentCultureService();
-            this.fileService = new FileService(this.contentRoot, this.config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, logger);
-            this.rootCultures = this.fileService.GetRootCultures();
-            this.allFiles = this.fileService.GetAllFileFullNames();
+            var fileService = new FileService(this.contentRoot, this.config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, logger);
+            this.rootCultures = fileService.GetRootCultures();
+            this.allFiles = fileService.GetAllFileFullNames();
 
             if (!memoryCache.TryGetValue(AllFilesCacheKey, out List<IRecordCollectorFile> allFileModelsFromCache))
             {
@@ -70,7 +68,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 {
                     if (!memoryCache.TryGetValue(AllFilesCacheKey, out allFileModelsFromCache))
                     {
-                        allFileModelsFromCache = this.fileService.GetAllFileModels();
+                        allFileModelsFromCache = fileService.GetAllFileModels();
 
                         var cacheEntryOptions = new MemoryCacheEntryOptions()
                             .SetAbsoluteExpiration(TimeSpan.FromDays(1000))
@@ -139,14 +137,19 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var culture = rqf.RequestCulture.Culture;
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
 
-            // Sample navigation
-            this.pagesForNavigation.AddRange(this.allFileModels
-                .Where(x => x.Section == "page")
-                .Select(x => x as SinglePage)
-                .Where(x => x?.Title != null)
-                .OrderByDescending(x => x.Weight)
-                .ThenBy(x => x.Title)
-                .ToList());
+            // Main navigation
+            var mainNavigationSection = this.config.GetAppSettingsMainNavigationSection();
+
+            if (mainNavigationSection != null)
+            {
+                this.pagesForNavigation.AddRange(this.allFileModels
+                    .Where(x => x.Section == mainNavigationSection)
+                    .Select(x => x as SinglePage)
+                    .Where(x => x?.Title != null)
+                    .OrderByDescending(x => x.Weight)
+                    .ThenBy(x => x.Title)
+                    .ToList());
+            }
 
             // Start page
             if (path == null)

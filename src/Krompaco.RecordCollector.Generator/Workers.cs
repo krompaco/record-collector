@@ -12,7 +12,6 @@ using Krompaco.RecordCollector.Content.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
-using Xunit.Sdk;
 
 namespace Krompaco.RecordCollector.Generator
 {
