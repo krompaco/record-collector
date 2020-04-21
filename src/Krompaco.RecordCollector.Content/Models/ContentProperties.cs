@@ -10,6 +10,8 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string StaticSiteRootPath { get; set; }
 
+        public string[] SectionsToExcludeFromLists { get; set; }
+
         public string EnvironmentProjectWebRootPath { get; set; }
     }
 }

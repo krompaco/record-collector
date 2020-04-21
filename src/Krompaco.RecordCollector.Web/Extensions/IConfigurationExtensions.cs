@@ -15,5 +15,11 @@ namespace Krompaco.RecordCollector.Web.Extensions
             var path = config.GetValue<string>("AppSettings:StaticSiteRootPath");
             return path;
         }
+
+        public static string[] GetAppSettingsSectionsToExcludeFromLists(this IConfiguration config)
+        {
+            var sections = config?.GetSection("AppSettings:SectionsToExcludeFromLists").Get<string[]>();
+            return sections;
+        }
     }
 }

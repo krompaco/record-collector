@@ -23,6 +23,8 @@ namespace Krompaco.RecordCollector.Content.IO
 
         private readonly ILogger logger;
 
+        private readonly string[] sectionsToExcludeFromLists;
+
         private readonly object allFileModelsLock = new object();
 
         private string[] allFilesField = null;
@@ -33,7 +35,7 @@ namespace Krompaco.RecordCollector.Content.IO
 
         private List<string> sectionsField = null;
 
-        public FileService(string contentRoot, ContentCultureService contentCultureService, ILogger logger)
+        public FileService(string contentRoot, string[] sectionsToExcludeFromLists, ContentCultureService contentCultureService, ILogger logger)
         {
             if (string.IsNullOrWhiteSpace(contentRoot))
             {
@@ -49,6 +51,7 @@ namespace Krompaco.RecordCollector.Content.IO
             this.contentRootDirectoryInfo = new DirectoryInfo(this.contentRoot);
             this.contentCultureService = contentCultureService;
             this.logger = logger;
+            this.sectionsToExcludeFromLists = sectionsToExcludeFromLists;
         }
 
         public bool IsSameDirectory(string path1, string path2)
@@ -528,7 +531,9 @@ namespace Krompaco.RecordCollector.Content.IO
                 .Where(x =>
                     ((this.IsListPartialPageFile(current.FullName)
                         && !x.FullName.Equals(current.FullName, StringComparison.OrdinalIgnoreCase)
-                        && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase))
+                        && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
+                        && this.sectionsToExcludeFromLists != null
+                        && !this.sectionsToExcludeFromLists.Any(y => y.Equals(x.Section, StringComparison.OrdinalIgnoreCase)))
                      || (!this.IsListPartialPageFile(current.FullName)
                           && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
                           && !this.IsSameDirectory(new FileInfo(x.FullName).DirectoryName, directoryName)))

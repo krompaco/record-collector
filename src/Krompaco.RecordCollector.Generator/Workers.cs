@@ -38,6 +38,7 @@ namespace Krompaco.RecordCollector.Generator
 
             var fileService = new FileService(
                 contentProperties.ContentRootPath,
+                contentProperties.SectionsToExcludeFromLists,
                 new ContentCultureService(),
                 NullLogger.Instance);
 

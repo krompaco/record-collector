@@ -60,7 +60,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
             this.contentRoot = this.config.GetAppSettingsContentRootPath();
             this.contentCultureService = new ContentCultureService();
-            this.fileService = new FileService(this.contentRoot, this.contentCultureService, logger);
+            this.fileService = new FileService(this.contentRoot, this.config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, logger);
             this.rootCultures = this.fileService.GetRootCultures();
             this.allFiles = this.fileService.GetAllFileFullNames();
 
@@ -125,6 +125,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             {
                 ContentRootPath = this.contentRoot,
                 StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath(),
+                SectionsToExcludeFromLists = this.config.GetAppSettingsSectionsToExcludeFromLists(),
                 EnvironmentProjectWebRootPath = this.env.WebRootPath,
             };
 
