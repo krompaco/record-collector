@@ -112,7 +112,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 sb.AppendLine();
             }
 
-            return this.Content(sb.ToString(), "text/plain");
+            return this.Content(sb.ToString(), "text/plain", Encoding.UTF8);
         }
 
         [HttpGet]
@@ -138,21 +138,41 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var culture = rqf.RequestCulture.Culture;
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
 
-            // Main navigation
-            var mainNavigationSection = this.config.GetAppSettingsMainNavigationSection();
-
-            if (mainNavigationSection != null)
-            {
-                this.pagesForNavigation.AddRange(this.allFileModels
-                    .Where(x => x.Section == mainNavigationSection)
-                    .Select(x => x as SinglePage)
-                    .Where(x => x?.Title != null)
-                    .OrderByDescending(x => x.Weight)
-                    .ThenBy(x => x.Title)
-                    .ToList());
-            }
-
+            // Fix path for pagination
             path = RemovePaginationFromPath(path);
+
+            // Main navigation
+            var mainNavigationSections = this.config.GetAppSettingsMainNavigationSections();
+
+            if (mainNavigationSections != null && mainNavigationSections.Length > 0)
+            {
+                if (this.rootCultures.Any() && !string.IsNullOrEmpty(path))
+                {
+                    this.pagesForNavigation.AddRange(this.allFileModels
+                        .Where(x =>
+                            mainNavigationSections.Contains(x.Section)
+                            && x.RelativeUrl
+                                .ToString()
+                                .TrimStart('/')
+                                .StartsWith($"{culture.Name}/", StringComparison.OrdinalIgnoreCase))
+                        .Select(x => x as SinglePage)
+                        .Where(x => x?.Title != null)
+                        .OrderByDescending(x => x.Weight)
+                        .ThenBy(x => x.Title)
+                        .ToList());
+                }
+                else if (!this.rootCultures.Any())
+                {
+                    this.pagesForNavigation.AddRange(this.allFileModels
+                        .Where(x =>
+                            mainNavigationSections.Contains(x.Section))
+                        .Select(x => x as SinglePage)
+                        .Where(x => x?.Title != null)
+                        .OrderByDescending(x => x.Weight)
+                        .ThenBy(x => x.Title)
+                        .ToList());
+                }
+            }
 
             // Start page
             if (string.IsNullOrEmpty(path))

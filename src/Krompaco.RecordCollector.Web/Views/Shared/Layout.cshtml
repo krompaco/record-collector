@@ -9,18 +9,9 @@
 </head>
 <body>
 	<div role="navigation">
-		@if (Model.RootCultures.Count > 0)
+		@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/")
 		{
 			<ul>
-				@if (Model.CurrentPath == "/")
-				{
-					<li>Home</li>
-				}
-				else
-				{
-					<li><a role="menuitem" href="/">Home</a></li>
-				}
-
 				@foreach (var c in Model.RootCultures)
 				{
 					<li>
@@ -36,16 +27,17 @@
 				}
 			</ul>
 		}
-		else
+
+		@if (Model.NavigationItems.Count > 0)
 		{
 			<ul>
-				@if (Model.CurrentPath == "/")
+				@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
 				{
 					<li>Home</li>
 				}
 				else
 				{
-					<li><a role="menuitem" href="/">Home</a></li>
+					<li><a role="menuitem" href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">Home</a></li>
 				}
 
 				@foreach (var ni in Model.NavigationItems)

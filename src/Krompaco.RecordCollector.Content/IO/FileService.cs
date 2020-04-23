@@ -162,7 +162,7 @@ namespace Krompaco.RecordCollector.Content.IO
             return this.rootCulturesField;
         }
 
-        public List<string> GetSections(CultureInfo culture)
+        public List<string> GetSections()
         {
             if (this.sectionsField != null)
             {
@@ -174,12 +174,10 @@ namespace Krompaco.RecordCollector.Content.IO
             foreach (var info in this.GetRootDirectories())
             {
                 if (this.contentCultureService.DoesCultureExist(info.Name)
-                    && culture != null
-                    && culture.Name.Equals(info.Name, StringComparison.OrdinalIgnoreCase)
                     && this.GetRootCultures().Any())
                 {
                     var directories = info.EnumerateDirectories("*", SearchOption.TopDirectoryOnly);
-                    return directories.Select(x => x.Name).ToList();
+                    sections.AddRange(directories.Select(x => x.Name));
                 }
 
                 if (!this.contentCultureService.DoesCultureExist(info.Name))
@@ -199,7 +197,7 @@ namespace Krompaco.RecordCollector.Content.IO
                 throw new ArgumentNullException(nameof(fullName));
             }
 
-            var allSections = this.GetSections(null);
+            var allSections = this.GetSections();
             var name = fullName.Replace(this.contentRoot, string.Empty);
             var parts = name.Split(Path.DirectorySeparatorChar);
 

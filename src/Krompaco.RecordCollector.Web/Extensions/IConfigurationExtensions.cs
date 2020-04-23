@@ -16,10 +16,10 @@ namespace Krompaco.RecordCollector.Web.Extensions
             return path;
         }
 
-        public static string GetAppSettingsMainNavigationSection(this IConfiguration config)
+        public static string[] GetAppSettingsMainNavigationSections(this IConfiguration config)
         {
-            var path = config.GetValue<string>("AppSettings:MainNavigationSection");
-            return path;
+            var sections = config?.GetSection("AppSettings:MainNavigationSections").Get<string[]>();
+            return sections;
         }
 
         public static string[] GetAppSettingsSectionsToExcludeFromLists(this IConfiguration config)
