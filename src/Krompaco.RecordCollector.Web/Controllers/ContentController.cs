@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
@@ -151,10 +152,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     .ToList());
             }
 
+            path = RemovePaginationFromPath(path);
+
             // Start page
-            if (path == null)
+            if (string.IsNullOrEmpty(path))
             {
-                this.logger.LogInformation("Path is null so must mean root/startpage.");
+                this.logger.LogInformation("Path is null or empty so must mean root/startpage.");
 
                 var rootPage = this.allFileModels
                                    .Where(x => x.RelativeUrl.ToString() == "/")
@@ -163,10 +166,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 if (this.rootCultures.Any())
                 {
-                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures)
+                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request)
                         .WithMarkdownPipeline()
-                        .WithMeta(this.Request)
-                        .WithNavigationItems(this.Request, this.pagesForNavigation)
+                        .WithMeta()
+                        .WithPaginationItems(
+                                this.config.GetAppSettingsPaginationPageCount(),
+                                this.config.GetAppSettingsPaginationPageSize())
+                        .WithNavigationItems(this.pagesForNavigation)
                         .GetViewModel();
 
                     rootViewModel.Title = rootPage.Title ?? "Select Language";
@@ -176,10 +182,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     return this.View("List", rootViewModel);
                 }
 
-                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures)
+                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request)
                     .WithMarkdownPipeline()
-                    .WithMeta(this.Request)
-                    .WithNavigationItems(this.Request, this.pagesForNavigation)
+                    .WithMeta()
+                    .WithPaginationItems(
+                        this.config.GetAppSettingsPaginationPageCount(),
+                        this.config.GetAppSettingsPaginationPageSize())
+                    .WithNavigationItems(this.pagesForNavigation)
                     .GetViewModel();
 
                 listViewModel.Title = rootPage.Title ?? "Posts";
@@ -208,10 +217,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                        .Select(x => x as ListPage)
                                        .FirstOrDefault() ?? new ListPage();
 
-                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures)
+                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures, this.Request)
                         .WithMarkdownPipeline()
-                        .WithMeta(this.Request)
-                        .WithNavigationItems(this.Request, this.pagesForNavigation)
+                        .WithMeta()
+                        .WithPaginationItems(
+                            this.config.GetAppSettingsPaginationPageCount(),
+                            this.config.GetAppSettingsPaginationPageSize())
+                        .WithNavigationItems(this.pagesForNavigation)
                         .GetViewModel();
 
                     listViewModel.Title = listPage.Title ?? cultureInfo.NativeName;
@@ -294,14 +306,27 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.NotFound();
             }
 
-            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures)
+            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures, this.Request)
                 .WithMarkdownPipeline()
-                .WithMeta(this.Request)
-                .WithNavigationItems(this.Request, this.pagesForNavigation)
+                .WithMeta()
+                .WithNavigationItems(this.pagesForNavigation)
                 .GetViewModel();
 
             this.LogTime();
             return this.View("Single", singleViewModel);
+        }
+
+        private static string RemovePaginationFromPath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return string.Empty;
+            }
+
+            path = path.TrimStart('/');
+            path = "/" + path;
+
+            return Regex.Replace(path, "/page-\\d+/$", string.Empty, RegexOptions.IgnoreCase);
         }
 
         private void LogTime()

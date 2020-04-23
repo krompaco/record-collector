@@ -18,7 +18,7 @@
 	{
 		<h2>Posts</h2>
 		<ul>
-			@foreach (var sp in Model.CurrentPage.DescendantPages)
+			@foreach (var sp in Model.PagedDescendantPages)
 			{
 				<li>
 					<h3>
@@ -54,5 +54,7 @@
 				</li>
 			}
 		</ul>
+
+		@Html.Partial("Pagination", Model.PaginationItems)
 	}
 </div>

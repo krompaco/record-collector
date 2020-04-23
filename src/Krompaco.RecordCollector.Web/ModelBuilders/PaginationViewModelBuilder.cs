@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using Krompaco.RecordCollector.Web.Models;
 
@@ -7,7 +8,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 {
     public class PaginationViewModelBuilder
     {
-        private readonly Uri currentUrl;
+        private readonly string currentPath;
 
         private readonly int totalCount;
 
@@ -15,21 +16,20 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         private int pageSize;
 
-        private int selectedPage;
-
         public PaginationViewModelBuilder(
-            Uri currentUrl,
+            string currentPath,
             int totalCount,
             int pageCount,
-            int pageSize,
-            int selectedPage)
+            int pageSize)
         {
-            this.currentUrl = currentUrl;
+            this.currentPath = currentPath;
             this.totalCount = totalCount;
             this.pageCount = pageCount;
             this.pageSize = pageSize;
-            this.selectedPage = selectedPage;
+            this.SelectedPage = this.GetCurrentPageNumber();
         }
+
+        public int SelectedPage { get; set; }
 
         public IEnumerable<PaginationItemViewModel> GetPaginationItems()
         {
@@ -50,14 +50,14 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
             var totalPages = (int)Math.Ceiling((double)this.totalCount / (double)this.pageSize);
 
-            if (this.selectedPage < 1)
+            if (this.SelectedPage < 1)
             {
-                this.selectedPage = 1;
+                this.SelectedPage = 1;
             }
 
-            if (this.selectedPage > totalPages)
+            if (this.SelectedPage > totalPages)
             {
-                this.selectedPage = totalPages;
+                this.SelectedPage = totalPages;
             }
 
             var start = 1;
@@ -65,13 +65,13 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
             if (totalPages > this.pageCount)
             {
-                if (this.selectedPage > (this.pageCount / 2))
+                if (this.SelectedPage > (this.pageCount / 2))
                 {
-                    start = this.selectedPage - (this.pageCount / 2);
+                    start = this.SelectedPage - (this.pageCount / 2);
                     end = start + this.pageCount - 1;
                 }
 
-                if (this.selectedPage > totalPages - (this.pageCount / 2))
+                if (this.SelectedPage > totalPages - (this.pageCount / 2))
                 {
                     end = totalPages;
                     start = end - this.pageCount + 1;
@@ -83,16 +83,16 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
                 end = totalPages;
             }
 
-            if (this.selectedPage > start)
+            if (this.SelectedPage > start)
             {
                 yield return new PaginationItemViewModel
                 {
-                    Page = this.selectedPage - 1,
-                    RelativeUrl = this.GetUrl(this.selectedPage - 1),
+                    Page = this.SelectedPage - 1,
+                    RelativeUrl = this.GetUrl(this.SelectedPage - 1),
                     IsPrevious = true,
                 };
 
-                yield return this.Separator(this.selectedPage);
+                yield return this.Separator(this.SelectedPage);
 
                 if (start > 1)
                 {
@@ -103,19 +103,19 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
                         IsFirst = true,
                     };
 
-                    yield return this.Separator(this.selectedPage);
+                    yield return this.Separator(this.SelectedPage);
                 }
 
                 if (start > 2)
                 {
                     yield return new PaginationItemViewModel
                     {
-                        Page = this.selectedPage - 1,
-                        RelativeUrl = this.GetUrl(this.selectedPage - 1),
+                        Page = this.SelectedPage - 1,
+                        RelativeUrl = this.GetUrl(this.SelectedPage - 1),
                         IsEllipsis = true,
                     };
 
-                    yield return this.Separator(this.selectedPage);
+                    yield return this.Separator(this.SelectedPage);
                 }
             }
 
@@ -125,35 +125,35 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
                 {
                     Page = i,
                     RelativeUrl = this.GetUrl(i),
-                    IsSelected = i == this.selectedPage,
+                    IsSelected = i == this.SelectedPage,
                 };
 
                 if (i < end)
                 {
-                    yield return this.Separator(this.selectedPage);
+                    yield return this.Separator(this.SelectedPage);
                 }
             }
 
-            if (this.selectedPage >= totalPages)
+            if (this.SelectedPage >= totalPages)
             {
                 yield break;
             }
 
-            if (end < (totalPages - 1))
+            if (end < totalPages - 1)
             {
-                yield return this.Separator(this.selectedPage);
+                yield return this.Separator(this.SelectedPage);
 
                 yield return new PaginationItemViewModel
                 {
-                    Page = this.selectedPage + 1,
-                    RelativeUrl = this.GetUrl(this.selectedPage + 1),
+                    Page = this.SelectedPage + 1,
+                    RelativeUrl = this.GetUrl(this.SelectedPage + 1),
                     IsEllipsis = true,
                 };
             }
 
             if (end < totalPages)
             {
-                yield return this.Separator(this.selectedPage);
+                yield return this.Separator(this.SelectedPage);
 
                 yield return new PaginationItemViewModel
                 {
@@ -163,12 +163,12 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
                 };
             }
 
-            yield return this.Separator(this.selectedPage);
+            yield return this.Separator(this.SelectedPage);
 
             yield return new PaginationItemViewModel
             {
-                Page = this.selectedPage + 1,
-                RelativeUrl = this.GetUrl(this.selectedPage + 1),
+                Page = this.SelectedPage + 1,
+                RelativeUrl = this.GetUrl(this.SelectedPage + 1),
                 IsNext = true,
             };
         }
@@ -185,11 +185,24 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         private Uri GetUrl(int page)
         {
-            var current = this.currentUrl.ToString();
-            current = Regex.Replace(current, "/page-\\d+/", "/", RegexOptions.IgnoreCase);
+            var current = this.currentPath;
+            current = Regex.Replace(current, "/page-\\d+/$", "/", RegexOptions.IgnoreCase);
             current = current.TrimEnd('/');
-            var newUrl = $"{current}/page-{page}/";
+            var newUrl = page == 1 ? $"{current}/" : $"{current}/page-{page}/";
             return new Uri(newUrl, UriKind.Relative);
+        }
+
+        private int GetCurrentPageNumber()
+        {
+            var match = Regex.Match(this.currentPath, "/page-(\\d+)/$", RegexOptions.IgnoreCase);
+
+            if (match.Success && match.Groups.Count > 1)
+            {
+                var matchValue = match.Groups[1].Value;
+                return Convert.ToInt32(matchValue, CultureInfo.InvariantCulture);
+            }
+
+            return 1;
         }
     }
 }

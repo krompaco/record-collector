@@ -17,7 +17,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         private readonly TViewModel vm;
 
-        public LayoutViewModelBuilder(TModel currentPage, CultureInfo currentCulture, List<CultureInfo> rootCultures)
+        public LayoutViewModelBuilder(TModel currentPage, CultureInfo currentCulture, List<CultureInfo> rootCultures, HttpRequest request)
         {
             this.currentPage = currentPage;
             this.vm = new TViewModel();
@@ -30,22 +30,43 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             this.vm.RootCultures = rootCultures ?? new List<CultureInfo>();
             this.vm.CurrentCulture = currentCulture;
             this.vm.NavigationItems = new List<MenuItemViewModel>();
+            this.vm.CurrentPath = !string.IsNullOrEmpty(request?.Path.Value) ? request.Path.Value : "/";
+
+            if (this.vm is ListPageViewModel listPageViewModel)
+            {
+                listPageViewModel.PaginationItems = new List<PaginationItemViewModel>();
+                listPageViewModel.PagedDescendantPages = new List<SinglePage>();
+            }
         }
 
-        public LayoutViewModelBuilder<TViewModel, TModel> WithMeta(HttpRequest request)
+        public LayoutViewModelBuilder<TViewModel, TModel> WithMeta()
         {
             this.vm.Title = this.currentPage.Title;
-            this.vm.CurrentPath = !string.IsNullOrEmpty(request?.Path.Value) ? request.Path.Value : "/";
             return this;
         }
 
-        public LayoutViewModelBuilder<TViewModel, TModel> WithNavigationItems(HttpRequest request, List<SinglePage> pages)
+        public LayoutViewModelBuilder<TViewModel, TModel> WithPaginationItems(int pageCount, int pageSize)
         {
-            if (request == null)
+            if (!(this.vm is ListPageViewModel listPageViewModel)
+                || !(this.currentPage is ListPage listPage))
             {
-                throw new ArgumentNullException(nameof(request));
+                return this;
             }
 
+            var builder = new PaginationViewModelBuilder(
+                this.vm.CurrentPath,
+                listPage.DescendantPages.Count,
+                pageCount,
+                pageSize);
+
+            listPageViewModel.PaginationItems = builder.GetPaginationItems().ToList();
+            listPageViewModel.PagedDescendantPages = listPage.DescendantPages.Skip(pageSize * (builder.SelectedPage - 1)).Take(pageSize).ToList();
+
+            return this;
+        }
+
+        public LayoutViewModelBuilder<TViewModel, TModel> WithNavigationItems(List<SinglePage> pages)
+        {
             if (pages == null)
             {
                 throw new ArgumentNullException(nameof(pages));

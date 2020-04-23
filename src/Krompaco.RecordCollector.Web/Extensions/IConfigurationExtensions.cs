@@ -27,5 +27,17 @@ namespace Krompaco.RecordCollector.Web.Extensions
             var sections = config?.GetSection("AppSettings:SectionsToExcludeFromLists").Get<string[]>();
             return sections;
         }
+
+        public static int GetAppSettingsPaginationPageCount(this IConfiguration config)
+        {
+            var value = config.GetValue<int>("AppSettings:PaginationPageCount");
+            return value;
+        }
+
+        public static int GetAppSettingsPaginationPageSize(this IConfiguration config)
+        {
+            var value = config.GetValue<int>("AppSettings:PaginationPageSize");
+            return value;
+        }
     }
 }

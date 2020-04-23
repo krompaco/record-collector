@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -52,6 +53,35 @@ namespace Krompaco.RecordCollector.Generator
             {
                 var task = this.client.GetAsync(file.RelativeUrl);
                 allRequestTasks.Add(task);
+
+                if (!(file is ListPage))
+                {
+                    continue;
+                }
+
+                // Pagination processing if ListPage
+                for (var j = 1; j <= 100; j++)
+                {
+                    var paginationPath = $"{file.RelativeUrl}page-{j}/";
+                    var paginationUrl = new Uri(paginationPath, UriKind.Relative);
+                    var paginationResponse = await this.client.GetAsync(paginationUrl).ConfigureAwait(true);
+
+                    if (paginationResponse.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        break;
+                    }
+
+                    paginationResponse.EnsureSuccessStatusCode();
+
+                    var virtualFile = new ListPage { RelativeUrl = paginationUrl };
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                    await using var output = File.Create(CreateDirectoryAndGetFilePath(virtualFile, contentProperties));
+#pragma warning restore CA2000 // Dispose objects before losing scope
+                    await using var input = await paginationResponse.Content.ReadAsStreamAsync().ConfigureAwait(true);
+                    await input.CopyToAsync(output).ConfigureAwait(true);
+                    await input.DisposeAsync().ConfigureAwait(true);
+                    await output.DisposeAsync().ConfigureAwait(true);
+                }
             }
 
             var f = 0;

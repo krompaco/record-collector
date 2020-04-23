@@ -1,54 +1,57 @@
-﻿@model IEnumerable<PaginationItemViewModel>
+﻿@model List<PaginationItemViewModel>
 
-<div class="" role="navigation">
-	<ul>
-		@foreach (var item in Model)
-		{
-			@if (item.IsSelected)
+@if (Model != null && Model.Count > 0)
+{
+	<div class="" role="navigation">
+		<ul>
+			@foreach (var item in Model)
 			{
-				<li class="">
-					<a href="@item.RelativeUrl" aria-current="page">@item.Page</a>
-				</li>
+				@if (item.IsSelected)
+				{
+					<li class="">
+						<a href="@item.RelativeUrl" aria-current="page">@item.Page</a>
+					</li>
+				}
+				else if (item.IsFirst)
+				{
+					<li class="">
+						<a href="@item.RelativeUrl" aria-label="First">First</a>
+					</li>
+				}
+				else if (item.IsLast)
+				{
+					<li class="">
+						<a href="@item.RelativeUrl" aria-label="Last">Last</a>
+					</li>
+				}
+				else if (item.IsPrevious)
+				{
+					<li class="">
+						<a href="@item.RelativeUrl" aria-label="Previous (page @item.Page)">Previous</a>
+					</li>
+				}
+				else if (item.IsNext)
+				{
+					<li class="">
+						<a href="@item.RelativeUrl" aria-label="Next (page @item.Page)">Next</a>
+					</li>
+				}
+				else if (item.IsEllipsis)
+				{
+					<li class="">
+						...
+					</li>
+				}
+				else if (item.IsSeparator)
+				{
+				}
+				else
+				{
+					<li class="">
+						<a href="@item.RelativeUrl">@item.Page</a>
+					</li>
+				}
 			}
-			else if (item.IsFirst)
-			{
-				<li class="">
-					<a href="@item.RelativeUrl" aria-label="First">First</a>
-				</li>
-			}
-			else if (item.IsLast)
-			{
-				<li class="">
-					<a href="@item.RelativeUrl" aria-label="Last">Last</a>
-				</li>
-			}
-			else if (item.IsPrevious)
-			{
-				<li class="">
-					<a href="@item.RelativeUrl" aria-label="Previous (page @item.Page)">Previous</a>
-				</li>
-			}
-			else if (item.IsNext)
-			{
-				<li class="">
-					<a href="@item.RelativeUrl" aria-label="Next (page @item.Page)">Next</a>
-				</li>
-			}
-			else if (item.IsEllipsis)
-			{
-				<li class="">
-					...
-				</li>
-			}
-			else if (item.IsSeparator)
-			{
-			}
-			else
-			{
-				<li class="">
-					<a href="@item.RelativeUrl">@item.Page</a>
-				</li>
-			}
-		}
-	</ul>
-</div>
+		</ul>
+	</div>
+}
