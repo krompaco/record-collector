@@ -59,8 +59,10 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
                 pageCount,
                 pageSize);
 
-            listPageViewModel.PaginationItems = builder.GetPaginationItems().ToList();
             listPageViewModel.PagedDescendantPages = listPage.DescendantPages.Skip(pageSize * (builder.SelectedPage - 1)).Take(pageSize).ToList();
+
+            // This updates builder.SelectedPage to the highest available page
+            listPageViewModel.PaginationItems = builder.GetPaginationItems().ToList();
 
             return this;
         }

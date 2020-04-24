@@ -14,7 +14,7 @@
 		@Html.Raw(Model.CurrentPage.Content)
 	}
 
-	@if (Model.CurrentPage.DescendantPages.Count > 0)
+	@if (Model.PagedDescendantPages.Count > 0)
 	{
 		<h2>Posts</h2>
 		<ul>

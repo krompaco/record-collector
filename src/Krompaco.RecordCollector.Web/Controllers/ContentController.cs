@@ -139,6 +139,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
 
             // Fix path for pagination
+            var isPaginationPath = IsPaginationPath(path);
             path = RemovePaginationFromPath(path);
 
             // Main navigation
@@ -186,17 +187,18 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 if (this.rootCultures.Any())
                 {
+                    if (isPaginationPath)
+                    {
+                        this.LogTime();
+                        return this.NotFound();
+                    }
+
                     var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request)
                         .WithMarkdownPipeline()
                         .WithMeta()
-                        .WithPaginationItems(
-                                this.config.GetAppSettingsPaginationPageCount(),
-                                this.config.GetAppSettingsPaginationPageSize())
-                        .WithNavigationItems(this.pagesForNavigation)
                         .GetViewModel();
 
                     rootViewModel.Title = rootPage.Title ?? "Select Language";
-                    rootViewModel.CurrentPage.DescendantPages = new List<SinglePage>();
 
                     this.LogTime();
                     return this.View("List", rootViewModel);
@@ -210,6 +212,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         this.config.GetAppSettingsPaginationPageSize())
                     .WithNavigationItems(this.pagesForNavigation)
                     .GetViewModel();
+
+                if (isPaginationPath && listViewModel.PagedDescendantPages.Count == 0)
+                {
+                    this.LogTime();
+                    return this.NotFound();
+                }
 
                 listViewModel.Title = rootPage.Title ?? "Posts";
 
@@ -245,6 +253,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
                             this.config.GetAppSettingsPaginationPageSize())
                         .WithNavigationItems(this.pagesForNavigation)
                         .GetViewModel();
+
+                    if (isPaginationPath && listViewModel.PagedDescendantPages.Count == 0)
+                    {
+                        this.LogTime();
+                        return this.NotFound();
+                    }
 
                     listViewModel.Title = listPage.Title ?? cultureInfo.NativeName;
 
@@ -347,6 +361,21 @@ namespace Krompaco.RecordCollector.Web.Controllers
             path = "/" + path;
 
             return Regex.Replace(path, "/page-\\d+/$", string.Empty, RegexOptions.IgnoreCase);
+        }
+
+        private static bool IsPaginationPath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return false;
+            }
+
+            path = path.TrimStart('/');
+            path = "/" + path;
+
+            var match = Regex.Match(path, "/page-\\d+/$", RegexOptions.IgnoreCase);
+
+            return match.Success && match.Groups.Count > 0;
         }
 
         private void LogTime()
