@@ -1,6 +1,6 @@
 +++
 linkTitle = "About"
 title = "What does Record Collector do?"
-weight = 10
+weight = 15
 +++
 What does it do?
