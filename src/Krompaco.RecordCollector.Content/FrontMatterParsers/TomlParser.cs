@@ -319,7 +319,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (key.Equals("weight", StringComparison.OrdinalIgnoreCase))
                 {
-                    single.Weight = (int)table[key];
+                    single.Weight = (int)(long)table[key];
                     continue;
                 }
 

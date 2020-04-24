@@ -20,6 +20,7 @@ categories:
 date: '2012-04-06'
 description: spf13-vim is a cross platform distribution of vim plugins and resources for Vim.
 slug: spf13-vim-3-0-release-and-new-website
+weight: 1
 testint: 1
 images:
   - site-feature-image.jpg

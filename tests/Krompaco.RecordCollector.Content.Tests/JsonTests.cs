@@ -18,6 +18,7 @@ namespace Krompaco.RecordCollector.Content.Tests
    ],
    ""date"": ""2012-04-06"",
 ""images"": [""site-feature-image.jpg""],
+""weight"": 1,
 ""testint"": 1,
 ""testbool"": false,
 ""teststring"": ""What?"",

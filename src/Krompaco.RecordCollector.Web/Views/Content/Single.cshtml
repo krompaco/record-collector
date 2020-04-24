@@ -3,10 +3,10 @@
 @model SinglePageViewModel
 
 <div>
-	@foreach (var a in Model.CurrentPage.Ancestors)
+	@*@foreach (var a in Model.CurrentPage.Ancestors)
 	{
 		<div><a href="@a.RelativeUrl">@a.Title</a></div>
-	}
+	}*@
 
 	<h1>@Model.Title</h1>
 	@if (Model.CurrentPage.Date != DateTime.MinValue)
@@ -23,7 +23,7 @@
 		@Html.Raw(Model.CurrentPage.Content)
 	}
 
-	<h2>Siblings</h2>
+	@*<h2>Siblings</h2>
 	<ol>
 		@foreach (var sp in Model.CurrentPage.Siblings)
 		{
@@ -35,5 +35,5 @@
 				<a href="@sp.RelativeUrl">@sp.Title</a>
 			</li>
 		}
-	</ol>
+	</ol>*@
 </div>

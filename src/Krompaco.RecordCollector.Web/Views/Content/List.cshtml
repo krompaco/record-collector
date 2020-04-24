@@ -40,15 +40,13 @@
 
 					@if (@sp.Summary != null)
 					{
-						if (sp.ContentType == ContentType.Html)
+						if (sp.ContentType == ContentType.Markdown)
 						{
-							<h3>The summary</h3>
-							@Html.Raw(sp.Summary)
+							@Html.Raw(Markdown.ToHtml(sp.Summary, Model.MarkdownPipeline))
 						}
 						else
 						{
-							<h3>The summary</h3>
-							<p>@sp.Summary</p>
+							@Html.Raw(sp.Summary)
 						}
 					}
 				</li>
