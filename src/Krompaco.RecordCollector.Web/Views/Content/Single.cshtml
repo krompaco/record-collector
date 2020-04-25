@@ -2,38 +2,18 @@
 @using Markdig
 @model SinglePageViewModel
 
-<div>
-	@*@foreach (var a in Model.CurrentPage.Ancestors)
-	{
-		<div><a href="@a.RelativeUrl">@a.Title</a></div>
-	}*@
+<h1>@Model.Title</h1>
 
-	<h1>@Model.Title</h1>
-	@if (Model.CurrentPage.Date != DateTime.MinValue)
-	{
-		<em>@Model.CurrentPage.Date.ToString("yyyy-MM-dd")</em>
-	}
+@if (Model.CurrentPage.Date != DateTime.MinValue)
+{
+	<time datetime="@Model.CurrentPage.Date.ToString("yyyy-MM-dd")">@Model.CurrentPage.Date.ToShortDateString()</time>
+}
 
-	@if (Model.CurrentPage.ContentType == ContentType.Markdown)
-	{
-		@Html.Raw(Markdown.ToHtml(Model.CurrentPage.Content, Model.MarkdownPipeline))
-	}
-	else
-	{
-		@Html.Raw(Model.CurrentPage.Content)
-	}
-
-	@*<h2>Siblings</h2>
-	<ol>
-		@foreach (var sp in Model.CurrentPage.Siblings)
-		{
-			<li>
-				@if (sp.Date != DateTime.MinValue)
-				{
-					@(sp.Date.ToString("yyyy-MM-dd") + ": ")
-				}
-				<a href="@sp.RelativeUrl">@sp.Title</a>
-			</li>
-		}
-	</ol>*@
-</div>
+@if (Model.CurrentPage.ContentType == ContentType.Markdown)
+{
+	@Html.Raw(Markdown.ToHtml(Model.CurrentPage.Content, Model.MarkdownPipeline))
+}
+else
+{
+	@Html.Raw(Model.CurrentPage.Content)
+}

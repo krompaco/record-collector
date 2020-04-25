@@ -6,6 +6,7 @@ using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Models;
 using Markdig;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 
 namespace Krompaco.RecordCollector.Web.ModelBuilders
 {
@@ -17,7 +18,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         private readonly TViewModel vm;
 
-        public LayoutViewModelBuilder(TModel currentPage, CultureInfo currentCulture, List<CultureInfo> rootCultures, HttpRequest request)
+        public LayoutViewModelBuilder(TModel currentPage, CultureInfo currentCulture, List<CultureInfo> rootCultures, HttpRequest request, IStringLocalizer localizer)
         {
             this.currentPage = currentPage;
             this.vm = new TViewModel();
@@ -31,10 +32,16 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             this.vm.CurrentCulture = currentCulture;
             this.vm.NavigationItems = new List<MenuItemViewModel>();
             this.vm.CurrentPath = !string.IsNullOrEmpty(request?.Path.Value) ? request.Path.Value : "/";
+            this.vm.Localizer = localizer;
 
             if (this.vm is ListPageViewModel listPageViewModel)
             {
-                listPageViewModel.PaginationItems = new List<PaginationItemViewModel>();
+                listPageViewModel.Pagination =
+                    new PaginationViewModel
+                    {
+                        Layout = this.vm,
+                        Items = new List<PaginationItemViewModel>()
+                    };
                 listPageViewModel.PagedDescendantPages = new List<SinglePage>();
             }
         }
@@ -62,7 +69,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             listPageViewModel.PagedDescendantPages = listPage.DescendantPages.Skip(pageSize * (builder.SelectedPage - 1)).Take(pageSize).ToList();
 
             // This updates builder.SelectedPage to the highest available page
-            listPageViewModel.PaginationItems = builder.GetPaginationItems().ToList();
+            listPageViewModel.Pagination.Items = builder.GetPaginationItems().ToList();
 
             return this;
         }

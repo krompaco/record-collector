@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Krompaco.RecordCollector.Web
 {
@@ -37,6 +36,8 @@ namespace Krompaco.RecordCollector.Web
                 options.RequestCultureProviders.Clear();
                 options.RequestCultureProviders.Add(new CustomRequestCultureProvider(this.Configuration));
             });
+
+            services.AddLocalization();
 
             services.AddControllersWithViews();
         }

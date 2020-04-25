@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using Markdig;
+using Microsoft.Extensions.Localization;
 
 namespace Krompaco.RecordCollector.Web.Models
 {
@@ -17,5 +18,7 @@ namespace Krompaco.RecordCollector.Web.Models
         public MarkdownPipeline MarkdownPipeline { get; set; }
 
         public List<MenuItemViewModel> NavigationItems { get; set; }
+
+        public IStringLocalizer Localizer { get; set; }
     }
 }

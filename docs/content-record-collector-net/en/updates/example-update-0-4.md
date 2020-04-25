@@ -1,6 +1,6 @@
 ---
-title: "Example update 0.1"
-date: 2020-04-11
+title: "Example update 0.4"
+date: 2020-04-04
 ---
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.

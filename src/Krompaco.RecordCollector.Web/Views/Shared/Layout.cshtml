@@ -1,62 +1,71 @@
-﻿@model LayoutViewModel
+﻿@using Krompaco.RecordCollector.Web.Extensions
+@model LayoutViewModel
 <!DOCTYPE html>
 <html lang="@Model.CurrentCulture.Name">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>@Model.Title - Krompaco.RecordCollector.Web</title>
-	<link rel="stylesheet" href="~/css/site.css" />
+	<title>@Model.Title</title>
+	<link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
-	<div role="navigation">
-		@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/")
-		{
-			<ul>
-				@foreach (var c in Model.RootCultures)
-				{
-					<li>
-						@if (Model.CurrentPath != "/" && c.Equals(Model.CurrentCulture))
-						{
-							@c.NativeName
-						}
-						else
-						{
-							<a lang="@c.Name" role="menuitem" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName</a>
-						}
-					</li>
-				}
-			</ul>
-		}
+	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/"
+		  || Model.NavigationItems.Count > 0)
+	{
+		<div id="skip">
+			<a href="#main">@Model.Localizer["Skip to main content"]</a>
+		</div>
+		<div role="navigation">
+			@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/")
+			{
+				<ul role="menu">
+					@foreach (var c in Model.RootCultures)
+					{
+						<li>
+							@if (Model.CurrentPath != "/" && c.Equals(Model.CurrentCulture))
+							{
+								@c.NativeName.FirstCharToUpper()
+							}
+							else
+							{
+								<a lang="@c.Name" role="menuitem" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName.FirstCharToUpper()</a>
+							}
+						</li>
+					}
+				</ul>
+			}
 
-		@if (Model.NavigationItems.Count > 0)
-		{
-			<ul>
-				@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
-				{
-					<li>Home</li>
-				}
-				else
-				{
-					<li><a role="menuitem" href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">Home</a></li>
-				}
+			@if (Model.NavigationItems.Count > 0)
+			{
+				<ul role="menu">
+					@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
+					{
+						<li>@Model.Localizer["Home"]</li>
+					}
+					else
+					{
+						<li><a role="menuitem" href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">Home</a></li>
+					}
 
-				@foreach (var ni in Model.NavigationItems)
-				{
-					<li>
-						@if (ni.IsSelected)
-						{
-							@ni.Text
-						}
-						else
-						{
-							<a role="menuitem" href="@ni.RelativeUrl">@ni.Text</a>
-						}
-					</li>
-				}
-			</ul>
-		}
-	</div>
-	<div role="main">
+					@foreach (var ni in Model.NavigationItems)
+					{
+						<li>
+							@if (ni.IsSelected)
+							{
+								@ni.Text
+							}
+							else
+							{
+								<a role="menuitem" href="@ni.RelativeUrl">@ni.Text</a>
+							}
+						</li>
+					}
+				</ul>
+			}
+		</div>
+	}
+
+	<div role="main" id="main">
 		@RenderBody()
 	</div>
 </body>

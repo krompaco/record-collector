@@ -1,58 +1,49 @@
 ﻿@using Krompaco.RecordCollector.Content.Models
 @using Markdig
+
 @model ListPageViewModel
 
-<div>
-	<h1>@Model.Title</h1>
+<h1>@Model.Title</h1>
 
-	@if (Model.CurrentPage.ContentType == ContentType.Markdown)
-	{
-		@Html.Raw(Markdown.ToHtml(Model.CurrentPage.Content, Model.MarkdownPipeline))
-	}
-	else
-	{
-		@Html.Raw(Model.CurrentPage.Content)
-	}
+@if (Model.CurrentPage.ContentType == ContentType.Markdown)
+{
+	@Html.Raw(Markdown.ToHtml(Model.CurrentPage.Content, Model.MarkdownPipeline))
+}
+else
+{
+	@Html.Raw(Model.CurrentPage.Content)
+}
 
-	@if (Model.PagedDescendantPages.Count > 0)
-	{
-		<h2>Posts</h2>
-		<ul>
-			@foreach (var sp in Model.PagedDescendantPages)
-			{
-				<li>
-					<h3>
-						@if (sp.Date != DateTime.MinValue)
-						{
-							@(sp.Date.ToString("yyyy-MM-dd") + ": ")
-						}
-						<a href="@sp.RelativeUrl">@sp.Title</a>
-					</h3>
+@if (Model.PagedDescendantPages.Count > 0)
+{
+	<h2>@Model.Localizer["Updates"]</h2>
+	<ul>
+		@foreach (var sp in Model.PagedDescendantPages)
+		{
+			<li>
+				<h3>
+					<a href="@sp.RelativeUrl">@sp.Title</a>
+				</h3>
 
-					@*@if (sp.ContentType == ContentType.Markdown)
+				@if (sp.Date != DateTime.MinValue)
+				{
+					<time datetime="@sp.Date.ToString("yyyy-MM-dd")">@sp.Date.ToShortDateString()</time>
+				}
+
+				@if (@sp.Summary != null)
+				{
+					if (sp.ContentType == ContentType.Markdown)
 					{
-						@Html.Raw(Markdown.ToHtml(sp.Content, Model.MarkdownPipeline))
+						@Html.Raw(Markdown.ToHtml(sp.Summary, Model.MarkdownPipeline))
 					}
 					else
 					{
-						@Html.Raw(sp.Content)
-					}*@
-
-					@if (@sp.Summary != null)
-					{
-						if (sp.ContentType == ContentType.Markdown)
-						{
-							@Html.Raw(Markdown.ToHtml(sp.Summary, Model.MarkdownPipeline))
-						}
-						else
-						{
-							@Html.Raw(sp.Summary)
-						}
+						@Html.Raw(sp.Summary)
 					}
-				</li>
-			}
-		</ul>
+				}
+			</li>
+		}
+	</ul>
 
-		@Html.Partial("Pagination", Model.PaginationItems)
-	}
-</div>
+	@Html.Partial("Pagination", Model.Pagination)
+}

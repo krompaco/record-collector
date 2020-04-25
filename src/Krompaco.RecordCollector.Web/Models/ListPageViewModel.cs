@@ -7,7 +7,7 @@ namespace Krompaco.RecordCollector.Web.Models
     {
         public ListPage CurrentPage { get; set; }
 
-        public List<PaginationItemViewModel> PaginationItems { get; set; }
+        public PaginationViewModel Pagination { get; set; }
 
         public List<SinglePage> PagedDescendantPages { get; set; }
     }

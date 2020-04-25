@@ -12,12 +12,14 @@ using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.ModelBuilders;
 using Krompaco.RecordCollector.Web.Models;
+using Krompaco.RecordCollector.Web.Resources;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace Krompaco.RecordCollector.Web.Controllers
@@ -29,6 +31,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
         public static readonly object AllFilesLock = new object();
 
         private readonly ILogger<ContentController> logger;
+
+        private readonly IStringLocalizer localizer;
 
         private readonly IWebHostEnvironment env;
 
@@ -48,11 +52,16 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly Stopwatch stopwatch;
 
-        public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env)
+        public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env, IStringLocalizerFactory factory)
         {
             this.logger = logger;
             this.config = config;
             this.env = env;
+
+            if (factory != null)
+            {
+                this.localizer = factory.Create(typeof(SharedResource));
+            }
 
             this.stopwatch = new Stopwatch();
             this.stopwatch.Start();
@@ -193,18 +202,18 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         return this.NotFound();
                     }
 
-                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request)
+                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer)
                         .WithMarkdownPipeline()
                         .WithMeta()
                         .GetViewModel();
 
-                    rootViewModel.Title = rootPage.Title ?? "Select Language";
+                    rootViewModel.Title = rootPage.Title ?? this.localizer["Select language"];
 
                     this.LogTime();
                     return this.View("List", rootViewModel);
                 }
 
-                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request)
+                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer)
                     .WithMarkdownPipeline()
                     .WithMeta()
                     .WithPaginationItems(
@@ -219,7 +228,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     return this.NotFound();
                 }
 
-                listViewModel.Title = rootPage.Title ?? "Posts";
+                listViewModel.Title = rootPage.Title ?? this.localizer["Updates"];
 
                 this.LogTime();
                 return this.View("List", listViewModel);
@@ -245,7 +254,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                        .Select(x => x as ListPage)
                                        .FirstOrDefault() ?? new ListPage();
 
-                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures, this.Request)
+                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures, this.Request, this.localizer)
                         .WithMarkdownPipeline()
                         .WithMeta()
                         .WithPaginationItems(
@@ -260,7 +269,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         return this.NotFound();
                     }
 
-                    listViewModel.Title = listPage.Title ?? cultureInfo.NativeName;
+                    listViewModel.Title = listPage.Title ?? cultureInfo.NativeName.FirstCharToUpper();
 
                     this.LogTime();
                     return this.View("List", listViewModel);
@@ -340,7 +349,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.NotFound();
             }
 
-            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures, this.Request)
+            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures, this.Request, this.localizer)
                 .WithMarkdownPipeline()
                 .WithMeta()
                 .WithNavigationItems(this.pagesForNavigation)

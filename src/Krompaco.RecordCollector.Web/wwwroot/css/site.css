@@ -39,8 +39,9 @@ th, td {
 	padding: 6px 10px;
 	border: 1px solid #808080;
 }
-img, table {
+img {
 	max-width: 100%;
+	height: auto;
 }
 hr {
 	margin: 2rem 0;

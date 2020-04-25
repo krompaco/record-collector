@@ -1,4 +1,6 @@
 +++
-title = "record-collector.net"
+title = "The .NET Core static site kit"
 +++
-Let us play your party.
+This is both documentation and the demo web site.
+
+Below is a sample list with pagination.
