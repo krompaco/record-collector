@@ -15,7 +15,7 @@
 	src: url(inter-italic-var.woff2) format('woff2');
 }
 body {
-	margin: 40px auto;
+	margin: 22px auto;
 	max-width: 650px;
 	line-height: 1.6;
 	color: #444;

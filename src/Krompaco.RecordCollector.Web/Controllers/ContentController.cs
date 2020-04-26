@@ -143,6 +143,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
         [HttpGet]
         public IActionResult Files(string path)
         {
+            var viewPrefix = this.config.GetAppSettingsViewPrefix();
             var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture;
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
@@ -210,7 +211,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     rootViewModel.Title = rootPage.Title ?? this.localizer["Select language"];
 
                     this.LogTime();
-                    return this.View("List", rootViewModel);
+                    return this.View(viewPrefix + "List", rootViewModel);
                 }
 
                 var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer)
@@ -231,7 +232,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 listViewModel.Title = rootPage.Title ?? this.localizer["Updates"];
 
                 this.LogTime();
-                return this.View("List", listViewModel);
+                return this.View(viewPrefix + "List", listViewModel);
             }
 
             var items = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -272,7 +273,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     listViewModel.Title = listPage.Title ?? cultureInfo.NativeName.FirstCharToUpper();
 
                     this.LogTime();
-                    return this.View("List", listViewModel);
+                    return this.View(viewPrefix + "List", listViewModel);
                 }
             }
 
@@ -356,7 +357,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 .GetViewModel();
 
             this.LogTime();
-            return this.View("Single", singleViewModel);
+            return this.View(viewPrefix + "Single", singleViewModel);
         }
 
         private static string RemovePaginationFromPath(string path)

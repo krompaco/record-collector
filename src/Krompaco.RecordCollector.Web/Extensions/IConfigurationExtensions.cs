@@ -16,6 +16,12 @@ namespace Krompaco.RecordCollector.Web.Extensions
             return path;
         }
 
+        public static string GetAppSettingsViewPrefix(this IConfiguration config)
+        {
+            var path = config.GetValue<string>("AppSettings:ViewPrefix");
+            return path;
+        }
+
         public static string[] GetAppSettingsMainNavigationSections(this IConfiguration config)
         {
             var sections = config?.GetSection("AppSettings:MainNavigationSections").Get<string[]>();
