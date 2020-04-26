@@ -137,6 +137,10 @@
     <value>Föregående</value>
     <comment>Pagination</comment>
   </data>
+  <data name="Skip to main content" xml:space="preserve">
+    <value>Hoppa till innehåll</value>
+    <comment>Skip link</comment>
+  </data>
   <data name="Updates" xml:space="preserve">
     <value>Uppdateringar</value>
     <comment>The default H2 for paged lists</comment>

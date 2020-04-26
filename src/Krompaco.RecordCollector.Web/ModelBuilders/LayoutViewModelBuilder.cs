@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Krompaco.RecordCollector.Content.Models;
+using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.Models;
 using Markdig;
+using Markdig.Extensions.AutoLinks;
+using Markdig.Extensions.EmphasisExtras;
+using Markdig.Extensions.MediaLinks;
+using Markdig.Extensions.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
@@ -104,7 +109,27 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         public LayoutViewModelBuilder<TViewModel, TModel> WithMarkdownPipeline()
         {
-            this.vm.MarkdownPipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+
+            this.vm.MarkdownPipeline = new MarkdownPipelineBuilder()
+                .Use<HtmlTableWithWrapperExtension>()
+                .UseAbbreviations()
+                .UseCitations()
+                .UseDefinitionLists()
+                .UseEmphasisExtras()
+                .UseFigures()
+                .UseFooters()
+                .UseFootnotes()
+                .UseGridTables()
+                .UseMathematics()
+                .UseMediaLinks()
+                .UsePipeTables()
+                .UseListExtras()
+                .UseTaskLists()
+                .UseDiagrams()
+                .UseAutoLinks()
+                .UseGenericAttributes()
+                .Build();
+
             return this;
         }
 
