@@ -54,6 +54,8 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
         public LayoutViewModelBuilder<TViewModel, TModel> WithMeta()
         {
             this.vm.Title = this.currentPage.Title;
+            this.vm.Description = this.currentPage.Description;
+            this.vm.Keywords = this.currentPage.Keywords;
             return this;
         }
 

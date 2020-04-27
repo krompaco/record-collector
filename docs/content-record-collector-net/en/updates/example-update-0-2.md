@@ -1,6 +1,7 @@
 ---
 title: "Example update 0.2"
 date: 2020-04-02
+description: "META description is considered required by many."
 ---
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.

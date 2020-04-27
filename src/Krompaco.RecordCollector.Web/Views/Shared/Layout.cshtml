@@ -7,6 +7,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@Model.Title</title>
 	<link rel="stylesheet" href="/css/site.css" />
+	<link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
+	<meta name="description" content="@Model.Description" />
+
+	@if (!string.IsNullOrWhiteSpace(Model.Keywords))
+	{
+		<meta name="keywords" content="@Model.Keywords" />
+	}
 </head>
 <body>
 	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/"

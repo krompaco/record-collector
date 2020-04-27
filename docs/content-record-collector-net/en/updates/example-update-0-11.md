@@ -1,6 +1,7 @@
 ---
 title: "Example update 0.11"
 date: 2020-04-11
+description: "META description is considered required by many."
 ---
 
 This content was found as part of the [Docsy example repo](https://github.com/google/docsy-example).

@@ -4,3 +4,4 @@ _ReSharper.Caches/
 bin
 obj
 appsettings.Development.json
+node_modules

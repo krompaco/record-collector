@@ -1,6 +1,7 @@
 ---
 title: "Exempeluppdatering 0.10"
 date: 2020-04-10
+description: "META-beskrivning av sidan är viktigt."
 ---
 
 Text kan vara **bold**, _italic_, eller ~~strikethrough~~. Se [länk till bloggen](https://krompaco.nu).
