@@ -14,18 +14,23 @@ In this setup the generation process work using the WebApplicationFactory from t
 
 ## Installed packages
 
-Built using .NET Core 3.1 and these packages. Thank you!
+Built using .NET Core 3.1 and these packages and projects. Thank you!
 
-| Project                                                 | License      |
-|---------------------------------------------------------|--------------|
-| [YamlDotNet](https://github.com/aaubry/YamlDotNet/wiki) | MIT          |
-| [Tomlyn](https://github.com/xoofx/Tomlyn)               | BSD-Clause 2 |
-| [Markdig](https://github.com/lunet-io/markdig)          | BSD-Clause 2 |
+| Project                                                 | License                   |
+|---------------------------------------------------------|---------------------------|
+| [YamlDotNet](https://github.com/aaubry/YamlDotNet/wiki) | MIT                       |
+| [Tomlyn](https://github.com/xoofx/Tomlyn)               | BSD-Clause 2              |
+| [Markdig](https://github.com/lunet-io/markdig)          | BSD-Clause 2              |
+| [Inter font family](https://rsms.me/inter/)             | SIL Open Font License 1.1 |
 
 ### Quality control tools
 
 * [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
 * [Microsoft.CodeAnalysis.FxCopAnalyzers](https://github.com/dotnet/roslyn-analyzers)
+
+### Demo site
+
+The [demo web site](https://record-collector.net) views are closed source and uses [Tailwind UI](https://tailwindui.com) which needs a purchased license. I will look into if the full demo site can be opened or made accessible in some form.
 
 ## License
 
