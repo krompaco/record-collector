@@ -1,8 +1,10 @@
 +++
-title = "The .NET Core static site kit"
-description = "META-beskrivning av sidan är viktigt."
+title = "The .NET Core static web site generator toolkit"
+description = "The documentation and Record Collector demo web site."
 keywords = "C# HTML"
 +++
-This is both documentation and the demo web site.
+This site contains documentation and also acts as a demo web site of what the static output can be.
 
-Below is a sample list with pagination.
+Features are the same as in the [Github repo](https://github.com/krompaco/record-collector) web but when [online at record-collector.net](https://record-collector.net) it also has styling using [Tailwind UI](https://tailwindui.com) components which needs a purchased license and aren't part of the open code.
+
+Below is a sample posts list with _pagination_.
