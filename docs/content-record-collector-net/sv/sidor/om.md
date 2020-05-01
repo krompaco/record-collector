@@ -5,3 +5,5 @@ description = "Information om vad Record Collector innehåller."
 weight = 15
 +++
 Här kommer det berättas om Record Collectors huvudfunktioner och fördelar.
+
+![Skiss på Record Collectors flöde](/files/flow.png)
