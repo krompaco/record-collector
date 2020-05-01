@@ -1,7 +1,7 @@
 +++
 linkTitle = "Börja använda"
 title = "Kom igång"
-description = "META-beskrivning av sidan är viktigt."
+description = "Information om hur du kommer igång och anpassar Record Collector."
 weight = 10
 +++
 Vad är åäö?

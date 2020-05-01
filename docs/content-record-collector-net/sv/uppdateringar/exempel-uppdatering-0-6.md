@@ -2,6 +2,8 @@
 title: "Exempeluppdatering 0.6"
 date: 2020-04-06
 description: "META-beskrivning av sidan är viktigt."
+authorname: "Johan Kronberg"
+authorimage: "/files/jk.jpg"
 ---
 
 Text kan vara **bold**, _italic_, eller ~~strikethrough~~. Se [länk till bloggen](https://krompaco.nu).

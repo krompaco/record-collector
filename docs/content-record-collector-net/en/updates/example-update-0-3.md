@@ -2,6 +2,8 @@
 title: "Example update 0.3"
 date: 2020-04-03
 description: "META description is considered required by many."
+authorname: "Johan Kronberg"
+authorimage: "/files/jk.jpg"
 ---
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.

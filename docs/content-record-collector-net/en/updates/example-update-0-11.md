@@ -1,7 +1,9 @@
 ---
-title: "Example update 0.11"
+title: "Example update called 0.11"
 date: 2020-04-11
 description: "META description is considered required by many."
+authorname: "Johan Kronberg"
+authorimage: "/files/jk.jpg"
 ---
 
 This content was found as part of the [Docsy example repo](https://github.com/google/docsy-example).
@@ -79,20 +81,6 @@ And an ordered list:
 2. Seamus Blake
 3. Branford Marsalis
 
-And a nested list:
-
-* Jackson 5
-  * Michael
-  * Tito
-  * Jackie
-  * Marlon
-  * Jermaine
-* TMNT
-  * Leonardo
-  * Michelangelo
-  * Donatello
-  * Raphael
-
 Definition lists can be used with Markdown syntax. Definition headers are bold.
 
 Name
@@ -169,16 +157,6 @@ Inline code inside table cells should still be distinguishable.
 | Ruby        | `foo = "bar"{`      |
 
 ----------------
-
-Small images should be shown at their actual size.
-
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Picea_abies_shoot_with_buds%2C_Sogndal%2C_Norway.jpg/240px-Picea_abies_shoot_with_buds%2C_Sogndal%2C_Norway.jpg)
-
-Large images should always scale down and fit in the content container.
-
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Picea_abies_shoot_with_buds%2C_Sogndal%2C_Norway.jpg/1024px-Picea_abies_shoot_with_buds%2C_Sogndal%2C_Norway.jpg)
-
-_The photo above of the Spruce Picea abies shoot with foliage buds: Bjørn Erik Pedersen, CC-BY-SA._
 
 ## Another Heading
 
