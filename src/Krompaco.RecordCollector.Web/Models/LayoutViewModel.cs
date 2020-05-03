@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using Krompaco.RecordCollector.Content.Models;
 using Markdig;
 using Microsoft.Extensions.Localization;
 
@@ -24,5 +25,7 @@ namespace Krompaco.RecordCollector.Web.Models
         public List<MenuItemViewModel> NavigationItems { get; set; }
 
         public IStringLocalizer Localizer { get; set; }
+
+        public ContentProperties ContentProperties { get; set; }
     }
 }

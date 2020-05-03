@@ -23,7 +23,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         private readonly TViewModel vm;
 
-        public LayoutViewModelBuilder(TModel currentPage, CultureInfo currentCulture, List<CultureInfo> rootCultures, HttpRequest request, IStringLocalizer localizer)
+        public LayoutViewModelBuilder(TModel currentPage, CultureInfo currentCulture, List<CultureInfo> rootCultures, HttpRequest request, IStringLocalizer localizer, ContentProperties contentProperties)
         {
             this.currentPage = currentPage;
             this.vm = new TViewModel();
@@ -38,6 +38,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             this.vm.NavigationItems = new List<MenuItemViewModel>();
             this.vm.CurrentPath = !string.IsNullOrEmpty(request?.Path.Value) ? request.Path.Value : "/";
             this.vm.Localizer = localizer;
+            this.vm.ContentProperties = contentProperties;
 
             if (this.vm is ListPageViewModel listPageViewModel)
             {

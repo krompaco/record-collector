@@ -18,7 +18,9 @@ else
 	@Html.Raw(Model.CurrentPage.Content)
 }
 
-@if (Model.CurrentPage.NextPage != null || Model.CurrentPage.PreviousPage != null)
+@if (!Model.ContentProperties.SectionsToExcludeFromLists
+		.Any(x => x.Equals(Model.CurrentPage.Section, StringComparison.OrdinalIgnoreCase))
+     && (Model.CurrentPage.NextPage != null || Model.CurrentPage.PreviousPage != null))
 {
 	<div class="" role="navigation">
 		<h2>@Model.Localizer["Page navigation"]</h2>

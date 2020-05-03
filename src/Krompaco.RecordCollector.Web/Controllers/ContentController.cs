@@ -130,15 +130,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
         public IActionResult Properties()
         {
             this.LogTime();
-
-            var model = new ContentProperties
-            {
-                ContentRootPath = this.contentRoot,
-                StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath(),
-                SectionsToExcludeFromLists = this.config.GetAppSettingsSectionsToExcludeFromLists(),
-                EnvironmentProjectWebRootPath = this.env.WebRootPath,
-            };
-
+            var model = this.GetContentProperties();
             return this.Json(model);
         }
 
@@ -148,6 +140,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var viewPrefix = this.config.GetAppSettingsViewPrefix();
             var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture;
+            var contentProperties = this.GetContentProperties();
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
 
             // Fix path for pagination
@@ -205,7 +198,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         return this.NotFound();
                     }
 
-                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer)
+                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
                         .WithMarkdownPipeline()
                         .WithMeta()
                         .GetViewModel();
@@ -216,7 +209,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     return this.View(viewPrefix + "List", rootViewModel);
                 }
 
-                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer)
+                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
                     .WithMarkdownPipeline()
                     .WithMeta()
                     .WithPaginationItems(
@@ -257,7 +250,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                        .Select(x => x as ListPage)
                                        .FirstOrDefault() ?? new ListPage();
 
-                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures, this.Request, this.localizer)
+                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
                         .WithMarkdownPipeline()
                         .WithMeta()
                         .WithPaginationItems(
@@ -352,7 +345,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.NotFound();
             }
 
-            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures, this.Request, this.localizer)
+            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
                 .WithMarkdownPipeline()
                 .WithMeta()
                 .WithNavigationItems(this.pagesForNavigation)
@@ -388,6 +381,19 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var match = Regex.Match(path, "/page-\\d+/$", RegexOptions.IgnoreCase);
 
             return match.Success && match.Groups.Count > 0;
+        }
+
+        private ContentProperties GetContentProperties()
+        {
+            var model = new ContentProperties
+            {
+                ContentRootPath = this.contentRoot,
+                StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath(),
+                SectionsToExcludeFromLists = this.config.GetAppSettingsSectionsToExcludeFromLists(),
+                EnvironmentProjectWebRootPath = this.env.WebRootPath,
+            };
+
+            return model;
         }
 
         private void LogTime()
