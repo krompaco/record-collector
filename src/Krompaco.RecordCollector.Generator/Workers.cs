@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -42,6 +43,9 @@ namespace Krompaco.RecordCollector.Generator
             this.testOutputHelper.WriteLine("Record Collector Version 0.1");
             this.testOutputHelper.WriteLine(string.Empty);
             this.testOutputHelper.WriteLine("Starting to generate site...");
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             var contentProperties = await this.GetContentProperties().ConfigureAwait(true);
             ClearDirectory(contentProperties);
@@ -151,8 +155,12 @@ namespace Krompaco.RecordCollector.Generator
                 await output.DisposeAsync().ConfigureAwait(true);
             }
 
+            stopwatch.Stop();
+
             this.testOutputHelper.WriteLine($"Test web host requests written: {i}");
             this.testOutputHelper.WriteLine($"Completed to: {contentProperties.StaticSiteRootPath}");
+
+            this.testOutputHelper.WriteLine($"Time to process: {stopwatch.Elapsed.TotalMilliseconds} ms");
         }
 
         private static string CreateDirectoryAndGetFilePath(IRecordCollectorFile page, ContentProperties contentProperties)

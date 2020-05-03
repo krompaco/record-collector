@@ -17,3 +17,25 @@ else
 {
 	@Html.Raw(Model.CurrentPage.Content)
 }
+
+@if (Model.CurrentPage.NextPage != null || Model.CurrentPage.PreviousPage != null)
+{
+	<div class="" role="navigation">
+		<h2>@Model.Localizer["Page navigation"]</h2>
+		<ul>
+			@if (Model.CurrentPage.PreviousPage != null)
+			{
+				<li class="">
+					<a href="@Model.CurrentPage.PreviousPage.RelativeUrl">@Model.Localizer["Previous"]: @Model.CurrentPage.PreviousPage.Title</a>
+				</li>
+			}
+
+			@if (Model.CurrentPage.NextPage != null)
+			{
+				<li class="">
+					<a href="@Model.CurrentPage.NextPage.RelativeUrl">@Model.Localizer["Next"]: @Model.CurrentPage.NextPage.Title</a>
+				</li>
+			}
+		</ul>
+	</div>
+}

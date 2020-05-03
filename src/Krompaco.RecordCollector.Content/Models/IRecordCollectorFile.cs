@@ -38,7 +38,11 @@ namespace Krompaco.RecordCollector.Content.Models
 
         bool IsPage { get; set; }
 
-        SinglePage Parent { get; set; }
+        SinglePage ParentPage { get; set; }
+
+        SinglePage PreviousPage { get; set; }
+
+        SinglePage NextPage { get; set; }
 
         List<SinglePage> Siblings { get; set; }
 

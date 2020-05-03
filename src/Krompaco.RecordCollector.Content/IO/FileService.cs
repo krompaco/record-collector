@@ -124,14 +124,16 @@ namespace Krompaco.RecordCollector.Content.IO
                 && x.Name.StartsWith("index.", StringComparison.OrdinalIgnoreCase));
         }
 
-        public static List<SinglePage> GetSiblings(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
+        public static List<SinglePage> GetSiblingsAndSetNextAndPrevious(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
         {
-            return allFileModels
+            if (current == null)
+            {
+                throw new ArgumentNullException(nameof(current));
+            }
+
+            var allOnSameLevel = allFileModels
                 .Where(x =>
                     x.GetType() == typeof(SinglePage)
-                    && !x.FullName.Equals(
-                        current.FullName,
-                        StringComparison.OrdinalIgnoreCase)
                     && x.Section == current.Section
                     && x.ClosestSectionDirectory != null
                     && current.ClosestSectionDirectory != null
@@ -142,6 +144,37 @@ namespace Krompaco.RecordCollector.Content.IO
                 .Where(x => !x.Headless)
                 .OrderByDescending(x => x.Date)
                 .ToList();
+
+            var i = 0;
+
+            foreach (var sp in allOnSameLevel)
+            {
+                if (sp.FullName.Equals(
+                    current.FullName,
+                    StringComparison.OrdinalIgnoreCase))
+                {
+                    if (i > 0 && allOnSameLevel.Count > i - 1)
+                    {
+                        var previous = allOnSameLevel[i - 1];
+                        current.PreviousPage = previous;
+                    }
+
+                    if (allOnSameLevel.Count > i + 1 && allOnSameLevel.Count > 1)
+                    {
+                        var next = allOnSameLevel[i + 1];
+                        current.NextPage = next;
+                        break;
+                    }
+                }
+
+                i++;
+            }
+
+            return allOnSameLevel
+                .Where(x => !x.FullName.Equals(
+                    current.FullName,
+                    StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
 
         public static List<SinglePage> GetAncestors(IRecordCollectorFile current)
@@ -150,10 +183,10 @@ namespace Krompaco.RecordCollector.Content.IO
 
             while (true)
             {
-                if (current.Parent != null)
+                if (current.ParentPage != null)
                 {
-                    ancestors.Add(current.Parent);
-                    current = current.Parent;
+                    ancestors.Add(current.ParentPage);
+                    current = current.ParentPage;
                 }
                 else
                 {
@@ -369,7 +402,7 @@ namespace Krompaco.RecordCollector.Content.IO
                 {
                     if (currentModel.GetType() == typeof(SinglePage))
                     {
-                        currentModel.Siblings = GetSiblings(currentModel, allFileModels);
+                        currentModel.Siblings = GetSiblingsAndSetNextAndPrevious(currentModel, allFileModels);
                     }
                     else
                     {
@@ -381,7 +414,7 @@ namespace Krompaco.RecordCollector.Content.IO
                         listPage.DescendantPages = this.GetDescendantSinglePages(currentModel, allFileModels);
                     }
 
-                    currentModel.Parent = this.GetParent(currentModel, allFileModels);
+                    currentModel.ParentPage = this.GetParent(currentModel, allFileModels);
                     currentModel.Descendants = this.GetDescendants(currentModel, allFileModels);
                 });
 
@@ -563,11 +596,15 @@ namespace Krompaco.RecordCollector.Content.IO
                 .Where(x =>
                     ((IsListPartialPageFile(current.FullName)
                         && !x.FullName.Equals(current.FullName, StringComparison.OrdinalIgnoreCase)
+
+                        // ReSharper disable once AssignNullToNotNullAttribute
                         && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
                         && this.sectionsToExcludeFromLists != null
                         && !this.sectionsToExcludeFromLists.Any(y => y.Equals(x.Section, StringComparison.OrdinalIgnoreCase)))
                      || (!IsListPartialPageFile(current.FullName)
-                          && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
+
+                         // ReSharper disable once AssignNullToNotNullAttribute
+                         && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
                           && !IsSameDirectory(new FileInfo(x.FullName).DirectoryName, directoryName)))
                     && !IsSameDirectory(new FileInfo(x.FullName).DirectoryName, current.FullName))
                 .ToList();
@@ -651,6 +688,7 @@ namespace Krompaco.RecordCollector.Content.IO
                     nestedSection = directoryInfo.FullName;
                 }
 
+                // ReSharper disable once PossibleNullReferenceException
                 directoryName = directoryInfo.Parent.FullName;
 
                 if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))

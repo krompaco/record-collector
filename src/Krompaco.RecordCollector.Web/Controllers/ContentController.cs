@@ -109,7 +109,9 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 sb.AppendLine($"Descendants: {fm.Descendants.Count}");
                 sb.AppendLine($"ClosestSectionDirectory: {fm.ClosestSectionDirectory}");
                 sb.AppendLine($"Section: {fm.Section}");
-                sb.AppendLine($"Parent: {fm.Parent?.RelativeUrl.ToString() ?? "n/a"}");
+                sb.AppendLine($"Parent: {fm.ParentPage?.RelativeUrl.ToString() ?? "n/a"}");
+                sb.AppendLine($"Previous: {fm.PreviousPage?.RelativeUrl.ToString() ?? "n/a"}");
+                sb.AppendLine($"Next: {fm.NextPage?.RelativeUrl.ToString() ?? "n/a"}");
 
                 if (fm is SinglePage)
                 {
