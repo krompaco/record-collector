@@ -1,4 +1,5 @@
-﻿using Markdig.Extensions.Tables;
+﻿using System;
+using Markdig.Extensions.Tables;
 using Markdig.Renderers;
 
 namespace Krompaco.RecordCollector.Web.Extensions
@@ -7,6 +8,11 @@ namespace Krompaco.RecordCollector.Web.Extensions
     {
         protected override void Write(HtmlRenderer renderer, Table table)
         {
+            if (renderer == null)
+            {
+                throw new ArgumentNullException(nameof(renderer));
+            }
+
             renderer.EnsureLine();
             renderer.WriteLine("<div class=\"table-wrapper\">");
             base.Write(renderer, table);

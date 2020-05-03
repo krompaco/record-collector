@@ -47,7 +47,7 @@ namespace Krompaco.RecordCollector.Web
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
 #pragma warning restore CA1822 // Mark members as static
         {
-            logger.LogInformation("Inside Configure method.");
+            logger.LogInformation("\r\nRecord Collector Version 0.1\r\n");
 
             app.UseRequestLocalization();
 

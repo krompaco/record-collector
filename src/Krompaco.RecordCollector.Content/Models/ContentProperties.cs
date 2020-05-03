@@ -10,7 +10,9 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string StaticSiteRootPath { get; set; }
 
+#pragma warning disable CA1819 // Properties should not return arrays
         public string[] SectionsToExcludeFromLists { get; set; }
+#pragma warning restore CA1819 // Properties should not return arrays
 
         public string EnvironmentProjectWebRootPath { get; set; }
     }

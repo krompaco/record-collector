@@ -111,7 +111,6 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         public LayoutViewModelBuilder<TViewModel, TModel> WithMarkdownPipeline()
         {
-
             this.vm.MarkdownPipeline = new MarkdownPipelineBuilder()
                 .Use<HtmlTableWithWrapperExtension>()
                 .UseAbbreviations()

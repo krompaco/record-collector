@@ -1,0 +1,1 @@
+dotnet run --project ./src/Krompaco.RecordCollector.Web/Krompaco.RecordCollector.Web.csproj --configuration Release

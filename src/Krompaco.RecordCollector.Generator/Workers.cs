@@ -13,19 +13,24 @@ using Krompaco.RecordCollector.Content.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Krompaco.RecordCollector.Generator
 {
     public class Workers : IClassFixture<WebApplicationFactory<Web.Startup>>
     {
+        private readonly ITestOutputHelper testOutputHelper;
+
         private readonly HttpClient client;
 
-        public Workers(WebApplicationFactory<Web.Startup> factory)
+        public Workers(WebApplicationFactory<Web.Startup> factory, ITestOutputHelper testOutputHelper)
         {
             if (factory == null)
             {
                 throw new ArgumentNullException(nameof(factory));
             }
+
+            this.testOutputHelper = testOutputHelper;
 
             this.client = factory.CreateClient();
         }
@@ -33,6 +38,11 @@ namespace Krompaco.RecordCollector.Generator
         [Fact]
         public async Task GenerateStaticSite()
         {
+            this.testOutputHelper.WriteLine(string.Empty);
+            this.testOutputHelper.WriteLine("Record Collector Version 0.1");
+            this.testOutputHelper.WriteLine(string.Empty);
+            this.testOutputHelper.WriteLine("Starting to generate site...");
+
             var contentProperties = await this.GetContentProperties().ConfigureAwait(true);
             ClearDirectory(contentProperties);
 
@@ -47,6 +57,7 @@ namespace Krompaco.RecordCollector.Generator
 
             var allFileModels = fileService.GetAllFileModels();
             var allRequestTasks = new List<Task<HttpResponseMessage>>();
+            var i = 0;
 
             // Start sending requests
             foreach (var file in allFileModels.Where(x => x is SinglePage))
@@ -71,6 +82,8 @@ namespace Krompaco.RecordCollector.Generator
                         break;
                     }
 
+                    i++;
+                    this.testOutputHelper.WriteLine($"GET {paginationPath}");
                     paginationResponse.EnsureSuccessStatusCode();
 
                     var virtualFile = new ListPage { RelativeUrl = paginationUrl };
@@ -114,11 +127,12 @@ namespace Krompaco.RecordCollector.Generator
                 CopyFileResource(file, contentProperties);
             }
 
-            Console.WriteLine($"Files copied on disk: {f}");
+            this.testOutputHelper.WriteLine($"Copying from project web root: {contentProperties.EnvironmentProjectWebRootPath}");
+            this.testOutputHelper.WriteLine($"Copying from content root: {contentProperties.ContentRootPath}");
+            this.testOutputHelper.WriteLine($"Files copied: {f}");
 
             // Write the requested URL responses to disk
             var responses = await Task.WhenAll(allRequestTasks).ConfigureAwait(true);
-            var i = 0;
 
             foreach (var response in responses)
             {
@@ -126,7 +140,7 @@ namespace Krompaco.RecordCollector.Generator
                 response.EnsureSuccessStatusCode();
 
                 var file = allFileModels.Single(x => x.RelativeUrl.ToString() == response.RequestMessage.RequestUri.AbsolutePath);
-                Console.WriteLine($"Found {file.RelativeUrl}");
+                this.testOutputHelper.WriteLine($"GET {file.RelativeUrl}");
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
                 await using var output = File.Create(CreateDirectoryAndGetFilePath(file, contentProperties));
@@ -137,7 +151,8 @@ namespace Krompaco.RecordCollector.Generator
                 await output.DisposeAsync().ConfigureAwait(true);
             }
 
-            Console.WriteLine($"HTTP requested files written: {i}");
+            this.testOutputHelper.WriteLine($"Test web host requests written: {i}");
+            this.testOutputHelper.WriteLine($"Completed to: {contentProperties.StaticSiteRootPath}");
         }
 
         private static string CreateDirectoryAndGetFilePath(IRecordCollectorFile page, ContentProperties contentProperties)
