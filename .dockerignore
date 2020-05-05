@@ -1,0 +1,11 @@
+# directories
+**/bin/
+**/obj/
+**/out/
+
+# files
+Dockerfile
+**/*.trx
+**/*.ps1
+**/*.cmd
+**/*.sh

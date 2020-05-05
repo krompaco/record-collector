@@ -5,3 +5,4 @@ bin
 obj
 appsettings.Development.json
 node_modules
+artifacts/static-site/
