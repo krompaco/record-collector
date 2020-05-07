@@ -1,5 +1,7 @@
 name: .NET Core
 on: [push]
+env:
+  ASPNETCORE_ENVIRONMENT: 'Action'
 jobs:
   deployCommitDraft:
     name: Deploy draft to Netlify
