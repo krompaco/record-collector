@@ -28,9 +28,13 @@ Built using .NET Core 3.1 and these packages and projects. Thank you!
 * [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
 * [Microsoft.CodeAnalysis.FxCopAnalyzers](https://github.com/dotnet/roslyn-analyzers)
 
-### Demo site
+### Demo sites
 
 The [demo web site](https://record-collector.net) views are closed source and uses [Tailwind UI](https://tailwindui.com) which needs a purchased license. I will look into if the full demo site can be opened or made accessible in some form.
+
+The [sample web site](https://record-collector.netlify.app) is generated on push and deployed to Netlify using a GitHub Action.
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
 ## License
 
