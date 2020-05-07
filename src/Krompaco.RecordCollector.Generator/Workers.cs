@@ -48,7 +48,6 @@ namespace Krompaco.RecordCollector.Generator
             stopwatch.Start();
 
             var contentProperties = await this.GetContentProperties().ConfigureAwait(true);
-            ClearDirectory(contentProperties);
 
             var fileService = new FileService(
                 contentProperties.ContentRootPath,
@@ -58,6 +57,8 @@ namespace Krompaco.RecordCollector.Generator
 
             var outputPath = contentProperties.StaticSiteRootPath;
             Directory.CreateDirectory(outputPath);
+
+            ClearDirectory(contentProperties);
 
             var allFileModels = fileService.GetAllFileModels();
             var allRequestTasks = new List<Task<HttpResponseMessage>>();
