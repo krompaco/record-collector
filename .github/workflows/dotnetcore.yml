@@ -1,4 +1,4 @@
-name: Generate and Deploy to Netlify
+name: .NET Core
 on: [push]
 jobs:
   deployCommitDraft:
