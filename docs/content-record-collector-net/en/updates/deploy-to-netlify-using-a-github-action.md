@@ -1,19 +1,17 @@
 ---
-title: "Deploy to Netflify using GitHub Action"
+title: "Deploy to Netflify using a GitHub Action"
 date: 2020-05-06
 description: "How to set up deployment to Netlify using a GitHub Action."
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 ---
-
-This definition will deploy to the production URL on **push** to **master** and deploy a draft that will get a preview URL on **push** to any other branch.
+This definition will deploy to the production URL on **push to master** and deploy a draft that will get a preview URL on push to any other branch.
 <!--more-->
-
 You first need to add secrets to you GitHub repo for `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`, these are easily created and copied from your Netlify site settings.
 
 ## YAML file to use in your action
 
-Then add an action that has the following definition. It sets the environment name to **Action** so look in that appsettings JSON file on what gets pulled.
+Then add an action that has the following definition. It sets the environment name to `Action` so look in that appsettings file on what gets pulled.
 
 ```yml
 name: .NET Core
