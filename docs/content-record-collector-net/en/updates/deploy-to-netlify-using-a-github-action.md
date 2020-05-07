@@ -1,11 +1,11 @@
 ---
-title: "Deploy to Netflify using a GitHub Action"
+title: "Deploy to Netlify using a GitHub Action"
 date: 2020-05-06
-description: "How to set up deployment to Netlify using a GitHub Action."
+description: "How to set up deployment of a Record Collector site to Netlify using a GitHub Action."
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 ---
-This definition will deploy to the production URL on **push to master** and deploy a draft that will get a preview URL on push to any other branch.
+This definition will deploy your site to the production URL on **push to master** and deploy a draft that will get a preview URL on push to any other branch.
 <!--more-->
 You first need to add secrets to you GitHub repo for `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`, these are easily created and copied from your Netlify site settings.
 
