@@ -4,6 +4,7 @@ date: 2020-04-11
 description: "META description is considered required by many."
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
+robots: "noindex"
 ---
 
 This content was found as part of the [Docsy example repo](https://github.com/google/docsy-example).

@@ -8,6 +8,10 @@
 	<title>@Model.Title</title>
 	<link rel="stylesheet" href="/css/site.css" />
 	<link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
+	@if (!string.IsNullOrWhiteSpace(Model.Robots))
+	{
+		<meta name="robots" content="@Model.Robots" />
+	}
 	<meta name="description" content="@Model.Description" />
 	@if (!string.IsNullOrWhiteSpace(Model.Keywords))
 	{

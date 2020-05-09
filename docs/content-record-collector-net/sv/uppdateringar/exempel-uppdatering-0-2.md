@@ -4,6 +4,7 @@ date: 2020-04-02
 description: "META-beskrivning av sidan är viktigt."
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
+robots: "noindex"
 ---
 
 Text kan vara **bold**, _italic_, eller ~~strikethrough~~. Se [länk till bloggen](https://krompaco.nu).

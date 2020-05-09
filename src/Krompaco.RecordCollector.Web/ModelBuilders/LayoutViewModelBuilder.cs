@@ -6,10 +6,6 @@ using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.Models;
 using Markdig;
-using Markdig.Extensions.AutoLinks;
-using Markdig.Extensions.EmphasisExtras;
-using Markdig.Extensions.MediaLinks;
-using Markdig.Extensions.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
@@ -40,16 +36,18 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             this.vm.Localizer = localizer;
             this.vm.ContentProperties = contentProperties;
 
-            if (this.vm is ListPageViewModel listPageViewModel)
+            if (!(this.vm is ListPageViewModel listPageViewModel))
             {
-                listPageViewModel.Pagination =
-                    new PaginationViewModel
-                    {
-                        Layout = this.vm,
-                        Items = new List<PaginationItemViewModel>()
-                    };
-                listPageViewModel.PagedDescendantPages = new List<SinglePage>();
+                return;
             }
+
+            listPageViewModel.Pagination =
+                new PaginationViewModel
+                {
+                    Layout = this.vm,
+                    Items = new List<PaginationItemViewModel>()
+                };
+            listPageViewModel.PagedDescendantPages = new List<SinglePage>();
         }
 
         public LayoutViewModelBuilder<TViewModel, TModel> WithMeta()
@@ -57,6 +55,14 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             this.vm.Title = this.currentPage.Title;
             this.vm.Description = this.currentPage.Description;
             this.vm.Keywords = this.currentPage.Keywords;
+
+            const string RobotsKey = "robots";
+
+            if (this.currentPage.CustomStringProperties.ContainsKey(RobotsKey))
+            {
+                this.vm.Robots = this.currentPage.CustomStringProperties[RobotsKey];
+            }
+
             return this;
         }
 

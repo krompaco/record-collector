@@ -10,6 +10,8 @@ namespace Krompaco.RecordCollector.Web.Models
     {
         public string Title { get; set; }
 
+        public string Robots { get; set; }
+
         public string Description { get; set; }
 
         public string Keywords { get; set; }
