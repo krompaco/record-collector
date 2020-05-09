@@ -1,17 +1,21 @@
 ---
-title: "Deploy to Netlify using a GitHub Action"
+title: "Deploy your Netlify site from GitHub using a GitHub Action"
 date: 2020-05-06
 description: "How to set up deployment of a Record Collector site to Netlify using a GitHub Action."
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 ---
-This definition will deploy your site to the production URL on **push to master** and deploy a draft that will get a preview URL on push to any other branch.
+This definition will deploy your site to your Netlify site's production URL on **push to master** and deploy a draft that will get a preview URL on push to any other branch.
 <!--more-->
-You first need to add secrets to you GitHub repo for `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`, these are easily created and copied from your Netlify site settings.
+[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://record-collector.netlify.app/)
+
+You first need to add secrets to you GitHub repo for `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`, these are easily created/found in and copied from your Netlify site settings.
 
 ## YAML file to use in your action
 
-Then add an action that has the following definition. It sets the environment name to `Action` so look in that appsettings file on what gets pulled.
+Then add an action that has the following definition. I'm not sure if it's necessary but I started from the default .NET Core Action and kept that name and some other things.
+
+I thought this [marketplace GitHub Action for deploying to Netlify](https://github.com/marketplace/actions/netlify-actions) looked the best. It's in the YAML below and doesn't need anything else to work.
 
 ```yml
 name: .NET Core
@@ -67,3 +71,22 @@ jobs:
           build-dir: './artifacts/static-site'
           comment-on-commit: true
 ```
+
+## Paths to use in configuration
+
+As you can see the environment name gets set to `Action` so in **appsettings.Action.json** this is how I've configured the sample site.
+
+```js
+{
+  "AppSettings": {
+    "ContentRootPath": "/home/runner/work/record-collector/record-collector/docs/content-record-collector-net/",
+    "StaticSiteRootPath": "/home/runner/work/record-collector/record-collector/artifacts/static-site/",
+    "SectionsToExcludeFromLists": [ "pages", "sidor" ],
+    "MainNavigationSections": [ "pages", "sidor" ],
+    "PaginationPageCount": 2,
+    "PaginationPageSize": 3
+  }
+}
+```
+
+Notice the full paths to use on the GitHub Action work runner.

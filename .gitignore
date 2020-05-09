@@ -6,3 +6,5 @@ obj
 appsettings.Development.json
 node_modules
 artifacts/static-site/
+artifacts/zip-*.bat
+artifacts/*.zip
