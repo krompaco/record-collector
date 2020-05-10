@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Text;
 using System.Text.RegularExpressions;
 using Krompaco.RecordCollector.Content.IO;
@@ -137,11 +138,24 @@ namespace Krompaco.RecordCollector.Web.Controllers
         [HttpGet]
         public IActionResult Files(string path)
         {
+            var siteUrl = this.config.GetAppSettingsSiteUrl();
             var viewPrefix = this.config.GetAppSettingsViewPrefix();
             var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
             var culture = rqf.RequestCulture.Culture;
             var contentProperties = this.GetContentProperties();
             this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
+
+            // Check if RSS request
+            var rssForList = path != null
+                             && !string.IsNullOrWhiteSpace(siteUrl)
+                             && path.EndsWith("rss.xml", StringComparison.OrdinalIgnoreCase);
+
+            if (rssForList)
+            {
+                this.logger.LogInformation("RSS requested.");
+                path = Regex.Replace(path, "rss.xml$", string.Empty, RegexOptions.IgnoreCase);
+                this.logger.LogInformation($"Path now: \"{path}\"");
+            }
 
             // Fix path for pagination
             var isPaginationPath = IsPaginationPath(path);
@@ -227,6 +241,26 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 listViewModel.Title = rootPage.Title ?? this.localizer["Updates"];
 
                 this.LogTime();
+
+                if (rssForList)
+                {
+                    var rssUrl = new Uri(
+                        new Uri(siteUrl),
+                        $"{rootPage.RelativeUrl}rss.xml");
+                    var rssItems = rootPage.DescendantPages.Take(10).ToList();
+                    var rssResult = new RssXmlActionResult(
+                        new Uri(siteUrl),
+                        this,
+                        rssItems,
+                        new SyndicationFeed(
+                            listViewModel.Title,
+                            listViewModel.Description,
+                            rssUrl,
+                            rssUrl.ToString(),
+                            rssItems.First().Date.ToUniversalTime()));
+                    return rssResult.Get();
+                }
+
                 return this.View(viewPrefix + "List", listViewModel);
             }
 
@@ -268,6 +302,26 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     listViewModel.Title = listPage.Title ?? cultureInfo.NativeName.FirstCharToUpper();
 
                     this.LogTime();
+
+                    if (rssForList)
+                    {
+                        var rssUrl = new Uri(
+                            new Uri(siteUrl),
+                            $"{listPage.RelativeUrl}rss.xml");
+                        var rssItems = listPage.DescendantPages.Take(10).ToList();
+                        var rssResult = new RssXmlActionResult(
+                            new Uri(siteUrl),
+                            this,
+                            rssItems,
+                            new SyndicationFeed(
+                                listViewModel.Title,
+                                listViewModel.Description,
+                                rssUrl,
+                                rssUrl.ToString(),
+                                rssItems.First().Date.ToUniversalTime()));
+                        return rssResult.Get();
+                    }
+
                     return this.View(viewPrefix + "List", listViewModel);
                 }
             }
