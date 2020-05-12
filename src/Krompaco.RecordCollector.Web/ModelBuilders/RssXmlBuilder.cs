@@ -7,9 +7,9 @@ using System.Xml;
 using Krompaco.RecordCollector.Content.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Krompaco.RecordCollector.Web.Models
+namespace Krompaco.RecordCollector.Web.ModelBuilders
 {
-    public class RssXmlActionResult
+    public class RssXmlBuilder
     {
         private readonly Uri siteUrl;
 
@@ -19,7 +19,7 @@ namespace Krompaco.RecordCollector.Web.Models
 
         private readonly SyndicationFeed feed;
 
-        public RssXmlActionResult(Uri siteUrl, Controller controller, List<SinglePage> posts, SyndicationFeed feed)
+        public RssXmlBuilder(Uri siteUrl, Controller controller, List<SinglePage> posts, SyndicationFeed feed)
         {
             this.siteUrl = siteUrl;
             this.controller = controller;
@@ -27,7 +27,7 @@ namespace Krompaco.RecordCollector.Web.Models
             this.feed = feed;
         }
 
-        public IActionResult Get()
+        public IActionResult BuildActionResult()
         {
             var items = new List<SyndicationItem>();
             var postings = this.posts;

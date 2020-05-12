@@ -248,7 +248,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         new Uri(siteUrl),
                         $"{rootPage.RelativeUrl}rss.xml");
                     var rssItems = rootPage.DescendantPages.Take(10).ToList();
-                    var rssResult = new RssXmlActionResult(
+                    var rssXmlBuilder = new RssXmlBuilder(
                         new Uri(siteUrl),
                         this,
                         rssItems,
@@ -258,7 +258,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                             rssUrl,
                             rssUrl.ToString(),
                             rssItems.First().Date.ToUniversalTime()));
-                    return rssResult.Get();
+                    return rssXmlBuilder.BuildActionResult();
                 }
 
                 return this.View(viewPrefix + "List", listViewModel);
@@ -309,7 +309,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                             new Uri(siteUrl),
                             $"{listPage.RelativeUrl}rss.xml");
                         var rssItems = listPage.DescendantPages.Take(10).ToList();
-                        var rssResult = new RssXmlActionResult(
+                        var rssXmlBuilder = new RssXmlBuilder(
                             new Uri(siteUrl),
                             this,
                             rssItems,
@@ -319,7 +319,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                 rssUrl,
                                 rssUrl.ToString(),
                                 rssItems.First().Date.ToUniversalTime()));
-                        return rssResult.Get();
+                        return rssXmlBuilder.BuildActionResult();
                     }
 
                     return this.View(viewPrefix + "List", listViewModel);
@@ -445,6 +445,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath(),
                 SectionsToExcludeFromLists = this.config.GetAppSettingsSectionsToExcludeFromLists(),
                 EnvironmentProjectWebRootPath = this.env.WebRootPath,
+                SiteUrl = this.config.GetAppSettingsSiteUrl(),
             };
 
             return model;

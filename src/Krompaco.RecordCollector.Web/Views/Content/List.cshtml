@@ -16,6 +16,10 @@ else
 
 @if (Model.PagedDescendantPages.Count > 0)
 {
+	@section head {
+		<link rel="alternate" type="application/rss+xml" title="@Model.Title" href="@Model.ContentProperties.SiteUrl.TrimEnd('/')@(Model.CurrentPage.RelativeUrl)rss.xml" />
+	}
+
 	<h2>@Model.Localizer["Updates"]</h2>
 	<ul>
 		@foreach (var sp in Model.PagedDescendantPages)

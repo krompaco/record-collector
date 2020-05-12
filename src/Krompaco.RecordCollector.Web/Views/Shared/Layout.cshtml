@@ -17,6 +17,7 @@
 	{
 		<meta name="keywords" content="@Model.Keywords" />
 	}
+	@await RenderSectionAsync("head", false)
 </head>
 <body>
 	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/"

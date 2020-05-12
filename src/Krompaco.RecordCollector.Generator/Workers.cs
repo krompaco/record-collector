@@ -75,6 +75,25 @@ namespace Krompaco.RecordCollector.Generator
                     continue;
                 }
 
+                // RSS processing if ListPage
+                var rssPath = $"{file.RelativeUrl}rss.xml";
+                var rssUrl = new Uri(rssPath, UriKind.Relative);
+                var rssResponse = await this.client.GetAsync(rssUrl).ConfigureAwait(true);
+
+                if (rssResponse.Content.Headers.ContentType.MediaType == "application/rss+xml")
+                {
+                    this.testOutputHelper.WriteLine($"GET {rssPath}");
+
+                    var virtualFileRss = new ListPage { RelativeUrl = rssUrl };
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                    await using var outputRss = File.Create(CreateDirectoryAndGetFilePath(virtualFileRss, contentProperties));
+#pragma warning restore CA2000 // Dispose objects before losing scope
+                    await using var inputRss = await rssResponse.Content.ReadAsStreamAsync().ConfigureAwait(true);
+                    await inputRss.CopyToAsync(outputRss).ConfigureAwait(true);
+                    await inputRss.DisposeAsync().ConfigureAwait(true);
+                    await outputRss.DisposeAsync().ConfigureAwait(true);
+                }
+
                 // Pagination processing if ListPage
                 for (var j = 1; j <= 100; j++)
                 {

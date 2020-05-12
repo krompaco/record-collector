@@ -4,7 +4,9 @@ namespace Krompaco.RecordCollector.Web.Extensions
 {
     public static class IConfigurationExtensions
     {
+#pragma warning disable CA1055 // Uri return values should not be strings
         public static string GetAppSettingsSiteUrl(this IConfiguration config)
+#pragma warning restore CA1055 // Uri return values should not be strings
         {
             var path = config.GetValue<string>("AppSettings:SiteUrl");
             return path;

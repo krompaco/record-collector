@@ -1,5 +1,5 @@
 ---
-title: "Deploy your Netlify site from GitHub using a GitHub Action"
+title: "Deploy to your Netlify site from GitHub using a GitHub Action"
 date: 2020-05-06
 description: "How to set up deployment of a Record Collector site to Netlify using a GitHub Action."
 authorname: "Johan Kronberg"
