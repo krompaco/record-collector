@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
@@ -35,13 +37,26 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             foreach (var item in postings)
             {
                 var postUrl = new Uri(this.siteUrl, item.RelativeUrl);
-                items.Add(
-                    new SyndicationItem(
-                        item.Title,
-                        new TextSyndicationContent(item.Description),
-                        postUrl,
-                        postUrl.ToString(),
-                        item.Date.ToUniversalTime()));
+
+                var si = new SyndicationItem(
+                    item.Title,
+                    new TextSyndicationContent(item.Description),
+                    postUrl,
+                    postUrl.ToString(),
+                    item.Date.ToUniversalTime())
+                {
+                    PublishDate = item.Date.ToUniversalTime(),
+                };
+
+                if (item.Categories != null && item.Categories.Any())
+                {
+                    foreach (var category in item.Categories)
+                    {
+                        si.Categories.Add(new SyndicationCategory(category));
+                    }
+                }
+
+                items.Add(si);
             }
 
             this.feed.Items = items;
@@ -51,7 +66,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
                 Encoding = Encoding.UTF8,
                 NewLineHandling = NewLineHandling.Entitize,
                 NewLineOnAttributes = true,
-                Indent = true
+                Indent = true,
             };
 
             using var stream = new MemoryStream();
