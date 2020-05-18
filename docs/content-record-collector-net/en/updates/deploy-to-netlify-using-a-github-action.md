@@ -84,6 +84,7 @@ As you can see the environment name gets set to `Action` so in **appsettings.Act
 ```js
 {
   "AppSettings": {
+    "SiteUrl": "https://record-collector.netlify.app/",
     "ContentRootPath": "/home/runner/work/record-collector/record-collector/docs/content-record-collector-net/",
     "StaticSiteRootPath": "/home/runner/work/record-collector/record-collector/artifacts/static-site/",
     "SectionsToExcludeFromLists": [ "pages", "sidor" ],
