@@ -2,6 +2,10 @@
 title: "Exempeluppdatering 0.6"
 date: 2020-04-06
 description: "META-beskrivning av sidan är viktigt."
+categories:
+  - Exempel
+images:
+  - /files/photo-7.jpg
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 robots: "noindex"

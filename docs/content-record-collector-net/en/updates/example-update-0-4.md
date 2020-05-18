@@ -2,6 +2,10 @@
 title: "Example update 0.4"
 date: 2020-04-04
 description: "META description is considered required by many."
+categories:
+  - Examples
+images:
+  - /files/photo-1.jpg
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 robots: "noindex"
