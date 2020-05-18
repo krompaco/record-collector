@@ -6,6 +6,11 @@ namespace Krompaco.RecordCollector.Content.Models
 {
     public class SinglePage : IRecordCollectorFile
     {
+        public SinglePage()
+        {
+            this.Level = -1;
+        }
+
         public string Type { get; set; }
 
         public List<string> Categories { get; set; }

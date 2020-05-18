@@ -101,24 +101,31 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.LogTime();
             var sb = new StringBuilder();
 
-            foreach (var fm in this.allFileModels)
+            foreach (var fm in this.allFileModels.OrderBy(this.GetSortOrder))
             {
-                sb.AppendLine($"{fm.Title} {fm.FullName}");
-                sb.AppendLine($"{fm.Level} {fm.GetType()} {fm.RelativeUrl}");
-                sb.AppendLine($"Ancestors: {fm.Ancestors.Count}");
-                sb.AppendLine($"Siblings: {fm.Siblings.Count}");
-                sb.AppendLine($"Descendants: {fm.Descendants.Count}");
-                sb.AppendLine($"ClosestSectionDirectory: {fm.ClosestSectionDirectory}");
-                sb.AppendLine($"Section: {fm.Section}");
-                sb.AppendLine($"Parent: {fm.ParentPage?.RelativeUrl.ToString() ?? "n/a"}");
-                sb.AppendLine($"Previous: {fm.PreviousPage?.RelativeUrl.ToString() ?? "n/a"}");
-                sb.AppendLine($"Next: {fm.NextPage?.RelativeUrl.ToString() ?? "n/a"}");
+                var indent = new StringBuilder();
+
+                for (var i = 0; i < fm.Level; i++)
+                {
+                    indent.Append("    ");
+                }
+
+                sb.AppendLine($"{indent}{fm.Title} {fm.FullName}");
+                sb.AppendLine($"{indent}{fm.Level} {fm.GetType()} {fm.RelativeUrl}");
+                sb.AppendLine($"{indent}Ancestors: {fm.Ancestors.Count}");
+                sb.AppendLine($"{indent}Siblings: {fm.Siblings.Count}");
+                sb.AppendLine($"{indent}Descendants: {fm.Descendants.Count}");
+                sb.AppendLine($"{indent}ClosestSectionDirectory: {fm.ClosestSectionDirectory}");
+                sb.AppendLine($"{indent}Section: {fm.Section}");
+                sb.AppendLine($"{indent}Parent: {fm.ParentPage?.RelativeUrl.ToString() ?? "n/a"}");
+                sb.AppendLine($"{indent}Previous: {fm.PreviousPage?.RelativeUrl.ToString() ?? "n/a"}");
+                sb.AppendLine($"{indent}Next: {fm.NextPage?.RelativeUrl.ToString() ?? "n/a"}");
 
                 if (fm is SinglePage)
                 {
                     var sp = (SinglePage)fm;
-                    sb.AppendLine($"Content length: {sp.Content?.Length ?? 0}");
-                    sb.AppendLine($"Date: {sp.Date}");
+                    sb.AppendLine($"{indent}Content length: {sp.Content?.Length ?? 0}");
+                    sb.AppendLine($"{indent}Date: {sp.Date}");
                 }
 
                 sb.AppendLine();
@@ -176,7 +183,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                 .TrimStart('/')
                                 .StartsWith($"{culture.Name}/", StringComparison.OrdinalIgnoreCase))
                         .Select(x => x as SinglePage)
-                        .Where(x => x?.Title != null)
+                        .Where(x => x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
                         .ThenBy(x => x.Title)
                         .ToList());
@@ -187,7 +194,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         .Where(x =>
                             mainNavigationSections.Contains(x.Section))
                         .Select(x => x as SinglePage)
-                        .Where(x => x?.Title != null)
+                        .Where(x => x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
                         .ThenBy(x => x.Title)
                         .ToList());
@@ -449,6 +456,21 @@ namespace Krompaco.RecordCollector.Web.Controllers
             };
 
             return model;
+        }
+
+        private int GetSortOrder(IRecordCollectorFile file)
+        {
+            if (file.GetType() == typeof(ListPage))
+            {
+                return 0;
+            }
+
+            if (file.GetType() == typeof(SinglePage))
+            {
+                return 1;
+            }
+
+            return 2;
         }
 
         private void LogTime()

@@ -9,7 +9,7 @@ namespace Krompaco.RecordCollector.Web.Models
 
         public bool HasChildren { get; set; }
 
-        public IEnumerable<MenuItemViewModel> ChildItems { get; set; }
+        public List<MenuItemViewModel> ChildItems { get; set; }
 
         public Uri RelativeUrl { get; set; }
 

@@ -180,16 +180,23 @@ namespace Krompaco.RecordCollector.Content.IO
         public static List<SinglePage> GetAncestors(IRecordCollectorFile current)
         {
             var ancestors = new List<SinglePage>();
+            var original = current;
+            var input = current;
 
             while (true)
             {
-                if (current.ParentPage != null)
+                if (input.ParentPage != null)
                 {
-                    ancestors.Add(current.ParentPage);
-                    current = current.ParentPage;
+                    ancestors.Add(input.ParentPage);
+                    input = input.ParentPage;
                 }
                 else
                 {
+                    if (original.Level == -1 && ancestors.Count > 0)
+                    {
+                        original.Level = ancestors.Count;
+                    }
+
                     return ancestors;
                 }
             }
@@ -658,10 +665,10 @@ namespace Krompaco.RecordCollector.Content.IO
                         return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
                     }
 
-                    if (supportedFiles.Count == 1)
-                    {
-                        return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
-                    }
+                    ////if (supportedFiles.Count == 1)
+                    ////{
+                    ////    return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
+                    ////}
                 }
 
                 if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryInfo.Parent.FullName))

@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
     public class PageResource : IRecordCollectorFile
     {
+        public PageResource()
+        {
+            this.Level = -1;
+        }
+
         public string Name { get; set; }
 
         public string Title { get; set; }

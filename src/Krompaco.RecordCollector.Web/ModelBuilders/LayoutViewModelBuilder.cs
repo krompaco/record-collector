@@ -97,20 +97,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
             foreach (var page in pages)
             {
-                var item = new MenuItemViewModel();
-
-                if (this.vm.CurrentPath.Equals(page.RelativeUrl.ToString(), StringComparison.OrdinalIgnoreCase))
-                {
-                    item.IsSelected = true;
-                }
-
-                item.ChildItems = new List<MenuItemViewModel>();
-                item.HasChildren = item.ChildItems.Any();
-                item.Level = 0;
-                item.Text = string.IsNullOrWhiteSpace(page.LinkTitle) ? page.Title : page.LinkTitle;
-                item.RelativeUrl = page.RelativeUrl;
-
-                this.vm.NavigationItems.Add(item);
+                this.vm.NavigationItems.Add(this.GetMenuItemViewModelFromPage(page));
             }
 
             return this;
@@ -144,6 +131,40 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
         public TViewModel GetViewModel()
         {
             return this.vm;
+        }
+
+        private MenuItemViewModel GetMenuItemViewModelFromPage(SinglePage page)
+        {
+            var item = new MenuItemViewModel();
+
+            if (this.vm.CurrentPath.Equals(page.RelativeUrl.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                item.IsSelected = true;
+            }
+
+            item.ChildItems = new List<MenuItemViewModel>();
+
+            if (page.Descendants != null && page.Descendants.Any(x => x.Level == page.Level + 1))
+            {
+                var childPages = page.Descendants
+                    .Where(x => x.Level == page.Level + 1
+                                && x.GetType() == typeof(SinglePage))
+                    .Select(x => (SinglePage)x)
+                    .OrderBy(x => x.Weight)
+                    .ToList();
+
+                foreach (var childPage in childPages)
+                {
+                    item.ChildItems.Add(this.GetMenuItemViewModelFromPage(childPage));
+                }
+            }
+
+            item.HasChildren = item.ChildItems.Any();
+            item.Level = page.Level;
+            item.Text = string.IsNullOrWhiteSpace(page.LinkTitle) ? page.Title : page.LinkTitle;
+            item.RelativeUrl = page.RelativeUrl;
+
+            return item;
         }
     }
 }
