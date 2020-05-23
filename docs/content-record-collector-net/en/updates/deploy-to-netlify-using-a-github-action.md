@@ -36,10 +36,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: .NET Core
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
@@ -60,10 +61,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: .NET Core
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 

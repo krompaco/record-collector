@@ -4,4 +4,4 @@ title = "Kom igång"
 description = "Information om hur du kommer igång och anpassar Record Collector."
 weight = 10
 +++
-Här kommer det finnas instruktioner om hur man kommer igång eller åtminstone en länk till den engelska versionen.
+Instruktioner finns på den [den engelska "Getting started"-sidan](/en/pages/getting-started/).
