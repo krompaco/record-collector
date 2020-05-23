@@ -9,15 +9,16 @@ jobs:
     if: github.event_name == 'push' && github.ref != 'refs/heads/master'
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2     
-           
-      - name: .NET Core
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
-        
+
       - name: Deploy draft to Netlify
         uses: South-Paw/action-netlify-deploy@v1.0.3
         with:
@@ -35,10 +36,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: .NET Core
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.101
+
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
