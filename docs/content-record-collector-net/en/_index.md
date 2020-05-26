@@ -7,4 +7,4 @@ This site contains documentation and also acts as a demo web site of what the st
 
 Features are the same as in the [Github repo](https://github.com/krompaco/record-collector) sample web site but when online at [record-collector.net](https://record-collector.net) it also has styling using [Tailwind UI](https://tailwindui.com) components which needs a purchased license and aren't part of the open code.
 
-Below is a sample posts list with _pagination_.
+Below is a latest posts list with _pagination_.
