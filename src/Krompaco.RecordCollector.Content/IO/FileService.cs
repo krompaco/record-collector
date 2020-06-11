@@ -179,6 +179,11 @@ namespace Krompaco.RecordCollector.Content.IO
 
         public static List<SinglePage> GetAncestors(IRecordCollectorFile current)
         {
+            if (current == null)
+            {
+                throw new ArgumentNullException(nameof(current));
+            }
+
             var ancestors = new List<SinglePage>();
             var original = current;
             var input = current;
