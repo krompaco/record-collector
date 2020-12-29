@@ -29,14 +29,14 @@
 		<div role="navigation">
 			@if (Model.NavigationItems.Count > 0)
 			{
-				<ul role="menu">
+				<ul>
 					@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
 					{
 						<li>@Model.Localizer["Home"]</li>
 					}
 					else
 					{
-						<li><a role="menuitem" href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">@Model.Localizer["Home"]</a></li>
+						<li><a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">@Model.Localizer["Home"]</a></li>
 					}
 
 					@foreach (var ni in Model.NavigationItems)
@@ -48,7 +48,7 @@
 							}
 							else
 							{
-								<a role="menuitem" href="@ni.RelativeUrl">@ni.Text</a>
+								<a href="@ni.RelativeUrl">@ni.Text</a>
 							}
 
 							@if (ni.HasChildren)
@@ -70,7 +70,7 @@
 	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/")
 	{
 		<h2>@Model.Localizer["Change language"]</h2>
-		<ul role="menu">
+		<ul>
 			@foreach (var c in Model.RootCultures)
 			{
 				<li>
@@ -80,7 +80,7 @@
 					}
 					else
 					{
-						<a lang="@c.Name" role="menuitem" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName.FirstCharToUpper()</a>
+						<a lang="@c.Name" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName.FirstCharToUpper()</a>
 					}
 				</li>
 			}
@@ -106,7 +106,7 @@
 					}
 					else
 					{
-						<a role="menuitem" href="@ni.RelativeUrl">@ni.Text</a>
+						<a href="@ni.RelativeUrl">@ni.Text</a>
 					}
 
 					@if (ni.HasChildren)

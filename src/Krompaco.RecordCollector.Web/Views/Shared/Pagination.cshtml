@@ -2,44 +2,44 @@
 
 @if (Model.Items.Count > 1)
 {
-	<div class="" role="navigation">
+	<div role="navigation">
 		<h3>@Model.Layout.Localizer["Page navigation"]</h3>
 		<ul>
 			@foreach (var item in Model.Items)
 			{
 				@if (item.IsSelected)
 				{
-					<li class="">
+					<li>
 						<a href="@item.RelativeUrl" aria-current="page">@item.Page</a>
 					</li>
 				}
 				else if (item.IsFirst)
 				{
-					<li class="">
+					<li>
 						<a href="@item.RelativeUrl">@Model.Layout.Localizer["First"]</a>
 					</li>
 				}
 				else if (item.IsLast)
 				{
-					<li class="">
+					<li>
 						<a href="@item.RelativeUrl">@Model.Layout.Localizer["Last"]</a>
 					</li>
 				}
 				else if (item.IsPrevious)
 				{
-					<li class="">
+					<li>
 						<a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Previous"] (@item.Page)">@Model.Layout.Localizer["Previous"]</a>
 					</li>
 				}
 				else if (item.IsNext)
 				{
-					<li class="">
+					<li>
 						<a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Next"] (@item.Page)">@Model.Layout.Localizer["Next"]</a>
 					</li>
 				}
 				else if (item.IsEllipsis)
 				{
-					<li class="">
+					<li>
 						...
 					</li>
 				}
@@ -48,7 +48,7 @@
 				}
 				else
 				{
-					<li class="">
+					<li>
 						<a href="@item.RelativeUrl">@item.Page</a>
 					</li>
 				}
