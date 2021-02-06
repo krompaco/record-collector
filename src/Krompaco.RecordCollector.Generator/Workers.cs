@@ -40,7 +40,7 @@ namespace Krompaco.RecordCollector.Generator
         public async Task GenerateStaticSite()
         {
             this.testOutputHelper.WriteLine(string.Empty);
-            this.testOutputHelper.WriteLine("Record Collector Version 0.1");
+            this.testOutputHelper.WriteLine("Record Collector Version 1.0");
             this.testOutputHelper.WriteLine(string.Empty);
             this.testOutputHelper.WriteLine("Starting to generate site...");
 

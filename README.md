@@ -14,7 +14,7 @@ In this setup the generation process work using the WebApplicationFactory from t
 
 ## Installed packages
 
-Built using .NET Core 3.1 and these packages and projects. Thank you!
+Built using .NET 5.0 and these packages and projects. Thank you!
 
 | Project                                                 | License                   |
 |---------------------------------------------------------|---------------------------|
@@ -26,7 +26,7 @@ Built using .NET Core 3.1 and these packages and projects. Thank you!
 ### Quality control tools
 
 * [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
-* [Microsoft.CodeAnalysis.FxCopAnalyzers](https://github.com/dotnet/roslyn-analyzers)
+* [Microsoft.CodeAnalysis.NetAnalyzers](https://github.com/dotnet/roslyn-analyzers)
 
 ### Demo sites
 

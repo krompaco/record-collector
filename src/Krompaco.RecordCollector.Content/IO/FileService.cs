@@ -292,7 +292,7 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             var allSections = this.GetSections();
-            var name = fullName.Replace(this.contentRoot, string.Empty);
+            var name = fullName.Replace(this.contentRoot, string.Empty, StringComparison.OrdinalIgnoreCase);
             var parts = name.Split(Path.DirectorySeparatorChar);
 
             foreach (var part in parts)
@@ -534,10 +534,10 @@ namespace Krompaco.RecordCollector.Content.IO
                 throw new ArgumentNullException(nameof(fullName));
             }
 
-            var rootRemoved = fullName.Replace(this.contentRoot, string.Empty);
+            var rootRemoved = fullName.Replace(this.contentRoot, string.Empty, StringComparison.OrdinalIgnoreCase);
             rootRemoved = rootRemoved.TrimStart('/', '\\');
 
-            if (rootRemoved.Contains('\\'))
+            if (rootRemoved.Contains('\\', StringComparison.Ordinal))
             {
                 rootRemoved = rootRemoved.Replace('\\', '/');
             }
