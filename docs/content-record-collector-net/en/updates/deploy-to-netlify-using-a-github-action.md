@@ -10,7 +10,7 @@ images:
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 ---
-This definition will deploy your site to your Netlify site's production URL on **push to master** and deploy a draft that will get a preview URL on push to any other branch.
+This definition will deploy your site to your Netlify site's production URL on **push to main** and deploy a draft that will get a preview URL on push to any other branch.
 <!--more-->
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://record-collector.netlify.app/)
 
@@ -31,7 +31,7 @@ jobs:
   deployCommitDraft:
     name: Deploy draft to Netlify
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref != 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref != 'refs/heads/main'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -39,7 +39,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 5.0.102
 
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
@@ -56,7 +56,7 @@ jobs:
   publishMasterCommit:
     name: Publish to Netlify
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -64,7 +64,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 3.1.101
+          dotnet-version: 5.0.102
 
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
