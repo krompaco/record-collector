@@ -1,5 +1,5 @@
 +++
-title = "The .NET Core static web site generator toolkit"
+title = "The .NET 5.0 static site generator toolkit"
 description = "The documentation and Record Collector demo web site."
 keywords = "C# HTML"
 +++
