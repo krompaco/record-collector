@@ -45,12 +45,12 @@ This means the config used will come from **appsettings.Netlify.json** and this 
 
 These are settings that work well with the sample site.
 
-| Setting           | Value                    |
-|-------------------|--------------------------|
-| Base directory    | *Leave empty*            |
-| Build command     | `dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"` |
-| Publish directory | `artifacts/static-site/` |
-| Builds            | *Activate builds*        |
+| Setting           | Value                      |
+|-------------------|----------------------------|
+| Base directory    | *Leave empty*              |
+| Build command     | **dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"** |
+| Publish directory | **artifacts/static-site/** |
+| Builds            | *Activate builds*          |
 
  You should also be able to push a Shell script and have more work done, for example building front-end stuff before generating the static site using `npm run` or similar. The build-image has support for a wide variety of languages and runtimes.
 
