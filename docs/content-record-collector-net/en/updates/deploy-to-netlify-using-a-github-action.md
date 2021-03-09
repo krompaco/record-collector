@@ -97,4 +97,4 @@ As you can see the environment name gets set to `Action` so in **appsettings.Act
 }
 ```
 
-Notice the full paths to use on the GitHub Action work runner.
+Notice the full paths to use on the GitHub Action work runner. I have no idea why the `record-collector` GitHub repository name needs to be used twice in the structure but that is the case.
