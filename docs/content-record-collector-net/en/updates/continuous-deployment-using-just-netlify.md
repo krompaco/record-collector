@@ -39,7 +39,6 @@ This means the config used will come from **appsettings.Netlify.json** and this 
     "PaginationPageSize": 3
   }
 }
-
 ```
 
 ## Build settings in Netlify
