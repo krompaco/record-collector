@@ -30,7 +30,7 @@ Built using .NET 5.0 and these packages and projects. Thank you!
 
 ### Demo sites
 
-The [demo web site](https://record-collector.net) views are closed source and some parts use [Tailwind UI](https://tailwindui.com) which needs a purchased license. I will look into if the full demo site can be opened or made accessible in some form. The demo Website is generated and [deployed only on Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
+The [demo web site](https://record-collector.net) views are closed source and some parts use [Tailwind UI](https://tailwindui.com) which needs a purchased license. I will look into if the full demo site can be opened or made accessible in some form. The demo Website is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
 
