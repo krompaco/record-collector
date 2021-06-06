@@ -12,7 +12,7 @@ Go to the [Github repo](https://github.com/krompaco/record-collector) and choose
 
 ## Add a Development appsettings file to Web project
 
-Pick one of the example appsettings.*.json files or the base file and "save as" `appsettings.Development.json` in `src\Krompaco.RecordCollector.Web`. On Windows my file looks like this:
+Pick one of the example `appsettings.*.json` files or the base file and "save as" `appsettings.Development.json` in `src\Krompaco.RecordCollector.Web`. On Windows my file looks like this:
 
 ```js
 {
@@ -36,7 +36,7 @@ Pick one of the example appsettings.*.json files or the base file and "save as" 
 }
 ```
 
-Note that `C:\github\\record-collector\` is where I put the repository on my machine. Look at the files named Action, Docker or Netlify to see what works on Linux based systems.
+Note that `C:\github\record-collector\` is where I put the repository on my machine. Look at the files named Action, Docker or Netlify to see what works on Linux based systems.
 
 ## Run the web app in ASP.NET MVC mode
 
