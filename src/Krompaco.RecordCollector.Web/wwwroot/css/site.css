@@ -16,16 +16,19 @@
 }
 body {
 	margin: 22px auto;
-	max-width: 650px;
-	line-height: 1.6;
+	max-width: 750px;
+	line-height: 1.75;
 	background-color: #fff;
 	color: #444;
 	padding: 0 10px;
 	font-family: 'Inter var', sans-serif;
-	font-size: 1rem;
+	font-size: 1.2rem;
 }
 h1, h2, h3 {
-	line-height: 1.2
+	margin-top: 4rem;
+	line-height: 1.2;
+	letter-spacing: -0.025em;
+	font-weight: 900;
 }
 table {
 	border-collapse: collapse;
