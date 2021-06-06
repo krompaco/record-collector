@@ -62,7 +62,7 @@ Run `run-static-site-generator.ps1` in the repository root or use command:
 dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 ```
 
-This will write static HTML pages of your site as well asd assets you put in Web project's wwwroot folder to the path you specified in the appsettings file as `StaticSiteRootPath`.
+This will write static HTML pages of your site with the assets you put in Web project's wwwroot folder to the path you specified in the appsettings file as `StaticSiteRootPath`.
 
 ### Check static site locally
 
