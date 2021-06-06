@@ -1,6 +1,6 @@
 # record-collector.net
 
-The [Record Collector example and documentation web site](https://record-collector.net) is being filled with content and will have all the informaton on what the project is and does.
+The [Record Collector example and documentation web site](https://record-collector.net) is being filled with content and will have all the informaton on what the project is and does. Easiest starting point is to set up the repository locally and run the web project, see the [getting started](https://record-collector.net/en/pages/getting-started/) page for instructions.
 
 ## Inspiration
 
