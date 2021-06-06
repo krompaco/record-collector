@@ -6,7 +6,7 @@ weight = 15
 +++
 Record Collector reads a typical static site content folder into C# lists and objects and then uses them in a regular ASP.NET Core MVC project.
 
-![Sketch of Record Collector flow](/files/flow.png)
+![Sketch of Record Collector flow](https://record-collector.net/files/flow.png)
 
 This means when you are working with customization of a static site you are in a regular and very familiar ASP.NET MVC application.
 
@@ -20,4 +20,4 @@ You could also find a great fit if your site is just a few pages but you still w
 
 Thanks for your interest in Record Collector and reading this far!
 
-See the [getting started](/en/pages/getting-started/) page for instructions on how get going.
+See the getting started page for [instructions on how to get going](/en/pages/getting-started/) with Record Collector.
