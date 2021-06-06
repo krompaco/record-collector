@@ -10,9 +10,9 @@ To learn how Record Collector works it's easiest to grab a copy of the repositor
 
 Go to the [Github repo](https://github.com/krompaco/record-collector) and choose if you want to clone, fork and then clone or just download as a ZIP-file.
 
-## Add an `appsettings.Development.json` file to src/Krompaco.RecordCollector.Web
+## Add a Development appsettings file to Web project
 
-Pick one of the example appsettings.*.json files or the base file and "save as" `appsettings.Development.json` - on Windows my file looks like this:
+Pick one of the example appsettings.*.json files or the base file and "save as" `appsettings.Development.json` in `src\Krompaco.RecordCollector.Web`. On Windows my file looks like this:
 
 ```js
 {
