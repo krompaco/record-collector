@@ -8,7 +8,7 @@ To learn how Record Collector works it's easiest to grab a copy of the repositor
 
 ## Grab the repository
 
-Go to the [Github repo](https://github.com/krompaco/record-collector) and choose if you want to clone, fork and then clone or just download as a ZIP-file.
+Go to the [Github repo](https://github.com/krompaco/record-collector) and choose if you want to clone, _fork and then clone_ or just download as a ZIP-file.
 
 ## Add a Development appsettings file to Web project
 
@@ -16,13 +16,6 @@ Pick one of the example `appsettings.*.json` files or the base file and "save as
 
 ```js
 {
-	"Logging": {
-		"LogLevel": {
-			"Default": "Information",
-			"Microsoft": "Warning",
-			"Microsoft.Hosting.Lifetime": "Information"
-		}
-	},
 	"AppSettings": {
 		"SiteUrl": "http://localhost:5000/",
 		"ContentRootPath": "C:\\github\\record-collector\\docs\\content-record-collector-net\\",
@@ -40,7 +33,7 @@ Note that `C:\github\record-collector\` is where I put the repository on my mach
 
 ## Run the web app in ASP.NET MVC mode
 
-When running, Kestrel should be used and the default URL in the MVC mode should be `http://localhost:5000/`.
+When running, Kestrel is recommended and the default URL in the MVC mode is `http://localhost:5000/`.
 
 ### Alternative A: Run using Visual Studio
 
@@ -70,14 +63,14 @@ To verify the static site you can check the file `run-docker-nginx-static-site.p
 
 ## Deploy to Netlify
 
-These two blog posts should help with most deployment scenarios using different Git and build server providers. I think the most elegant way is to just use Netlify for the build which works great with GitHub, GitLab, or Bitbucket for your repository copy.
+These two blog posts should help with most deployment scenarios using different Git and build server providers. I think the most elegant way is to just use Netlify for the build which works with GitHub, GitLab, or Bitbucket for your repository copy.
 
 * [Continuous Deployment using just Netlify](/en/updates/continuous-deployment-using-just-netlify/)
 * [Deploy to Netlify using a GitHub Action](/en/updates/deploy-to-netlify-using-a-github-action/)
 
 ## Customize templates using the `ViewPrefix` setting
 
-You can of course modify anything existing but there is a also a simple built-in feature to be able to add your own templates with own file names so that pulling from the original repository won't overwrite your templates.
+You can of course modify anything existing but there is a also a simple built-in feature to be able to add your own templates with own file names so that updating from the original repository won't overwrite your templates.
 
 This works so that if you change the setting to something like `"ViewPrefix": "MiasTheme"` the default MVC controller will use that setting value in this way:
 
