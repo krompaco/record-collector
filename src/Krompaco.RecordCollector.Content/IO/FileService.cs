@@ -701,10 +701,15 @@ namespace Krompaco.RecordCollector.Content.IO
                 }
 
                 directoryName = directoryInfo.Parent?.FullName;
-                if (directoryName == null) nestedSection = string.Empty;
 
-                else if (IsSameDirectory(contentRootDirectoryInfo.FullName, directoryName))
-                    nestedSection = contentRootDirectoryInfo.FullName;
+                if (directoryName == null)
+                {
+                    nestedSection = string.Empty;
+                }
+                else if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))
+                {
+                    nestedSection = this.contentRootDirectoryInfo.FullName;
+                }
             }
 
             return nestedSection;
