@@ -132,6 +132,16 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                     continue;
                 }
 
+                if (property.Name.Equals("listcategory", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (single is ListPage listPage)
+                    {
+                        listPage.ListCategory = property.Value.GetString();
+                    }
+
+                    continue;
+                }
+
                 if (property.Name.Equals("draft", StringComparison.OrdinalIgnoreCase))
                 {
                     single.Draft = bool.Parse(property.Value.GetRawText().TrimStart('\"').TrimEnd('\"'));

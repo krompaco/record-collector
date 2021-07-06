@@ -9,6 +9,8 @@ namespace Krompaco.RecordCollector.Content.Models
             this.Level = -1;
         }
 
+        public string ListCategory { get; set; }
+
         public List<SinglePage> DescendantPages { get; set; }
     }
 }
