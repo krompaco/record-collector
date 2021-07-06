@@ -700,10 +700,13 @@ namespace Krompaco.RecordCollector.Content.IO
                     nestedSection = directoryInfo.FullName;
                 }
 
-                // ReSharper disable once PossibleNullReferenceException
-                directoryName = directoryInfo.Parent.FullName;
+                directoryName = directoryInfo.Parent?.FullName;
 
-                if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))
+                if (directoryName == null)
+                {
+                    nestedSection = string.Empty;
+                }
+                else if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))
                 {
                     nestedSection = this.contentRootDirectoryInfo.FullName;
                 }
