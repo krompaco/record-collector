@@ -70,3 +70,6 @@ pre, code {
 	max-width: 100%;
 	overflow-x: auto;
 }
+.footer {
+	margin-top: 4rem;
+}

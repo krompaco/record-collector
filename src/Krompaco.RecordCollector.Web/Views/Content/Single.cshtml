@@ -18,6 +18,27 @@ else
 	@Html.Raw(Model.CurrentPage.Content)
 }
 
+@if (Model.Categories != null && Model.Categories.Any())
+{
+	<h2>Tags</h2>
+	<ul>
+		@foreach (var categoryItem in Model.Categories)
+		{
+			<li>
+				@if (categoryItem.RelativeUrl == null)
+				{
+					@categoryItem.Text
+				}
+				else
+				{
+					<a href="@categoryItem.RelativeUrl">@categoryItem.Text (@categoryItem.PageCount)</a>
+				}
+			</li>
+		}
+	</ul>
+}
+
+@* This gets confusing to me when category/tag listings are available /JK
 @if (!Model.ContentProperties.SectionsToExcludeFromLists
 		.Any(x => x.Equals(Model.CurrentPage.Section, StringComparison.OrdinalIgnoreCase))
      && (Model.CurrentPage.NextPage != null || Model.CurrentPage.PreviousPage != null))
@@ -40,4 +61,4 @@ else
 			}
 		</ul>
 	</div>
-}
+}*@

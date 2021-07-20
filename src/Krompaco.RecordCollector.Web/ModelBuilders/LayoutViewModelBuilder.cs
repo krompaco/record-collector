@@ -68,19 +68,21 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
         public LayoutViewModelBuilder<TViewModel, TModel> WithPaginationItems(int pageCount, int pageSize)
         {
-            if (!(this.vm is ListPageViewModel listPageViewModel)
-                || !(this.currentPage is ListPage listPage))
+            if (this.vm is not ListPageViewModel listPageViewModel
+                || this.currentPage is not ListPage listPage)
             {
                 return this;
             }
 
+            var pageToList = string.IsNullOrWhiteSpace(listPage.ListCategory) ? listPage.DescendantPages : listPage.CategoryPages;
+
             var builder = new PaginationViewModelBuilder(
                 this.vm.CurrentPath,
-                listPage.DescendantPages.Count,
+                pageToList.Count,
                 pageCount,
                 pageSize);
 
-            listPageViewModel.PagedDescendantPages = listPage.DescendantPages.Skip(pageSize * (builder.SelectedPage - 1)).Take(pageSize).ToList();
+            listPageViewModel.PagedDescendantPages = pageToList.Skip(pageSize * (builder.SelectedPage - 1)).Take(pageSize).ToList();
 
             // This updates builder.SelectedPage to the highest available page
             listPageViewModel.Pagination.Items = builder.GetPaginationItems().ToList();

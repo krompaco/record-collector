@@ -12,5 +12,7 @@ namespace Krompaco.RecordCollector.Content.Models
         public string ListCategory { get; set; }
 
         public List<SinglePage> DescendantPages { get; set; }
+
+        public List<SinglePage> CategoryPages { get; set; }
     }
 }
