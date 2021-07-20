@@ -53,6 +53,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly Stopwatch stopwatch;
 
+        private CultureInfo currentCulture;
+
         public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env, IStringLocalizerFactory factory)
         {
             this.logger = logger;
@@ -148,9 +150,9 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var siteUrl = this.config.GetAppSettingsSiteUrl();
             var viewPrefix = this.config.GetAppSettingsViewPrefix();
             var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
-            var culture = rqf.RequestCulture.Culture;
+            this.currentCulture = rqf.RequestCulture.Culture;
             var contentProperties = this.GetContentProperties();
-            this.logger.LogInformation($"Culture is {culture.EnglishName} and local time is {DateTime.Now}.");
+            this.logger.LogInformation($"Culture is {this.currentCulture.EnglishName} and local time is {DateTime.Now}.");
 
             // Check if RSS request
             var rssForList = path != null
@@ -181,7 +183,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                             && x.RelativeUrl
                                 .ToString()
                                 .TrimStart('/')
-                                .StartsWith($"{culture.Name}/", StringComparison.OrdinalIgnoreCase))
+                                .StartsWith($"{this.currentCulture.Name}/", StringComparison.OrdinalIgnoreCase))
                         .Select(x => x as SinglePage)
                         .Where(x => x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
@@ -219,7 +221,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         return this.NotFound();
                     }
 
-                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
+                    var rootViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, this.currentCulture, this.rootCultures, this.Request, this.localizer, contentProperties)
                         .WithMarkdownPipeline()
                         .WithMeta()
                         .GetViewModel();
@@ -230,7 +232,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     return this.View(viewPrefix + "List", rootViewModel);
                 }
 
-                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
+                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, this.currentCulture, this.rootCultures, this.Request, this.localizer, contentProperties)
                     .WithMarkdownPipeline()
                     .WithMeta()
                     .WithPaginationItems(
@@ -291,7 +293,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                        .Select(x => x as ListPage)
                                        .FirstOrDefault() ?? new ListPage();
 
-                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
+                    var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPage, this.currentCulture, this.rootCultures, this.Request, this.localizer, contentProperties)
                         .WithMarkdownPipeline()
                         .WithMeta()
                         .WithPaginationItems(
@@ -354,7 +356,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.PhysicalFile(foundFullName, contentType);
             }
 
-            // Post
+            // Some kind of page
             physicalPath = physicalPath.TrimEnd(Path.DirectorySeparatorChar) + ".md";
             this.logger.LogInformation($"Lookup by {physicalPath}");
             var foundPage = this.allFiles.FirstOrDefault(x => x.EndsWith(physicalPath, StringComparison.OrdinalIgnoreCase));
@@ -400,17 +402,79 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 return this.NotFound();
             }
 
+            // Category listing check
+            if (this.allFileModels.FirstOrDefault(x => x.FullName.Equals(foundPage, StringComparison.OrdinalIgnoreCase)) is ListPage listPageForCategory && !string.IsNullOrWhiteSpace(listPageForCategory.ListCategory))
+            {
+                var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(listPageForCategory, this.currentCulture, this.rootCultures, this.Request, this.localizer, contentProperties)
+                    .WithMarkdownPipeline()
+                    .WithMeta()
+                    .WithPaginationItems(
+                        this.config.GetAppSettingsPaginationPageCount(),
+                        this.config.GetAppSettingsPaginationPageSize())
+                    .WithNavigationItems(this.pagesForNavigation)
+                    .GetViewModel();
+
+                if (isPaginationPath && listViewModel.PagedDescendantPages.Count == 0)
+                {
+                    this.LogTime();
+                    return this.NotFound();
+                }
+
+                listViewModel.Title = listPageForCategory.Title;
+
+                this.LogTime();
+
+                if (rssForList)
+                {
+                    var rssUrl = new Uri(
+                        new Uri(siteUrl),
+                        $"{listPageForCategory.RelativeUrl}rss.xml");
+                    var rssItems = listPageForCategory.CategoryPages.Take(10).ToList();
+                    var rssXmlBuilder = new RssXmlBuilder(
+                        new Uri(siteUrl),
+                        this,
+                        rssItems,
+                        new SyndicationFeed(
+                            listViewModel.Title,
+                            listViewModel.Description,
+                            rssUrl,
+                            rssUrl.ToString(),
+                            rssItems.First().Date.ToUniversalTime()));
+                    return rssXmlBuilder.BuildActionResult();
+                }
+
+                return this.View(viewPrefix + "List", listViewModel);
+            }
+
+            // Single page
             if (!(this.allFileModels.FirstOrDefault(x => x.FullName.Equals(foundPage, StringComparison.OrdinalIgnoreCase)) is SinglePage singlePage))
             {
                 this.LogTime();
                 return this.NotFound();
             }
 
-            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, culture, this.rootCultures, this.Request, this.localizer, contentProperties)
+            var singleViewModel = new LayoutViewModelBuilder<SinglePageViewModel, SinglePage>(singlePage, this.currentCulture, this.rootCultures, this.Request, this.localizer, contentProperties)
                 .WithMarkdownPipeline()
                 .WithMeta()
                 .WithNavigationItems(this.pagesForNavigation)
                 .GetViewModel();
+
+            singleViewModel.Categories = new List<CategoryItemViewModel>();
+
+            if (singlePage.Categories is { Count: > 0 })
+            {
+                foreach (var category in singlePage.Categories)
+                {
+                    var (url, count) = this.GetUrlAndCountForCategoryList(category);
+
+                    singleViewModel.Categories.Add(new CategoryItemViewModel
+                    {
+                        RelativeUrl = url,
+                        Text = category,
+                        PageCount = count,
+                    });
+                }
+            }
 
             this.LogTime();
             return this.View(viewPrefix + "Single", singleViewModel);
@@ -442,6 +506,34 @@ namespace Krompaco.RecordCollector.Web.Controllers
             var match = Regex.Match(path, "/page-\\d+/$", RegexOptions.IgnoreCase);
 
             return match.Success && match.Groups.Count > 0;
+        }
+
+        private Tuple<Uri, int> GetUrlAndCountForCategoryList(string category)
+        {
+            ListPage firstCategoryListPage = null;
+
+            if (this.rootCultures.Any())
+            {
+                firstCategoryListPage = this.allFileModels
+                    .Where(x => x.RelativeUrl
+                            .ToString()
+                            .TrimStart('/')
+                            .StartsWith($"{this.currentCulture.Name}/", StringComparison.OrdinalIgnoreCase))
+                    .Select(x => x as ListPage)
+                    .FirstOrDefault(x => x?.ListCategory != null
+                        && x.ListCategory.Equals(category, StringComparison.OrdinalIgnoreCase));
+            }
+            else
+            {
+                firstCategoryListPage = this.allFileModels
+                    .Select(x => x as ListPage)
+                    .FirstOrDefault(x => x?.ListCategory != null
+                                         && x.ListCategory.Equals(category, StringComparison.OrdinalIgnoreCase));;
+            }
+
+            return firstCategoryListPage != null ?
+                new Tuple<Uri, int>(firstCategoryListPage.RelativeUrl, firstCategoryListPage.CategoryPages.Count)
+                : new Tuple<Uri, int>(null, 0);
         }
 
         private ContentProperties GetContentProperties()

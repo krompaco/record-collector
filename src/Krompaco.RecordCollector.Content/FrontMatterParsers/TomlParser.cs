@@ -144,6 +144,16 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                     continue;
                 }
 
+                if (key.Equals("listcategory", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (single is ListPage listPage)
+                    {
+                        listPage.ListCategory = (string)table[key];
+                    }
+
+                    continue;
+                }
+
                 if (key.Equals("draft", StringComparison.OrdinalIgnoreCase))
                 {
                     single.Draft = (bool)table[key];

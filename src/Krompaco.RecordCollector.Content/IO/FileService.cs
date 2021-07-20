@@ -424,6 +424,11 @@ namespace Krompaco.RecordCollector.Content.IO
                     if (currentModel is ListPage listPage)
                     {
                         listPage.DescendantPages = this.GetDescendantSinglePages(currentModel, allFileModels);
+
+                        if (!string.IsNullOrWhiteSpace(listPage.ListCategory))
+                        {
+                            listPage.CategoryPages = this.GetSinglePagesInCategory(currentModel, listPage.ListCategory, allFileModels);
+                        }
                     }
 
                     currentModel.ParentPage = this.GetParent(currentModel, allFileModels);
@@ -571,6 +576,28 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             return new Uri("/" + rootRemoved, UriKind.Relative);
+        }
+
+        public List<SinglePage> GetSinglePagesInCategory(IRecordCollectorFile current, string category, List<IRecordCollectorFile> allFileModels)
+        {
+            if (current == null)
+            {
+                throw new ArgumentNullException(nameof(current));
+            }
+
+            var rootWithCulturePath = this.GetRootCultures().Any() && current.Culture != null ? Path.Combine(this.contentRoot, current.Culture.Name) : this.contentRoot;
+
+            var list = allFileModels
+                .Where(x =>
+                    x.FullName.StartsWith(rootWithCulturePath, StringComparison.OrdinalIgnoreCase)
+                    && x.GetType() == typeof(SinglePage))
+                .Select(x => (SinglePage)x)
+                .Where(x => !x.Headless
+                            && x.Categories != null && x.Categories.Any(y => y.Equals(category, StringComparison.OrdinalIgnoreCase)))
+                .OrderByDescending(x => x.Date)
+                .ToList();
+
+            return list;
         }
 
         public List<SinglePage> GetDescendantSinglePages(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)

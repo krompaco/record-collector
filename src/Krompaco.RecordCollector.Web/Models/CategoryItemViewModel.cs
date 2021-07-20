@@ -1,0 +1,13 @@
+﻿using System;
+
+namespace Krompaco.RecordCollector.Web.Models
+{
+    public class CategoryItemViewModel
+    {
+        public Uri RelativeUrl { get; set; }
+
+        public string Text { get; set; }
+
+        public int PageCount { get; set; }
+    }
+}

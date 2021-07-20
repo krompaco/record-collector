@@ -109,7 +109,7 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public int Weight { get; set; }
 
-        public Dictionary<string, string> CustomStringProperties { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> CustomStringProperties { get; set; } = new ();
 
         public Dictionary<string, List<string>> CustomArrayProperties { get; set; }
 
