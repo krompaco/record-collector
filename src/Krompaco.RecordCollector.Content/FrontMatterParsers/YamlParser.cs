@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Krompaco.RecordCollector.Content.Models;
+﻿using Krompaco.RecordCollector.Content.Models;
 using YamlDotNet.Serialization;
 
 namespace Krompaco.RecordCollector.Content.FrontMatterParsers
@@ -47,7 +46,9 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             var serializer = new SerializerBuilder()
                 .JsonCompatible()
                 .Build();
+#pragma warning disable CS8604
             var json = serializer.Serialize(yamlObject);
+#pragma warning restore CS8604
             using TextReader sr = new StringReader(json);
             var jsonParser = new JsonParser<TModel>(sr, this.FullName);
             var single = jsonParser.GetAsSinglePage();

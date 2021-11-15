@@ -20,7 +20,9 @@ namespace Krompaco.RecordCollector.Web
 
         private FileSystemWatcher fsw;
 
+#pragma warning disable CS8618
         public FileSystemWatcherService(ILogger<FileSystemWatcherService> logger, IConfiguration config, IMemoryCache memoryCache)
+#pragma warning restore CS8618
         {
             this.logger = logger;
             this.config = config;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Krompaco.RecordCollector.Content.Models
+﻿namespace Krompaco.RecordCollector.Content.Models
 {
     public class CascadeVariables
     {

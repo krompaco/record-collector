@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Krompaco.RecordCollector.Content.FrontMatterParsers;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
@@ -23,19 +18,25 @@ namespace Krompaco.RecordCollector.Content.IO
 
         private readonly ILogger logger;
 
-        private readonly string[] sectionsToExcludeFromLists;
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+        private readonly string[]? sectionsToExcludeFromLists;
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 
         private readonly object allFileModelsLock = new object();
 
-        private string[] allFilesField = null;
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+        private string[]? allFilesField = null;
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 
-        private List<DirectoryInfo> rootDirectoriesField = null;
+        private List<DirectoryInfo>? rootDirectoriesField = null;
 
-        private List<CultureInfo> rootCulturesField = null;
+        private List<CultureInfo>? rootCulturesField = null;
 
-        private List<string> sectionsField = null;
+        private List<string>? sectionsField = null;
 
-        public FileService(string contentRoot, string[] sectionsToExcludeFromLists, ContentCultureService contentCultureService, ILogger logger)
+#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
+        public FileService(string contentRoot, string[]? sectionsToExcludeFromLists, ContentCultureService contentCultureService, ILogger logger)
+#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             if (string.IsNullOrWhiteSpace(contentRoot))
             {
@@ -108,14 +109,14 @@ namespace Krompaco.RecordCollector.Content.IO
             return isIndexPage;
         }
 
-        public static FileInfo GetListPartialPageFileInfo(string directoryFullName)
+        public static FileInfo? GetListPartialPageFileInfo(string directoryFullName)
         {
             var di = new DirectoryInfo(directoryFullName);
             var partials = di.EnumerateFiles("_index.*", SearchOption.TopDirectoryOnly);
             return partials.FirstOrDefault(x => IsListPartialPageFile(x.Name));
         }
 
-        public static FileInfo GetIndexPageFileInfo(string directoryFullName)
+        public static FileInfo? GetIndexPageFileInfo(string directoryFullName)
         {
             var di = new DirectoryInfo(directoryFullName);
             var directories = di.EnumerateFiles("index.*", SearchOption.TopDirectoryOnly);

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Krompaco.RecordCollector.Content.Models;
+﻿using Krompaco.RecordCollector.Content.Models;
 
 namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 {

@@ -25,14 +25,9 @@ namespace Krompaco.RecordCollector.Web
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        public override async Task<ProviderCultureResult> DetermineProviderCultureResult(HttpContext httpContext)
+        public override async Task<ProviderCultureResult?> DetermineProviderCultureResult(HttpContext httpContext)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            if (httpContext == null)
-            {
-                return null;
-            }
-
             var items = httpContext.Request.Path.ToString().Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (items.Length == 0)

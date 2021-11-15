@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
@@ -11,7 +9,7 @@ namespace Krompaco.RecordCollector.Content.Models
             this.Level = -1;
         }
 
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         public List<string> Categories { get; set; }
 
@@ -23,17 +21,17 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public DateTime LastMod { get; set; }
 
-        public string Keywords { get; set; }
+        public string? Keywords { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string Slug { get; set; }
+        public string? Slug { get; set; }
 
         public Uri Url { get; set; }
 
-        public string Section { get; set; }
+        public string? Section { get; set; }
 
-        public string ClosestSectionDirectory { get; set; }
+        public string? ClosestSectionDirectory { get; set; }
 
         public CultureInfo Culture { get; set; }
 
@@ -57,11 +55,11 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public bool IsPage { get; set; }
 
-        public SinglePage ParentPage { get; set; }
+        public SinglePage? ParentPage { get; set; }
 
-        public SinglePage PreviousPage { get; set; }
+        public SinglePage? PreviousPage { get; set; }
 
-        public SinglePage NextPage { get; set; }
+        public SinglePage? NextPage { get; set; }
 
         public List<SinglePage> Siblings { get; set; }
 
@@ -71,21 +69,21 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public int Level { get; set; }
 
-        public string Layout { get; set; }
+        public string? Layout { get; set; }
 
         public List<string> Tags { get; set; }
 
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string LinkTitle { get; set; }
+        public string? LinkTitle { get; set; }
 
-        public string Summary { get; set; }
+        public string? Summary { get; set; }
 
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         public ContentType ContentType { get; set; }
 
-        public string Outputs { get; set; }
+        public string? Outputs { get; set; }
 
         public bool Draft { get; set; }
 
@@ -113,9 +111,9 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public Dictionary<string, List<string>> CustomArrayProperties { get; set; }
 
-        public CascadeVariables Cascade { get; set; }
+        public CascadeVariables? Cascade { get; set; }
 
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
         public bool IsVirtual { get; set; }
     }

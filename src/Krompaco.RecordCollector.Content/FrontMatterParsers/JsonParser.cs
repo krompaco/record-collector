@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text.Json;
 using Krompaco.RecordCollector.Content.Models;
 
@@ -13,10 +9,10 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
     {
         private readonly TextReader tr;
 
-        public JsonParser(TextReader tr, string fullName)
+        public JsonParser(TextReader tr, string? fullName)
         {
             this.tr = tr;
-            this.FullName = fullName;
+            this.FullName = fullName ?? string.Empty;
         }
 
         public TModel GetAsSinglePage()
@@ -25,7 +21,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
             while (this.tr.Peek() >= 0)
             {
-                var line = this.tr.ReadLine();
+                var line = this.tr.ReadLine() ?? string.Empty;
 
                 // TODO: Make JSON front matter extraction more robust
                 if (line.StartsWith("{", StringComparison.Ordinal))
@@ -72,14 +68,14 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             {
                 if (property.Name.Equals("aliases", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Aliases = stringValues.Select(x => new Uri(x, UriKind.Relative)).ToList();
                     continue;
                 }
 
                 if (property.Name.Equals("audio", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Audio = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
                     continue;
                 }
@@ -101,7 +97,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                         if (cascadeProperty.Value.ValueKind == JsonValueKind.Array)
                         {
-                            var stringValues = cascadeProperty.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                            var stringValues = cascadeProperty.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                             single.Cascade.CustomArrayProperties.Add(cascadeProperty.Name, stringValues);
                             continue;
                         }
@@ -115,7 +111,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (property.Name.Equals("categories", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Categories = stringValues;
                     continue;
                 }
@@ -162,7 +158,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (property.Name.Equals("images", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Images = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
                     continue;
                 }
@@ -229,7 +225,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
                             if (rp.Name.Equals("src", StringComparison.OrdinalIgnoreCase))
                             {
                                 fileResource.Permalink = new Uri(
-                                    rp.Value.GetString(),
+                                    rp.Value.GetString() ?? string.Empty,
                                     UriKind.RelativeOrAbsolute);
                                 continue;
                             }
@@ -261,7 +257,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (property.Name.Equals("series", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Series = stringValues;
                     continue;
                 }
@@ -280,7 +276,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (property.Name.Equals("tags", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Tags = stringValues;
                     continue;
                 }
@@ -299,14 +295,14 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (property.Name.Equals("url", StringComparison.OrdinalIgnoreCase))
                 {
-                    var urlString = property.Value.GetString();
+                    var urlString = property.Value.GetString() ?? string.Empty;
                     single.Url = new Uri(urlString, UriKind.Relative);
                     continue;
                 }
 
                 if (property.Name.Equals("videos", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.Videos = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
                     continue;
                 }
@@ -322,7 +318,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (property.Value.ValueKind == JsonValueKind.Array)
                 {
-                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString()).ToList();
+                    var stringValues = property.Value.EnumerateArray().Select(x => x.GetString() ?? string.Empty).ToList();
                     single.CustomArrayProperties.Add(property.Name, stringValues);
                     continue;
                 }

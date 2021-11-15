@@ -8,26 +8,26 @@ namespace Krompaco.RecordCollector.Web.Models
 {
     public class LayoutViewModel
     {
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
-        public string Robots { get; set; }
+        public string? Robots { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string Keywords { get; set; }
+        public string? Keywords { get; set; }
 
-        public string CurrentPath { get; set; }
+        public string? CurrentPath { get; set; }
 
-        public List<CultureInfo> RootCultures { get; set; }
+        public List<CultureInfo>? RootCultures { get; set; }
 
-        public CultureInfo CurrentCulture { get; set; }
+        public CultureInfo? CurrentCulture { get; set; }
 
-        public MarkdownPipeline MarkdownPipeline { get; set; }
+        public MarkdownPipeline? MarkdownPipeline { get; set; }
 
-        public List<MenuItemViewModel> NavigationItems { get; set; }
+        public List<MenuItemViewModel>? NavigationItems { get; set; }
 
-        public IStringLocalizer Localizer { get; set; }
+        public IStringLocalizer? Localizer { get; set; }
 
-        public ContentProperties ContentProperties { get; set; }
+        public ContentProperties? ContentProperties { get; set; }
     }
 }

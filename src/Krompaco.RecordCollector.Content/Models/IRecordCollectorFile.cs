@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 
 namespace Krompaco.RecordCollector.Content.Models
 {
     public interface IRecordCollectorFile
     {
-        string FullName { get; set; }
+        string? FullName { get; set; }
 
         bool IsVirtual { get; set; }
 
-        string Title { get; set; }
+        string? Title { get; set; }
 
-        string Section { get; set; }
+        string? Section { get; set; }
 
-        string ClosestSectionDirectory { get; set; }
+        string? ClosestSectionDirectory { get; set; }
 
         CultureInfo Culture { get; set; }
 
@@ -38,11 +36,11 @@ namespace Krompaco.RecordCollector.Content.Models
 
         bool IsPage { get; set; }
 
-        SinglePage ParentPage { get; set; }
+        SinglePage? ParentPage { get; set; }
 
-        SinglePage PreviousPage { get; set; }
+        SinglePage? PreviousPage { get; set; }
 
-        SinglePage NextPage { get; set; }
+        SinglePage? NextPage { get; set; }
 
         List<SinglePage> Siblings { get; set; }
 

@@ -47,13 +47,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly string contentRoot;
 
-        private readonly List<SinglePage> pagesForNavigation;
+        private readonly List<SinglePage?> pagesForNavigation = new List<SinglePage?>();
 
         private readonly List<IRecordCollectorFile> allFileModels;
 
         private readonly Stopwatch stopwatch;
 
-        private CultureInfo currentCulture;
+        private CultureInfo? currentCulture;
 
         public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env, IStringLocalizerFactory factory)
         {
@@ -61,10 +61,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.config = config;
             this.env = env;
 
-            if (factory != null)
-            {
-                this.localizer = factory.Create(typeof(SharedResource));
-            }
+            this.localizer = factory.Create(typeof(SharedResource));
 
             this.stopwatch = new Stopwatch();
             this.stopwatch.Start();
@@ -93,8 +90,6 @@ namespace Krompaco.RecordCollector.Web.Controllers
             }
 
             this.allFileModels = allFileModelsFromCache;
-
-            this.pagesForNavigation = new List<SinglePage>();
         }
 
         [HttpGet]
@@ -145,12 +140,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Files(string path)
+        public IActionResult Files(string? path)
         {
             var siteUrl = this.config.GetAppSettingsSiteUrl();
             var viewPrefix = this.config.GetAppSettingsViewPrefix();
             var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
-            this.currentCulture = rqf.RequestCulture.Culture;
+            this.currentCulture = rqf?.RequestCulture.Culture ?? CultureInfo.CurrentCulture;
             var contentProperties = this.GetContentProperties();
             this.logger.LogInformation($"Culture is {this.currentCulture.EnglishName} and local time is {DateTime.Now}.");
 
@@ -162,7 +157,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             if (rssForList)
             {
                 this.logger.LogInformation("RSS requested.");
-                path = Regex.Replace(path, "rss.xml$", string.Empty, RegexOptions.IgnoreCase);
+                path = Regex.Replace(path ?? string.Empty, "rss.xml$", string.Empty, RegexOptions.IgnoreCase);
                 this.logger.LogInformation($"Path now: \"{path}\"");
             }
 
@@ -177,7 +172,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             {
                 if (this.rootCultures.Any() && !string.IsNullOrEmpty(path))
                 {
-                    this.pagesForNavigation.AddRange(this.allFileModels
+                    var rangeToAdd = this.allFileModels
                         .Where(x =>
                             mainNavigationSections.Contains(x.Section)
                             && x.RelativeUrl
@@ -185,21 +180,31 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                 .TrimStart('/')
                                 .StartsWith($"{this.currentCulture.Name}/", StringComparison.OrdinalIgnoreCase))
                         .Select(x => x as SinglePage)
-                        .Where(x => x?.Title != null && x.Level == 1)
+                        .Where(x => x != null && x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
                         .ThenBy(x => x.Title)
-                        .ToList());
+                        .ToList();
+
+                    if (rangeToAdd.Any())
+                    {
+                        this.pagesForNavigation.AddRange(rangeToAdd);
+                    }
                 }
                 else if (!this.rootCultures.Any())
                 {
-                    this.pagesForNavigation.AddRange(this.allFileModels
+                    var rangeToAdd = this.allFileModels
                         .Where(x =>
                             mainNavigationSections.Contains(x.Section))
                         .Select(x => x as SinglePage)
-                        .Where(x => x?.Title != null && x.Level == 1)
+                        .Where(x => x != null && x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
                         .ThenBy(x => x.Title)
-                        .ToList());
+                        .ToList();
+
+                    if (rangeToAdd.Any())
+                    {
+                        this.pagesForNavigation.AddRange(rangeToAdd);
+                    }
                 }
             }
 

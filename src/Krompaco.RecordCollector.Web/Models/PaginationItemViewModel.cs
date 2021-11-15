@@ -23,6 +23,6 @@ namespace Krompaco.RecordCollector.Web.Models
 
         public int Page { get; set; }
 
-        public Uri RelativeUrl { get; set; }
+        public Uri? RelativeUrl { get; set; }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
-using Krompaco.RecordCollector.Content.Models;
+﻿using System.Text;
 
 namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 {
@@ -14,7 +11,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             this.tr = tr;
         }
 
-        public string GetSummaryFromContent()
+        public string? GetSummaryFromContent()
         {
             var rowCount = 0;
             var frontMatterOpened = false;
@@ -80,7 +77,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             return this.ResetStreamAndReturn(null);
         }
 
-        private string ResetStreamAndReturn(string summary)
+        private string? ResetStreamAndReturn(string? summary)
         {
             this.tr.BaseStream.Position = 0;
             this.tr.DiscardBufferedData();
