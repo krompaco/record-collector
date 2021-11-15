@@ -528,7 +528,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 firstCategoryListPage = this.allFileModels
                     .Select(x => x as ListPage)
                     .FirstOrDefault(x => x?.ListCategory != null
-                                         && x.ListCategory.Equals(category, StringComparison.OrdinalIgnoreCase));;
+                                         && x.ListCategory.Equals(category, StringComparison.OrdinalIgnoreCase));
             }
 
             return firstCategoryListPage != null ?

@@ -11,36 +11,33 @@ using System.Threading.Tasks;
 using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Krompaco.RecordCollector.Generator
 {
-    public class Workers : IClassFixture<WebApplicationFactory<Web.Startup>>
+    public class Workers
     {
         private readonly ITestOutputHelper testOutputHelper;
 
         private readonly HttpClient client;
 
-        public Workers(WebApplicationFactory<Web.Startup> factory, ITestOutputHelper testOutputHelper)
+        public Workers(ITestOutputHelper testOutputHelper)
         {
-            if (factory == null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
+            var application = new WebApplicationFactory<Program>();
+            this.client = application.CreateClient();
             this.testOutputHelper = testOutputHelper;
-
-            this.client = factory.CreateClient();
         }
 
         [Fact]
         public async Task GenerateStaticSite()
         {
             this.testOutputHelper.WriteLine(string.Empty);
-            this.testOutputHelper.WriteLine("Record Collector Version 1.0");
+            this.testOutputHelper.WriteLine("Record Collector Version 2.0");
             this.testOutputHelper.WriteLine(string.Empty);
             this.testOutputHelper.WriteLine("Starting to generate site...");
 

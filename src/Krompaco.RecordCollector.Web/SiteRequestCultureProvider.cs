@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Krompaco.RecordCollector.Web
 {
-    public class CustomRequestCultureProvider : RequestCultureProvider
+    public class SiteRequestCultureProvider : RequestCultureProvider
     {
         private readonly FileService fileService;
 
         private readonly ContentCultureService contentCultureService;
 
-        public CustomRequestCultureProvider(IConfiguration config)
+        public SiteRequestCultureProvider(IConfiguration config)
         {
             this.contentCultureService = new ContentCultureService();
             this.fileService = new FileService(config.GetAppSettingsContentRootPath(), config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, NullLogger.Instance);
