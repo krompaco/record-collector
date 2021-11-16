@@ -3,6 +3,7 @@
         "ASPNETCORE",
         "Krompaco",
         "pwsh",
+        "tailwindcss",
         "wwwroot"
     ]
 }

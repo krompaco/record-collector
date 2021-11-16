@@ -6,5 +6,6 @@ obj
 appsettings.Development.json
 node_modules
 artifacts/static-site/
-artifacts/zip-*.bat
-artifacts/*.zip
+src/Krompaco.RecordCollector.Web/wwwroot/dist/*.js
+src/Krompaco.RecordCollector.Web/wwwroot/dist/*.map
+src/Krompaco.RecordCollector.Web/wwwroot/dist/*.css
