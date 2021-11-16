@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build and deploy to Netlify
 on: [push]
 env:
   ASPNETCORE_ENVIRONMENT: 'Action'
