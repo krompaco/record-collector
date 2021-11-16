@@ -18,7 +18,8 @@ jobs:
 
       - name: Add robots.txt disallow
         shell: pwsh
-        run: Add-Content "./src/Krompaco.RecordCollector.Web/wwwroot/robots.txt" "User-agent: *`r`nDisallow: /`r`n"
+        run: |
+          Add-Content "./src/Krompaco.RecordCollector.Web/wwwroot/robots.txt" "User-agent: *`r`nDisallow: /`r`n"
 
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
@@ -47,7 +48,8 @@ jobs:
 
       - name: Add robots.txt disallow
         shell: pwsh
-        run: Add-Content "./src/Krompaco.RecordCollector.Web/wwwroot/robots.txt" "User-agent: *`r`nDisallow: /`r`n"
+        run: |
+          Add-Content "./src/Krompaco.RecordCollector.Web/wwwroot/robots.txt" "User-agent: *`r`nDisallow: /`r`n"
 
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
