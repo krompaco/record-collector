@@ -14,14 +14,18 @@ In this setup the generation process work using the WebApplicationFactory from t
 
 ## Installed packages
 
-Built using .NET 5.0 and these packages and projects. Thank you!
+Built using .NET 6.0 (through 3.1 and 5.0) and with these packages and projects. Thank you!
 
-| Project                                                 | License                   |
-|---------------------------------------------------------|---------------------------|
-| [YamlDotNet](https://github.com/aaubry/YamlDotNet/wiki) | MIT                       |
-| [Tomlyn](https://github.com/xoofx/Tomlyn)               | BSD-Clause 2              |
-| [Markdig](https://github.com/lunet-io/markdig)          | BSD-Clause 2              |
-| [Inter font family](https://rsms.me/inter/)             | SIL Open Font License 1.1 |
+| Project                                                   | License                   |
+|-----------------------------------------------------------|---------------------------|
+| [YamlDotNet](https://github.com/aaubry/YamlDotNet/wiki)   | MIT                       |
+| [Tomlyn](https://github.com/xoofx/Tomlyn)                 | BSD-Clause 2              |
+| [Markdig](https://github.com/lunet-io/markdig)            | BSD-Clause 2              |
+| [JetBrains Mono font](https://www.jetbrains.com/lp/mono/) | SIL Open Font License 1.1 |
+| [Tailwind CSS](https://tailwindcss.com/)                  | MIT                       |
+| [Hotwire](https://hotwired.dev/)                          | MIT                       |
+
+Other things such as Webpack are involved too but these are the ones I firstly referenced and then they in turn depend on other packages.
 
 ### Quality control tools
 
@@ -30,11 +34,11 @@ Built using .NET 5.0 and these packages and projects. Thank you!
 
 ### Demo sites
 
-The [demo web site](https://record-collector.net) views are closed source and some parts use [Tailwind UI](https://tailwindui.com) which needs a purchased license. I will look into if the full demo site can be opened or made accessible in some form. The demo Website is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
+The [demo web site](https://record-collector.net) is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
 
-The [sample web site](https://record-collector.netlify.app) is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/deploy-to-netlify-using-a-github-action.md).
+This [other instance of the same web site](https://record-collector.netlify.app) is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/deploy-to-netlify-using-a-github-action.md).
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
