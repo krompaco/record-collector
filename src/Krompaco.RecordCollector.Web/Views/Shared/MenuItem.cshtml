@@ -1,0 +1,56 @@
+﻿@model MenuItemViewModel
+
+@{
+    var listId = "l" + Guid.NewGuid().ToString("n");
+
+    string GetClassByLevel()
+    {
+        switch (Model.Level)
+        {
+            case 1:
+                return "pr-2 text-lg font-bold";
+            case 2:
+                return "pl-6 pr-2 py-2 text-lg";
+            case 3:
+                return "pl-9 pr-2 py-3 text-base";
+            case 4:
+                return "pl-12 pr-2 py-3 text-sm";
+        }
+
+        return "pl-12 pr-2 py-3 text-sm";
+    }
+}
+
+<li>
+    <div class="flex justify-between w-[calc(100vw-32px)] sm:w-[500px]" data-controller="tree">
+        <div class="@GetClassByLevel() flex items-center">
+            <a class="rc-link my-[2px]" href="@Model.RelativeUrl">@Model.Text</a>
+        </div>
+        @if (Model.ChildItems != null && Model.ChildItems.Count > 0)
+        {
+            <div>
+                <button data-tree-target="button" data-action="click->tree#toggle touch->tree#toggle" type="button"
+                        data-aria-controls="@listId"
+                        class="p-[6px] mt-[3px] rc-menu-link justify-self-end">
+                    <div class="js-content-collapsed">
+                        <span class="sr-only">@Model.Localizer["Open"] @Model.Text</span>
+                        <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    </div>
+                    <div class="js-content-expanded hidden">
+                        <span class="sr-only">@Model.Localizer["Close"] @Model.Text</span>
+                        <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                    </div>
+                </button>
+            </div>
+        }
+    </div>
+	@if (Model.ChildItems != null && Model.ChildItems.Count > 0)
+    {
+        <ul id="@listId" class="hidden">
+            @foreach (var child in Model.ChildItems)
+            {
+                @await Html.PartialAsync("MenuItem", child)
+            }
+        </ul>
+    }
+</li>

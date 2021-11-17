@@ -120,6 +120,12 @@
   <data name="Change language" xml:space="preserve">
     <value>Byt språk</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="Close menu" xml:space="preserve">
+    <value>Stäng meny</value>
+  </data>
   <data name="First" xml:space="preserve">
     <value>Första</value>
     <comment>Pagination</comment>
@@ -139,6 +145,12 @@
     <value>Nästa</value>
     <comment>Pagination</comment>
   </data>
+  <data name="Open" xml:space="preserve">
+    <value>Öppna</value>
+  </data>
+  <data name="Open menu" xml:space="preserve">
+    <value>Öppna meny</value>
+  </data>
   <data name="Page navigation" xml:space="preserve">
     <value>Sidnavigering</value>
   </data>
@@ -150,8 +162,8 @@
     <value>Hoppa till innehåll</value>
     <comment>Skip link</comment>
   </data>
-  <data name="Updates" xml:space="preserve">
-    <value>Uppdateringar</value>
+  <data name="The latest updates" xml:space="preserve">
+    <value>Senaste posterna</value>
     <comment>The default H2 for paged lists</comment>
   </data>
 </root>

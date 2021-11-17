@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Localization;
 
 namespace Krompaco.RecordCollector.Web.Models
 {
@@ -21,5 +20,7 @@ namespace Krompaco.RecordCollector.Web.Models
         public string? Text { get; set; }
 
         public int Level { get; set; }
+
+        public IStringLocalizer? Localizer { get; set; }
     }
 }
