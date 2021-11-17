@@ -1,11 +1,4 @@
 @font-face {
-	font-family: 'LeagueSpartanVariable';
-	src: url('leaguespartan-var.woff2') format('woff2-variations');
-	font-weight: 200 900;
-	font-display: swap;
-	font-style: normal;
-}
-@font-face {
 	font-family: 'JetBrainsMono';
 	font-weight: 100 900;
 	font-display: swap;
@@ -37,13 +30,17 @@
 }
 
 .prose a, .rc-link {
-	@apply underline text-blue-600 hover:bg-yellow-200 hover:text-gray-900 hover:no-underline focus:bg-yellow-200 focus:text-gray-900 focus:no-underline;
+	@apply underline text-blue-600 hover:bg-yellow-200 hover:text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none;
 }
 
-.prose pre, .prose pre code {
+.rc-menu-link {
+	@apply hover:bg-yellow-200 text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none focus:ring-2 focus:ring-black;
+}
+
+/* .prose pre, .prose pre code {
 	font-size: 12px !important;
 	line-height: 16px !important;
-}
+} */
 
 img[src$="files/flow.png"] {
 	width: 360px;

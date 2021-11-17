@@ -1,12 +1,16 @@
+import { stringify } from 'postcss';
 import { Controller } from 'stimulus'
 
 export default class extends Controller {
   static targets = ['toggleable', 'button']
-  static values = { open: Boolean }
+  static values = {
+    open: Boolean,
+    openText: String,
+    closeText: String,
+  }
 
   initialize() {
     this.toggleClass = 'hidden';
-    this.openText = 'Open menu';
   }
 
   connect() {
@@ -15,7 +19,7 @@ export default class extends Controller {
     this.buttonTargets.forEach(target => {
       target.setAttribute('aria-expanded', 'false');
       target.setAttribute('aria-controls', 'header-menu');
-      target.querySelector('.js-text-content').textContent = this.openText;
+      target.querySelector('.js-text-content').textContent = this.openTextValue;
     });
   }
 
@@ -35,7 +39,7 @@ export default class extends Controller {
 
     this.buttonTargets.forEach(target => {
       target.setAttribute('aria-expanded', this.openValue);
-      target.setAttribute('aria-label', this.openValue ? 'Close menu' : this.openText);
+      target.setAttribute('aria-label', this.openValue ? this.closeTextValue : this.openTextValue);
 
       // Hamburger graphics
       target.querySelector('.js-content-expanded').classList.toggle(this.toggleClass);

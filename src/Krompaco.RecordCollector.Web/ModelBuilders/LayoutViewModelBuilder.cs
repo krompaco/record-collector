@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.Models;
 using Markdig;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Localization;
 
 namespace Krompaco.RecordCollector.Web.ModelBuilders
@@ -165,6 +161,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             item.Level = page.Level;
             item.Text = string.IsNullOrWhiteSpace(page.LinkTitle) ? page.Title : page.LinkTitle;
             item.RelativeUrl = page.RelativeUrl;
+            item.Localizer = this.vm.Localizer;
 
             return item;
         }

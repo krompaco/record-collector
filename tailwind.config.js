@@ -12,7 +12,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['LeagueSpartanVariable', ...defaultTheme.fontFamily.sans],
+				sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Ubuntu"', '"Roboto"', '"Noto Sans"', '"Droid Sans"', 'sans-serif'],
 				mono: ['JetBrainsMono', ...defaultTheme.fontFamily.mono],
 			},
 		},
