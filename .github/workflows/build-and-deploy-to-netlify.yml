@@ -13,8 +13,8 @@ jobs:
 
       - name: Setup npm
         uses: actions/setup-node@v2
-          with:
-          node-version: '17.1.0'
+        with:
+          node-version: 17.1.0
 
       - run: npm ci
       - run: npm run prodbuild
@@ -51,8 +51,8 @@ jobs:
 
       - name: Setup npm
         uses: actions/setup-node@v2
-          with:
-          node-version: '17.1.0'
+        with:
+          node-version: 17.1.0
 
       - run: npm ci
       - run: npm run prodbuild
