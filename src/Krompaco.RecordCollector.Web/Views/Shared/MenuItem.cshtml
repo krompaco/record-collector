@@ -32,14 +32,14 @@
                 <button data-tree-target="button" data-action="click->tree#toggle touch->tree#toggle" type="button"
                         data-aria-controls="@listId"
                         class="p-[6px] mt-[3px] rc-menu-link justify-self-end">
-                    <div class="js-content-collapsed">
+                    <span class="block js-content-collapsed">
                         <span class="sr-only">@Model.Localizer["Open"] @Model.Text</span>
                         <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    </div>
-                    <div class="js-content-expanded hidden">
+                    </span>
+                    <span class="block js-content-expanded hidden">
                         <span class="sr-only">@Model.Localizer["Close"] @Model.Text</span>
                         <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
-                    </div>
+                    </span>
                 </button>
             </div>
         }
