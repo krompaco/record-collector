@@ -32,7 +32,7 @@ jobs:
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
-      - name: Deploy production to Netlify
+      - name: Publish draft to Netlify
         uses: nwtgck/actions-netlify@v1.2
         with:
           publish-dir: './artifacts/static-site'
@@ -71,7 +71,7 @@ jobs:
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
-      - name: Deploy production to Netlify
+      - name: Publish to Netlify production
         uses: nwtgck/actions-netlify@v1.2
         with:
           publish-dir: './artifacts/static-site'
