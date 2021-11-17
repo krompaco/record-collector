@@ -32,15 +32,16 @@ jobs:
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
-      - name: Deploy draft to Netlify
-        uses: South-Paw/action-netlify-deploy@v1.0.3
+      - name: Deploy production to Netlify
+        uses: nwtgck/actions-netlify@v1.2
         with:
+          publish-dir: './artifacts/static-site'
+          enable-commit-comment: true
+          production-deploy: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-          build-dir: './artifacts/static-site'
-          draft: true
-          comment-on-commit: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
   publishMasterCommit:
     name: Publish to Netlify
     runs-on: ubuntu-latest
@@ -71,10 +72,12 @@ jobs:
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
       - name: Deploy production to Netlify
-        uses: South-Paw/action-netlify-deploy@v1.0.3
+        uses: nwtgck/actions-netlify@v1.2
         with:
+          publish-dir: './artifacts/static-site'
+          enable-commit-comment: true
+          production-deploy: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-          build-dir: './artifacts/static-site'
-          comment-on-commit: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
