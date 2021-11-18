@@ -6,7 +6,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@Model.Title</title>
-	<link href="/dist/leaguespartan-var.woff2" rel="preload" as="font" type="font/woff2" crossorigin="anonymous" />
+	@* <link href="/dist/leaguespartan-var.woff2" rel="preload" as="font" type="font/woff2" crossorigin="anonymous" /> *@
 	<link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
 	@if (!string.IsNullOrWhiteSpace(Model.Robots))
 	{
@@ -33,7 +33,7 @@
 				</div>
 				<div role="banner" class="mt-1" data-controller="menu" data-menu-open-text-value="@Model.Localizer["Open menu"]" data-menu-close-text-value="@Model.Localizer["Close menu"]">
 					<div class="flex justify-between items-center">
-						<div class="-mb-px flex text-xl sm:text-2xl font-semibold">
+						<div class="-mb-px flex text-xl sm:text-2xl font-bold">
 							@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
 							{
 								<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>

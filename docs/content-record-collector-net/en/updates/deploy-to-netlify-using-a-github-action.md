@@ -14,7 +14,7 @@ This definition will deploy your site to your Netlify site's production URL on *
 <!--more-->
 ## Updated 2021-11-18
 
-YAML file now has .NET 6.0 support and npm steps for the CSS and JS setup in new default templates.
+YAML file now has .NET 6.0 support and npm steps for the CSS and JS setup used in the new default templates.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://record-collector.netlify.app/)
 
@@ -94,11 +94,6 @@ jobs:
         with:
           dotnet-version: 6.0.100
 
-      - name: Add robots.txt disallow
-        shell: pwsh
-        run: |
-          Set-Content "./src/Krompaco.RecordCollector.Web/wwwroot/robots.txt" "User-agent: *`r`nDisallow: /"
-
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
 
@@ -112,7 +107,6 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
 ```
 
 ## Paths to use in configuration
@@ -133,4 +127,4 @@ As you can see the environment name gets set to `Action` so in **appsettings.Act
 }
 ```
 
-Notice the full paths to use on the GitHub Action work runner. I have no idea why the `record-collector` GitHub repository name needs to be used twice in the structure but that is the case.
+Notice the full paths to use on the GitHub Action work runner. I have no idea why the GitHub repository name`record-collector` needs to be used twice in the structure but that is the case.

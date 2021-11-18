@@ -12,7 +12,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Ubuntu"', '"Roboto"', '"Noto Sans"', '"Droid Sans"', 'sans-serif'],
+				sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Ubuntu"', '"Roboto"', '"Noto Sans"', '"Droid Sans"', 'Arial', 'sans-serif'],
 				mono: ['JetBrainsMono', ...defaultTheme.fontFamily.mono],
 			},
 		},
