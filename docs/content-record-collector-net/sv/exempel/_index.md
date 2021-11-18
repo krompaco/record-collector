@@ -1,6 +1,6 @@
 +++
-title = "Kategori-listning för "Exempel""
-description = "Kategori-listning för "Exempel""
+title = "Kategori-listning för \"Exempel\""
+description = "Kategori-listning för \"Exempel\""
 keywords = "C# HTML"
 listcategory = "Exempel"
 robots = "noindex"
