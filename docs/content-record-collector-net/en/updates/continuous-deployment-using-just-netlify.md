@@ -54,6 +54,6 @@ These are settings that work well with the sample site.
 
  You should also be able to push a Shell script and have more work done, for example building front-end stuff before generating the static site using `npm run` or similar. The build-image has support for a wide variety of languages and runtimes.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://record-collector.netlify.app/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://record-collector.net/)
 
 This is such a great feature and really excited that it works this well with Record Collector! Thank you Netlify!
