@@ -1,5 +1,5 @@
 ---
-title: "Exempeluppdatering 0.6"
+title: "Exempel angående 0.6"
 date: 2020-04-06
 description: "META-beskrivning av sidan är viktigt."
 categories:
