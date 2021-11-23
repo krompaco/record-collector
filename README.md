@@ -25,6 +25,7 @@ Built using .NET 6.0 (through 3.1 and 5.0) and with these packages and projects.
 | [Tailwind CSS](https://tailwindcss.com/)                  | MIT                       |
 | [Hotwire](https://hotwired.dev/)                          | MIT                       |
 | [Simple.css {}](https://simplecss.org/)                   | MIT                       |
+| [Html Agility Pack](https://html-agility-pack.net/)       | MIT                       |
 
 Other things such as Webpack are involved too but these are the ones I firstly referenced and then they in turn depend on other packages.
 
