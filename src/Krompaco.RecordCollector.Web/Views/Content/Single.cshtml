@@ -23,6 +23,11 @@
 		}
 	</div>
 
+	@if (Model.ContentProperties.FrontendSetup == "simplecss")
+	{
+		<hr />
+	}
+
 	@if (Model.Categories.Count > 0)
 	{
 		<div class="mt-6 flex flex-row space-x-2">
@@ -30,9 +35,7 @@
 			{
 				if (!string.IsNullOrWhiteSpace(category.RelativeUrl?.ToString()))
 				{
-					<a href="@category.RelativeUrl" class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:bg-yellow-200 hover:bg-yellow-200">
-						@category.Text
-					</a>
+					<a href="@category.RelativeUrl" class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:bg-yellow-200 hover:bg-yellow-200">@category.Text</a>@(Model.ContentProperties.FrontendSetup == "simplecss" ? " " : string.Empty)
 				}
 				else
 				{
@@ -44,7 +47,7 @@
 		</div>
 	}
 
-	@await Html.PartialAsync("SingleData", Model.CurrentPage)
+	@await Html.PartialAsync("SingleData", Model.CurrentPage, new ViewDataDictionary(ViewData) { { "FrontendSetup", Model.ContentProperties.FrontendSetup } })
 
 	@* Confusing when having category pages that can also list and not only list by date.
 	Could be nice if you don't have category/tag pages though...

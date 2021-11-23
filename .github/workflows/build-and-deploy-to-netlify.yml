@@ -11,13 +11,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: 17.1.0
+      # Uncomment if you want to run default instead of simplecss
+      # - name: Setup npm
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 17.1.0
 
-      - run: npm ci
-      - run: npm run prodbuild
+      # - run: npm ci
+      # - run: npm run prodbuild
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
@@ -50,13 +51,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup npm
-        uses: actions/setup-node@v2
-        with:
-          node-version: 17.1.0
+      # Uncomment if you want to run default instead of simplecss
+      # - name: Setup npm
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: 17.1.0
 
-      - run: npm ci
-      - run: npm run prodbuild
+      # - run: npm ci
+      # - run: npm run prodbuild
 
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1

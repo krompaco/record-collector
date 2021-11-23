@@ -6,27 +6,54 @@
 	var author = Model.CustomStringProperties["authorname"] ?? string.Empty;
 	var hasAuthorImage = !string.IsNullOrWhiteSpace(authorImage);
 	var hasAuthor = !string.IsNullOrWhiteSpace(author);
+	var frontendSetup = ViewData["FrontendSetup"] as string;
 
-	<div class="mt-6 flex items-center">
-		@if (hasAuthorImage)
-		{
-			<div class="flex-shrink-0">
-				<img class="h-10 w-10 rounded-full" width="40" height="40" src="@authorImage" alt="@author" />
-			</div>
-		}
-		
-		<div class="ml-3">
-			<p class="text-sm leading-5 font-medium text-gray-900">
-				@author
-			</p>
-			<div class="text-sm leading-5 text-gray-700">
+	if (frontendSetup == "simplecss")
+	{
+		<p>
+			@if (hasAuthorImage)
+			{
+				<img width="40" height="40" src="@authorImage" alt="@author" /><br />
+				@if (hasAuthor)
+				{
+					<b>@author</b>
+				}
+				
 				@if (Model.Date != DateTime.MinValue)
 				{
 					<time datetime="@Model.Date.ToString("yyyy-MM-dd")">
 						@Model.Date.ToShortDateString()
 					</time>
 				}
+			}
+		</p>
+	}
+	else
+	{
+		<div class="mt-6 flex items-center">
+			@if (hasAuthorImage)
+			{
+				<div class="flex-shrink-0">
+					<img class="h-10 w-10 rounded-full" width="40" height="40" src="@authorImage" alt="@author" />
+				</div>
+			}
+		
+			<div class="ml-3">
+				@if (hasAuthor)
+				{
+					<p class="text-sm leading-5 font-medium text-gray-900">
+						@author
+					</p>
+				}
+				<div class="text-sm leading-5 text-gray-700">
+					@if (Model.Date != DateTime.MinValue)
+					{
+						<time datetime="@Model.Date.ToString("yyyy-MM-dd")">
+							@Model.Date.ToShortDateString()
+						</time>
+					}
+				</div>
 			</div>
 		</div>
-	</div>
+	}
 }

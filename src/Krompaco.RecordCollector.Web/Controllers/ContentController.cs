@@ -550,6 +550,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 SectionsToExcludeFromLists = this.config.GetAppSettingsSectionsToExcludeFromLists(),
                 EnvironmentProjectWebRootPath = this.env.WebRootPath,
                 SiteUrl = this.config.GetAppSettingsSiteUrl(),
+                FrontendSetup = this.config.GetAppSettingsFrontendSetup(),
             };
 
             return model;

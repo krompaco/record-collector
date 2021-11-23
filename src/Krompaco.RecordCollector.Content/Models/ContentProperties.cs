@@ -13,5 +13,7 @@
         public string EnvironmentProjectWebRootPath { get; set; }
 
         public string SiteUrl { get; set; }
+
+        public string FrontendSetup { get; set; }
     }
 }
