@@ -11,21 +11,19 @@
 	if (frontendSetup == "simplecss")
 	{
 		<p>
-			@if (hasAuthorImage)
-			{
-				<img width="40" height="40" src="@authorImage" alt="@author" /><br />
+			<i>
 				@if (hasAuthor)
 				{
-					<b>@author</b>
+					@author
 				}
-				
+
 				@if (Model.Date != DateTime.MinValue)
 				{
 					<time datetime="@Model.Date.ToString("yyyy-MM-dd")">
 						@Model.Date.ToShortDateString()
 					</time>
 				}
-			}
+			</i>
 		</p>
 	}
 	else

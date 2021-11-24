@@ -34,11 +34,14 @@
 @if (Model.Pagination.Items.FirstOrDefault(x => x.IsSelected)?.Page == null || Model.Pagination.Items.FirstOrDefault(x => x.IsSelected)?.Page == 1)
 {
 	h1Shown = true;
-	<div class="max-w-4xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
-		<h1 class="text-4xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-5xl">
-			@Model.Title
-		</h1>
-	</div>
+	if (Model.ContentProperties.FrontendSetup != "simplecss")
+	{
+		<div class="max-w-4xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
+			<h1 class="text-4xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-5xl">
+				@Model.Title
+			</h1>
+		</div>
+	}
 	<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
 		<div class="prose prose-lg max-w-none sm:prose-xl">
 			@if (Model.CurrentPage.ContentType == ContentType.Markdown)
@@ -56,7 +59,7 @@
 @if (Model.PagedDescendantPages.Count > 0)
 {
 	<div class="max-w-4xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
-		@if (h1Shown)
+		@if (h1Shown || Model.ContentProperties.FrontendSetup == "simplecss")
 		{
 			<h2 class="text-3xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-4xl">@Model.Localizer["The latest updates"]</h2>
 		}

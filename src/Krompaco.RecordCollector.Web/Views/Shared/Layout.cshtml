@@ -36,7 +36,7 @@
 		{
 			<header>
 				<h1>
-					@(new Uri(Model.ContentProperties.SiteUrl).Host)
+					@Model.Title
 				</h1>
 				<nav aria-label="@Model.Localizer["Main navigation"]">
 					@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
@@ -101,7 +101,7 @@
 										<ul class="w-full">
 											@foreach (var ni in Model.NavigationItems)
 											{
-												@await Html.PartialAsync("MenuItem", ni, new ViewDataDictionary(ViewData) { { "FrontendSetup", Model.ContentProperties.FrontendSetup } })
+												@await Html.PartialAsync("MenuItem", ni)
 											}
 										</ul>
 									</div>

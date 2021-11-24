@@ -254,7 +254,7 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             this.rootCulturesField = cultures;
-            return this.rootCulturesField;
+            return this.rootCulturesField.OrderBy(x => x.Name).ToList();
         }
 
         public List<string> GetSections()

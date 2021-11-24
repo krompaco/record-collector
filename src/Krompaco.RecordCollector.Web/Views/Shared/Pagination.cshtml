@@ -67,9 +67,12 @@
 				}
 				else if (item.IsEllipsis)
 				{
-					<span class="-mt-px border-t-2 border-transparent py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-gray-500">
-						...
-					</span>
+					if (frontendSetup != "simplecss")
+					{
+						<span class="-mt-px border-t-2 border-transparent py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-gray-500">
+							...
+						</span>
+					}
 				}
 				else
 				{
