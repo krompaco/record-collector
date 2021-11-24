@@ -48,7 +48,7 @@ These are settings that work well with the sample site.
 | Setting           | Value                      |
 |-------------------|----------------------------|
 | Base directory    | *Leave empty*              |
-| Build command     | **dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"** |
+| Build command     | **npm ci && npm run prodbuild && dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"** |
 | Publish directory | **artifacts/static-site/** |
 | Builds            | *Activate builds*          |
 
