@@ -12,7 +12,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				rc: ['sans-serif'],
+				rc: ['-apple-system', 'BlinkMacSystemFont', '"Avenir Next"' , 'Avenir','"Nimbus Sans L"', 'Roboto', 'Noto', '"Segoe UI"','Arial','Helvetica', '"Helvetica Neue"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'],
 				mono: ['JetBrainsMono', ...defaultTheme.fontFamily.mono],
 			},
 		},

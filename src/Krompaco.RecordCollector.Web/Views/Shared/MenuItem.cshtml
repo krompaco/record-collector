@@ -8,13 +8,13 @@
         switch (Model.Level)
         {
             case 1:
-                return "pr-2 text-lg font-bold";
+                return "pr-2 text-xl font-bold";
             case 2:
-                return "pl-6 pr-2 py-2 text-lg";
+                return "pl-6 pr-2 py-2 text-xl";
             case 3:
-                return "pl-9 pr-2 py-3 text-base";
+                return "pl-9 pr-2 py-3 text-lg";
             case 4:
-                return "pl-12 pr-2 py-3 text-sm";
+                return "pl-12 pr-2 py-3 text-base";
         }
 
         return "pl-12 pr-2 py-3 text-sm";
@@ -22,7 +22,7 @@
 }
 
 <li>
-    <div class="flex justify-between w-[calc(100vw-32px)] sm:w-[500px]" data-controller="tree">
+    <div class="flex justify-between w-[calc(100vw-32px)] sm:w-[450px]" data-controller="tree">
         <div class="@GetClassByLevel() flex items-center">
             <a class="rc-link my-[2px]" href="@Model.RelativeUrl">@Model.Text</a>
         </div>

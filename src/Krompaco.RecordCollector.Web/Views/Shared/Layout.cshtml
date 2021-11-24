@@ -71,7 +71,7 @@
 					</div>
 					<div role="banner" class="mt-1" data-controller="menu" data-menu-open-text-value="@Model.Localizer["Open menu"]" data-menu-close-text-value="@Model.Localizer["Close menu"]">
 						<div class="flex justify-between items-center">
-							<div class="-mb-px flex text-xl sm:text-2xl font-bold">
+							<div class="-mb-px flex text-2xl sm:text-2xl font-bold">
 								@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
 								{
 									<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>
@@ -82,13 +82,13 @@
 								}
 							</div>
 							<div>
-								<button data-menu-target="button" data-action="click->menu#toggle touch->menu#toggle" type="button" class="p-[6px] rc-menu-link justify-self-end">
+								<button data-menu-target="button" data-action="click->menu#toggle touch->menu#toggle" type="button" class="p-[4px] rc-menu-link justify-self-end">
 									<span class="sr-only js-text-content">@Model.Localizer["Open menu"]</span>
 									<span class="block js-content-collapsed">
-										<svg class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+										<svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
 									</span>
 									<span class="block hidden js-content-expanded">
-										<svg class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+										<svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
 									</span>
 								</button>
 							</div>
