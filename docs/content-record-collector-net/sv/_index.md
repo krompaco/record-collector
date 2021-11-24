@@ -1,5 +1,5 @@
 +++
-title = "Verktygslådan för .NET 5.0 och HTML-generering"
+title = "Verktygslådan för .NET 6.0 och HTML-generering"
 description = "Exempel och dokumentation för Record Collector."
 keywords = "C# HTML"
 +++
