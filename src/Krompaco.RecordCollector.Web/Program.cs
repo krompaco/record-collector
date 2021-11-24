@@ -53,6 +53,7 @@ if (frontendSetup == "simplecss")
     // Trying out a way to strip class attributes from HTML if Simple.css {} is used
     app.Use(async (context, next) =>
     {
+        // Way that should work to only process HTML output
         if (context.Request.Path.HasValue && context.Request.Path.Value.EndsWith("/"))
         {
             var responseBody = context.Response.Body;
@@ -68,6 +69,7 @@ if (frontendSetup == "simplecss")
 
             var html = new StreamReader(newResponseBody).ReadToEnd();
 
+            // Using HtmlAgilityPack to modify whole document
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 

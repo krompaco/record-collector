@@ -161,6 +161,9 @@
     <value>Föregående</value>
     <comment>Pagination</comment>
   </data>
+  <data name="Select language" xml:space="preserve">
+    <value>Välj språk</value>
+  </data>
   <data name="Skip to main content" xml:space="preserve">
     <value>Hoppa till innehåll</value>
     <comment>Skip link</comment>

@@ -21,7 +21,7 @@
 
 	@if (Model.ContentProperties.FrontendSetup == "simplecss")
 	{
-		<link href="/dist/simple.min.css" rel="stylesheet" asp-append-version="true" />
+		<link href="/simple.min.css" rel="stylesheet" asp-append-version="true" />
 	}
 	else
 	{
@@ -30,23 +30,23 @@
 	}
 </head>
 <body class="bg-white text-gray-900 font-rc">
-	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/"
-	|| Model.NavigationItems.Count > 0)
+	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems.Count > 0)
 	{
 		@if (Model.ContentProperties.FrontendSetup == "simplecss")
 		{
 			<header>
 				<h1>
+					@(new Uri(Model.ContentProperties.SiteUrl).Host)
+				</h1>
+				<nav>
 					@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
 					{
-						<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" aria-current="page">@Model.Localizer["Home"]</a>
+						<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" aria-current="page"><b>@Model.Localizer["Home"]</b></a>
 					}
 					else
 					{
 						<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">@Model.Localizer["Home"]</a>
 					}
-				</h1>
-				<nav>
 					@foreach (var ni in Model.NavigationItems)
 					{
 						@if (Model.CurrentPath == ni.RelativeUrl.ToString())
@@ -119,9 +119,10 @@
 	<footer class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-gray-500">
 		@{
 			var footerLinkClasses = "rc-link text-lg";
+			var isRootWithCultureSelection = Model.RootCultures.Count > 0 && Model.CurrentPath == "/";
 		}
 
-		@if (Model.RootCultures.Count > 0)
+		@if (isRootWithCultureSelection == false && Model.RootCultures.Count > 0 || Model.ContentProperties.FrontendSetup != "simplecss")
 		{
 			<h2 class="text-center text-lg">@Model.Localizer["Change language"]</h2>
 			<div class="flex flex-wrap justify-center">

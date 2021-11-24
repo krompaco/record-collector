@@ -1,4 +1,5 @@
 ﻿@using Krompaco.RecordCollector.Content.Models
+@using Krompaco.RecordCollector.Web.Extensions
 @using Markdig
 
 @model ListPageViewModel
@@ -6,6 +7,7 @@
 @{
 	var linkClasses1 = "rc-link";
 	var h1Shown = false;
+	var isRootWithCultureSelection = Model.RootCultures.Count > 0 && Model.CurrentPath == "/";
 }
 
 @section head {
@@ -14,6 +16,19 @@
 		<link rel="alternate" type="application/rss+xml" title="@Model.Title" href="@Model.ContentProperties.SiteUrl.TrimEnd('/')@(Model.CurrentPage.RelativeUrl)rss.xml" />
 	}
 	<link rel="canonical" href="@Model.ContentProperties.SiteUrl.TrimEnd('/')@(Model.CurrentPage.RelativeUrl)" />
+}
+
+@if (isRootWithCultureSelection && Model.ContentProperties.FrontendSetup == "simplecss")
+{
+	<header>
+		<h1>@Model.Localizer["Select language"]</h1>
+		<nav>
+			@foreach (var c in Model.RootCultures)
+			{
+				<a lang="@c.Name" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName.FirstCharToUpper()</a>
+			}
+		</nav>
+	</header>
 }
 
 @if (Model.Pagination.Items.FirstOrDefault(x => x.IsSelected)?.Page == null || Model.Pagination.Items.FirstOrDefault(x => x.IsSelected)?.Page == 1)

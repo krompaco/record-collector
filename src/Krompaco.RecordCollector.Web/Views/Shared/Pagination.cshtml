@@ -64,7 +64,7 @@
 
 				@if (item.IsSelected)
 				{
-					<a href="@item.RelativeUrl" aria-current="page" class="-mt-px border-t-2 border-blue-500 py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-blue-600  focus:text-gray-900 focus:border-gray-400 focus:outline-none focus:bg-yellow-200 hover:underline focus:underline">@item.Page</a>@(frontendSetup == "simplecss" ? " " : string.Empty)
+					<a href="@item.RelativeUrl" aria-current="page" class="-mt-px border-t-2 border-blue-500 py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-blue-600  focus:text-gray-900 focus:border-gray-400 focus:outline-none focus:bg-yellow-200 hover:underline focus:underline">@Html.Raw(frontendSetup == "simplecss" ? "<b>" : string.Empty)@(item.Page)@Html.Raw(frontendSetup == "simplecss" ? "</b>" : string.Empty)</a>@(frontendSetup == "simplecss" ? " " : string.Empty)
 				}
 				else if (item.IsEllipsis)
 				{
