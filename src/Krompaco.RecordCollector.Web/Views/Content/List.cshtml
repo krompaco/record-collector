@@ -22,7 +22,7 @@
 {
 	<header>
 		<h1>@Model.Localizer["Select language"]</h1>
-		<nav>
+		<nav aria-label="@Model.Localizer["Main navigation"]">
 			@foreach (var c in Model.RootCultures)
 			{
 				<a lang="@c.Name" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName.FirstCharToUpper()</a>

@@ -7,8 +7,7 @@
 	var previousShown = false;
 	var nextShown = false;
 	var frontendSetup = ViewData["FrontendSetup"] as string;
-	<div role="navigation" class="mt-16 border-t border-gray-200 px-0 flex items-center justify-between">
-		<h2 class="sr-only">@Model.Layout.Localizer["Page navigation"]</h2>
+	<nav class="mt-16 border-t border-gray-200 px-0 flex items-center justify-between" aria-label="@Model.Layout.Localizer["Page navigation"]">
 		@foreach (var item in Model.Items)
 		{
 			@if (item.IsFirst)
@@ -22,7 +21,7 @@
 			else if (item.IsPrevious)
 			{
 				previousShown = true;
-				<div class="w-0 flex-1 flex">
+				<span class="w-0 flex-1 flex">
 					<a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Previous"] (@item.Page)" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:border-gray-400 focus:outline-none hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline">
 						@if (frontendSetup != "simplecss")
 						{
@@ -32,15 +31,15 @@
 						}
 						@Model.Layout.Localizer["Previous"]
 					</a>
-				</div>
+				</span>
 			}
 			else if (item.IsNext)
 			{
 				nextShown = true;
-				@Html.Raw(numbersOpened ? "</div>" : string.Empty)
+				@Html.Raw(numbersOpened ? "</span>" : string.Empty)
 				numbersClosed = true;
 
-				<div class="w-0 flex-1 flex justify-end">
+				<span class="w-0 flex-1 flex justify-end">
 					<a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Next"] (@item.Page)" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:border-gray-400 focus:outline-none hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline">
 						@Model.Layout.Localizer["Next"]
 						@if (frontendSetup != "simplecss")
@@ -50,16 +49,16 @@
 							</svg>
 						}
 					</a>
-				</div>
+				</span>
 			}
 			else if (item.IsSeparator)
 			{
 			}
 			else
 			{
-				@Html.Raw(previousShown ? string.Empty : @"<div class=""w-0 flex-1 flex""></div>")
+				@Html.Raw(previousShown ? string.Empty : @"<span class=""w-0 flex-1 flex""></span>")
 				previousShown = true;
-				@Html.Raw(numbersOpened ? string.Empty : @"<div class=""hidden md:flex"">")
+				@Html.Raw(numbersOpened ? string.Empty : @"<span class=""hidden md:flex"">")
 				numbersOpened = true;
 
 				@if (item.IsSelected)
@@ -78,7 +77,7 @@
 				}
 			}
 		}
-		@Html.Raw(numbersOpened && !numbersClosed ? "</div>" : string.Empty)
-		@Html.Raw(nextShown ? string.Empty : @"<div class=""w-0 flex-1 flex justify-end""></div>")
-	</div>
+		@Html.Raw(numbersOpened && !numbersClosed ? "</span>" : string.Empty)
+		@Html.Raw(nextShown ? string.Empty : @"<span class=""w-0 flex-1 flex justify-end""></span>")
+	</nav>
 }

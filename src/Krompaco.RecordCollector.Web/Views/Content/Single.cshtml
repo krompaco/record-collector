@@ -23,14 +23,14 @@
 		}
 	</div>
 
-	@if (Model.ContentProperties.FrontendSetup == "simplecss")
+	@if (Model.ContentProperties.FrontendSetup == "simplecss" && (Model.Categories.Count > 0 || Model.CurrentPage.CustomStringProperties.Keys.Contains("authorname")))
 	{
 		<hr />
 	}
 
 	@if (Model.Categories.Count > 0)
 	{
-		<div class="mt-6 flex flex-row space-x-2">
+		<nav class="mt-6 flex flex-row space-x-2" aria-label="@Model.Localizer["Categories"]">
 			@foreach (var category in Model.Categories)
 			{
 				if (!string.IsNullOrWhiteSpace(category.RelativeUrl?.ToString()))
@@ -44,7 +44,7 @@
 					</span>
 				}
 			}
-		</div>
+		</nav>
 	}
 
 	@await Html.PartialAsync("SingleData", Model.CurrentPage, new ViewDataDictionary(ViewData) { { "FrontendSetup", Model.ContentProperties.FrontendSetup } })

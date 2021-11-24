@@ -38,7 +38,7 @@
 				<h1>
 					@(new Uri(Model.ContentProperties.SiteUrl).Host)
 				</h1>
-				<nav>
+				<nav aria-label="@Model.Localizer["Main navigation"]">
 					@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
 					{
 						<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" aria-current="page"><b>@Model.Localizer["Home"]</b></a>
