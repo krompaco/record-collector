@@ -12,7 +12,7 @@ authorimage: "/files/jk.jpg"
 ---
 This definition will deploy your site to your Netlify site's production URL on **push to main** and deploy a draft that will get a preview URL on push to any other branch.
 <!--more-->
-## Updated 2021-11-18
+## Update November 18th 2021
 
 YAML file now has .NET 6.0 support and npm steps for the CSS and JS setup used in the new default templates.
 

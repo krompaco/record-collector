@@ -10,21 +10,17 @@
 
 	if (frontendSetup == "simplecss")
 	{
-		<p>
-			<i>
-				@if (hasAuthor)
-				{
-					@author
-				}
-
-				@if (Model.Date != DateTime.MinValue)
-				{
-					<time datetime="@Model.Date.ToString("yyyy-MM-dd")">
-						@Model.Date.ToShortDateString()
-					</time>
-				}
-			</i>
-		</p>
+		<blockquote>
+			<p>
+				<time datetime="@Model.Date.ToString("yyyy-MM-dd")">
+					@Model.Date.ToShortDateString()
+				</time>
+			</p>
+			@if (hasAuthor)
+			{
+				<p><cite>– @author</cite></p>
+			}
+		</blockquote>
 	}
 	else
 	{
