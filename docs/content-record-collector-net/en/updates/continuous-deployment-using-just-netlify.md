@@ -32,6 +32,7 @@ This means the config used will come from **appsettings.Netlify.json** and this 
     "SiteUrl": "https://record-collector.netlify.app/",
     "ContentRootPath": "/opt/build/repo/docs/content-record-collector-net/",
     "StaticSiteRootPath": "/opt/build/repo/artifacts/static-site/",
+    "FrontendSetup": "default",
     "ViewPrefix": "",
     "SectionsToExcludeFromLists": [ "pages", "sidor" ],
     "MainNavigationSections": [ "pages", "sidor" ],
