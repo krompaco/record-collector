@@ -12,7 +12,7 @@ authorimage: "/files/jk.jpg"
 ---
 How to set up deployment of a Record Collector site using only Netlify.
 <!--more-->
-I was very happy to notice that the [Netlify build-image](https://github.com/netlify/build-image) now has the .NET 5.0.200 SDK installed.
+I was very happy to notice that the [Netlify build-image](https://github.com/netlify/build-image) now has the .NET 6.0.100 SDK installed.
 
 For Record Collector this means that you can get deploys done where Netlify pulls from a Git repository and does the build.
 
