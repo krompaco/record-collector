@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -14,14 +10,11 @@ using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.ModelBuilders;
 using Krompaco.RecordCollector.Web.Models;
 using Krompaco.RecordCollector.Web.Resources;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Logging;
 
 namespace Krompaco.RecordCollector.Web.Controllers
 {
@@ -47,13 +40,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private readonly string contentRoot;
 
-        private readonly List<SinglePage?> pagesForNavigation = new List<SinglePage?>();
+        private readonly List<SinglePage> pagesForNavigation = new ();
 
         private readonly List<IRecordCollectorFile> allFileModels;
 
         private readonly Stopwatch stopwatch;
 
-        private CultureInfo? currentCulture;
+        private CultureInfo currentCulture;
 
         public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env, IStringLocalizerFactory factory)
         {
@@ -70,6 +63,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             this.contentCultureService = new ContentCultureService();
             var fileService = new FileService(this.contentRoot, this.config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, logger);
             this.rootCultures = fileService.GetRootCultures();
+            this.currentCulture = CultureInfo.CurrentCulture;
             this.allFiles = fileService.GetAllFileFullNames();
 
             if (!memoryCache.TryGetValue(AllFilesCacheKey, out List<IRecordCollectorFile> allFileModelsFromCache))
@@ -168,7 +162,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             // Main navigation
             var mainNavigationSections = this.config.GetAppSettingsMainNavigationSections();
 
-            if (mainNavigationSections != null && mainNavigationSections.Length > 0)
+            if (mainNavigationSections.Any())
             {
                 if (this.rootCultures.Any() && !string.IsNullOrEmpty(path))
                 {
@@ -180,7 +174,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                                 .TrimStart('/')
                                 .StartsWith($"{this.currentCulture.Name}/", StringComparison.OrdinalIgnoreCase))
                         .Select(x => x as SinglePage)
-                        .Where(x => x != null && x?.Title != null && x.Level == 1)
+                        .Where(x => x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
                         .ThenBy(x => x.Title)
                         .ToList();
@@ -192,14 +186,16 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 }
                 else if (!this.rootCultures.Any())
                 {
-                    var rangeToAdd = this.allFileModels
+#pragma warning disable IDE0007 // Use implicit type
+                    List<SinglePage> rangeToAdd = this.allFileModels
+#pragma warning restore IDE0007 // Use implicit type
                         .Where(x =>
                             mainNavigationSections.Contains(x.Section))
                         .Select(x => x as SinglePage)
                         .Where(x => x != null && x?.Title != null && x.Level == 1)
                         .OrderByDescending(x => x.Weight)
                         .ThenBy(x => x.Title)
-                        .ToList();
+                        .ToList() !;
 
                     if (rangeToAdd.Any())
                     {
@@ -515,7 +511,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
         private Tuple<Uri, int> GetUrlAndCountForCategoryList(string category)
         {
-            ListPage firstCategoryListPage = null;
+            ListPage? firstCategoryListPage = null;
 
             if (this.rootCultures.Any())
             {

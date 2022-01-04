@@ -4,7 +4,12 @@ namespace Krompaco.RecordCollector.Web.Models
 {
     public class CategoryItemViewModel
     {
-        public Uri RelativeUrl { get; set; }
+        public CategoryItemViewModel()
+        {
+            this.Text = string.Empty;
+        }
+
+        public Uri? RelativeUrl { get; set; }
 
         public string Text { get; set; }
 

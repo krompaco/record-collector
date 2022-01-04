@@ -36,16 +36,16 @@
         }
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public static string[]? GetAppSettingsMainNavigationSections(this IConfiguration config)
+        public static List<string> GetAppSettingsMainNavigationSections(this IConfiguration config)
         {
             var sections = config?.GetSection("AppSettings:MainNavigationSections").Get<string[]>();
-            return sections;
+            return sections?.ToList() ?? new List<string>();
         }
 
-        public static string[]? GetAppSettingsSectionsToExcludeFromLists(this IConfiguration config)
+        public static List<string> GetAppSettingsSectionsToExcludeFromLists(this IConfiguration config)
         {
             var sections = config?.GetSection("AppSettings:SectionsToExcludeFromLists").Get<string[]>();
-            return sections;
+            return sections?.ToList() ?? new List<string>();
         }
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 

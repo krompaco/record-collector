@@ -77,7 +77,7 @@ namespace Krompaco.RecordCollector.Generator
                 var rssUrl = new Uri(rssPath, UriKind.Relative);
                 var rssResponse = await this.client.GetAsync(rssUrl).ConfigureAwait(true);
 
-                if (rssResponse.Content.Headers.ContentType.MediaType == "application/rss+xml")
+                if (rssResponse.Content.Headers.ContentType is { MediaType: "application/rss+xml" })
                 {
                     this.testOutputHelper.WriteLine($"GET {rssPath}");
 
@@ -160,6 +160,11 @@ namespace Krompaco.RecordCollector.Generator
                 i++;
                 response.EnsureSuccessStatusCode();
 
+                if (response?.RequestMessage?.RequestUri == null)
+                {
+                    throw new NullReferenceException("Something wrong with the response, no RequestUri found.");
+                }
+
                 var file = allFileModels.Single(x => x.RelativeUrl.ToString() == response.RequestMessage.RequestUri.AbsolutePath);
                 this.testOutputHelper.WriteLine($"GET {file.RelativeUrl}");
 
@@ -197,7 +202,12 @@ namespace Krompaco.RecordCollector.Generator
 
             var destinationFile = Path.Combine(contentProperties.StaticSiteRootPath, relativePath);
             var destinationDirectory = Path.GetDirectoryName(destinationFile);
-            Directory.CreateDirectory(destinationDirectory);
+
+            if (!string.IsNullOrWhiteSpace(destinationDirectory))
+            {
+                Directory.CreateDirectory(destinationDirectory);
+            }
+
             return destinationFile;
         }
 
@@ -218,6 +228,11 @@ namespace Krompaco.RecordCollector.Generator
 
         private static void CopyFileResource(IRecordCollectorFile file, ContentProperties contentProperties)
         {
+            if (string.IsNullOrWhiteSpace(file.FullName))
+            {
+                throw new ArgumentNullException(nameof(file), "Found file with empty file name.");
+            }
+
             var fileInfo = new FileInfo(file.FullName);
 
             if (fileInfo.DirectoryName == null)
@@ -262,7 +277,7 @@ namespace Krompaco.RecordCollector.Generator
                     PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                 });
 
-            return contentProperties;
+            return contentProperties ?? new ContentProperties();
         }
     }
 }

@@ -18,9 +18,7 @@ namespace Krompaco.RecordCollector.Content.IO
 
         private readonly ILogger logger;
 
-#pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        private readonly string[]? sectionsToExcludeFromLists;
-#pragma warning restore SA1011 // Closing square brackets should be spaced correctly
+        private readonly List<string> sectionsToExcludeFromLists;
 
         private readonly object allFileModelsLock = new object();
 
@@ -35,7 +33,7 @@ namespace Krompaco.RecordCollector.Content.IO
         private List<string>? sectionsField = null;
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public FileService(string contentRoot, string[]? sectionsToExcludeFromLists, ContentCultureService contentCultureService, ILogger logger)
+        public FileService(string contentRoot, List<string> sectionsToExcludeFromLists, ContentCultureService contentCultureService, ILogger logger)
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
         {
             if (string.IsNullOrWhiteSpace(contentRoot))
@@ -650,7 +648,7 @@ namespace Krompaco.RecordCollector.Content.IO
                 .ToList();
         }
 
-        public SinglePage GetParent(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
+        public SinglePage? GetParent(IRecordCollectorFile current, List<IRecordCollectorFile> allFileModels)
         {
             if (current == null)
             {

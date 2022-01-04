@@ -1,4 +1,4 @@
-# record-collector.net
+# Record Collector
 
 The [Record Collector example and documentation web site](https://record-collector.net) is being filled with content and will have all the information on what the project is and does. Easiest starting point is to set up the repository locally and run the web project, see the [getting started](https://record-collector.net/en/pages/getting-started/) page for instructions.
 
@@ -10,9 +10,9 @@ This project is heavily inspired by [Hugo](https://gohugo.io/) and I try to be s
 
 The content file layer is converted to C# lists and objects and then used in a regular ASP.NET Core MVC project which is also where you can work _live_ on both content preview and templating. This means you now can use your existing ASP.NET MVC and C# skills creating static site templates!
 
-In this setup the generation process work using the WebApplicationFactory from the Microsoft.AspNetCore.Mvc.Testing package so I don't have to fall back to a console application or custom web servers for crunching the files and templates which is the norm for static site generation. Feels a lot better to me and while keeping really fast generation times.
+In this setup the generation process work using the WebApplicationFactory from the Microsoft.AspNetCore.Mvc.Testing package so I don't have to fall back to a console application or custom web servers for crunching the files and templates which seems to be the norm for static site generation. Feels good to me and generation times are still fast.
 
-## Installed packages
+## Open source references
 
 Built using .NET 6.0 (through 3.1 and 5.0) and with these packages and projects. Thank you!
 
@@ -21,13 +21,14 @@ Built using .NET 6.0 (through 3.1 and 5.0) and with these packages and projects.
 | [YamlDotNet](https://github.com/aaubry/YamlDotNet/wiki)   | MIT                       |
 | [Tomlyn](https://github.com/xoofx/Tomlyn)                 | BSD-Clause 2              |
 | [Markdig](https://github.com/lunet-io/markdig)            | BSD-Clause 2              |
+| [Manrope font](https://manropefont.com/)                  | SIL Open Font License 1.1 |
 | [JetBrains Mono font](https://www.jetbrains.com/lp/mono/) | SIL Open Font License 1.1 |
 | [Tailwind CSS](https://tailwindcss.com/)                  | MIT                       |
 | [Hotwire](https://hotwired.dev/)                          | MIT                       |
-| [Simple.css \{\}](https://simplecss.org/)                   | MIT                       |
+| [Simple.css \{\}](https://simplecss.org/)                 | MIT                       |
 | [Html Agility Pack](https://html-agility-pack.net/)       | MIT                       |
 
-Other things such as Webpack are involved too but these are the ones I firstly referenced and then they in turn depend on other packages.
+Other things such as Webpack can be involved too but these are the ones I reference directly.
 
 ### Quality control tools
 
@@ -36,11 +37,11 @@ Other things such as Webpack are involved too but these are the ones I firstly r
 
 ### Demo sites
 
-The [demo web site](https://record-collector.net) is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
+The [demo web site](https://record-collector.net) is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md). It has the `default` frontend.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
 
-This [other instance of the same web site](https://record-collector.netlify.app) is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/deploy-to-netlify-using-a-github-action.md).
+This [other instance of the web site](https://record-collector.netlify.app) is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/deploy-to-netlify-using-a-github-action.md). It has the `simplecss` frontend configuration.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
