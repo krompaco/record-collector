@@ -254,21 +254,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 if (rssForList)
                 {
-                    var rssUrl = new Uri(
-                        new Uri(siteUrl),
-                        $"{rootPage.RelativeUrl}rss.xml");
-                    var rssItems = rootPage.DescendantPages.Take(10).ToList();
-                    var rssXmlBuilder = new RssXmlBuilder(
-                        new Uri(siteUrl),
-                        this,
-                        rssItems,
-                        new SyndicationFeed(
-                            listViewModel.Title,
-                            listViewModel.Description,
-                            rssUrl,
-                            rssUrl.ToString(),
-                            rssItems.First().Date.ToUniversalTime()));
-                    return rssXmlBuilder.BuildActionResult();
+                    return this.GetXmlActionResult(rootPage, listViewModel, siteUrl, false);
                 }
 
                 return this.View(viewPrefix + "List", listViewModel);
@@ -315,21 +301,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                     if (rssForList)
                     {
-                        var rssUrl = new Uri(
-                            new Uri(siteUrl),
-                            $"{listPage.RelativeUrl}rss.xml");
-                        var rssItems = listPage.DescendantPages.Take(10).ToList();
-                        var rssXmlBuilder = new RssXmlBuilder(
-                            new Uri(siteUrl),
-                            this,
-                            rssItems,
-                            new SyndicationFeed(
-                                listViewModel.Title,
-                                listViewModel.Description,
-                                rssUrl,
-                                rssUrl.ToString(),
-                                rssItems.First().Date.ToUniversalTime()));
-                        return rssXmlBuilder.BuildActionResult();
+                        return this.GetXmlActionResult(listPage, listViewModel, siteUrl, false);
                     }
 
                     return this.View(viewPrefix + "List", listViewModel);
@@ -427,21 +399,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 if (rssForList)
                 {
-                    var rssUrl = new Uri(
-                        new Uri(siteUrl),
-                        $"{listPageForCategory.RelativeUrl}rss.xml");
-                    var rssItems = listPageForCategory.CategoryPages.Take(10).ToList();
-                    var rssXmlBuilder = new RssXmlBuilder(
-                        new Uri(siteUrl),
-                        this,
-                        rssItems,
-                        new SyndicationFeed(
-                            listViewModel.Title,
-                            listViewModel.Description,
-                            rssUrl,
-                            rssUrl.ToString(),
-                            rssItems.First().Date.ToUniversalTime()));
-                    return rssXmlBuilder.BuildActionResult();
+                    return this.GetXmlActionResult(listPageForCategory, listViewModel, siteUrl, true);
                 }
 
                 return this.View(viewPrefix + "List", listViewModel);
@@ -565,6 +523,27 @@ namespace Krompaco.RecordCollector.Web.Controllers
             }
 
             return 2;
+        }
+
+        private IActionResult GetXmlActionResult(ListPage listPage, LayoutViewModel viewModel, string siteUrl, bool isCategory)
+        {
+            var rssUrl = new Uri(
+                new Uri(siteUrl),
+                $"{listPage.RelativeUrl}rss.xml");
+            var rssItems = isCategory ? listPage.CategoryPages.Take(10).ToList() : listPage.DescendantPages.Take(10).ToList();
+            var lastUpdatedTime = rssItems.Any() ? rssItems.First().Date.ToUniversalTime() : DateTime.UtcNow;
+            var lastUpdatedTimeOffset = new DateTimeOffset(lastUpdatedTime);
+            var rssXmlBuilder = new RssXmlBuilder(
+                new Uri(siteUrl),
+                this,
+                rssItems,
+                new SyndicationFeed(
+                    viewModel.Title,
+                    viewModel.Description,
+                    rssUrl,
+                    rssUrl.ToString(),
+                    lastUpdatedTimeOffset));
+            return rssXmlBuilder.BuildActionResult();
         }
 
         private void LogTime()
