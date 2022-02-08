@@ -6,6 +6,6 @@ weight = 15
 +++
 Så här fungerar Record Collector.
 
-![Skiss på Record Collectors flöde](/files/flow.png)
+![Skiss på Record Collectors flöde](https://record-collector.net/files/flow.png)
 
 Mer information hittar du på [den engelska About-sidan](/en/pages/about/).

@@ -9,7 +9,7 @@ authorimage: "/files/jk.jpg"
 robots: "noindex"
 ---
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
+Text can be **bold**, _italic_, or lorem ipsum.
 <!--more-->
 There should be whitespace between paragraphs and they can contain text that is long or short. This is sample content.
 
