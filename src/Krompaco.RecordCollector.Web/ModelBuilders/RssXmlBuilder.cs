@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.ServiceModel.Syndication;
+﻿using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
 using Krompaco.RecordCollector.Content.Models;

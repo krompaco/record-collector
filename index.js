@@ -1,5 +1,3 @@
-import "./styles.css"
-
 import * as Turbo from "@hotwired/turbo"
 
 import { Application } from "stimulus"

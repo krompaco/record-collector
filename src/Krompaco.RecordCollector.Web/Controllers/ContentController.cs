@@ -22,7 +22,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
     {
         public const string AllFilesCacheKey = "RecordCollectorAllFiles";
 
-        public static readonly object AllFilesLock = new object();
+        public static readonly object AllFilesLock = new ();
 
         private readonly ILogger<ContentController> logger;
 
@@ -89,7 +89,6 @@ namespace Krompaco.RecordCollector.Web.Controllers
         [HttpGet]
         public IActionResult Report()
         {
-            this.LogTime();
             var sb = new StringBuilder();
 
             foreach (var fm in this.allFileModels.OrderBy(this.GetSortOrder))
@@ -122,15 +121,18 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 sb.AppendLine();
             }
 
+            this.LogTime();
             return this.Content(sb.ToString(), "text/plain", Encoding.UTF8);
         }
 
         [HttpGet]
         public IActionResult Properties()
         {
-            this.LogTime();
             var model = this.GetContentProperties();
-            return this.Json(model);
+
+            var json = this.Json(model);
+            this.LogTime();
+            return json;
         }
 
         [HttpGet]
@@ -250,13 +252,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 listViewModel.Title = rootPage.Title ?? this.localizer["Updates"];
 
-                this.LogTime();
-
                 if (rssForList)
                 {
-                    return this.GetXmlActionResult(rootPage, listViewModel, siteUrl, false);
+                    return this.GetXmlActionResultAndLogTime(rootPage, listViewModel, siteUrl, false);
                 }
 
+                this.LogTime();
                 return this.View(viewPrefix + "List", listViewModel);
             }
 
@@ -297,13 +298,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                     listViewModel.Title = listPage.Title ?? cultureInfo.NativeName.FirstCharToUpper();
 
-                    this.LogTime();
-
                     if (rssForList)
                     {
-                        return this.GetXmlActionResult(listPage, listViewModel, siteUrl, false);
+                        return this.GetXmlActionResultAndLogTime(listPage, listViewModel, siteUrl, false);
                     }
 
+                    this.LogTime();
                     return this.View(viewPrefix + "List", listViewModel);
                 }
             }
@@ -395,13 +395,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
 
                 listViewModel.Title = listPageForCategory.Title;
 
-                this.LogTime();
-
                 if (rssForList)
                 {
-                    return this.GetXmlActionResult(listPageForCategory, listViewModel, siteUrl, true);
+                    return this.GetXmlActionResultAndLogTime(listPageForCategory, listViewModel, siteUrl, true);
                 }
 
+                this.LogTime();
                 return this.View(viewPrefix + "List", listViewModel);
             }
 
@@ -467,7 +466,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             return match.Success && match.Groups.Count > 0;
         }
 
-        private Tuple<Uri, int> GetUrlAndCountForCategoryList(string category)
+        private Tuple<Uri?, int> GetUrlAndCountForCategoryList(string category)
         {
             ListPage? firstCategoryListPage = null;
 
@@ -491,8 +490,8 @@ namespace Krompaco.RecordCollector.Web.Controllers
             }
 
             return firstCategoryListPage != null ?
-                new Tuple<Uri, int>(firstCategoryListPage.RelativeUrl, firstCategoryListPage.CategoryPages.Count)
-                : new Tuple<Uri, int>(null, 0);
+                new Tuple<Uri?, int>(firstCategoryListPage.RelativeUrl, firstCategoryListPage.CategoryPages.Count)
+                : new Tuple<Uri?, int>(null, 0);
         }
 
         private ContentProperties GetContentProperties()
@@ -525,7 +524,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             return 2;
         }
 
-        private IActionResult GetXmlActionResult(ListPage listPage, LayoutViewModel viewModel, string siteUrl, bool isCategory)
+        private IActionResult GetXmlActionResultAndLogTime(ListPage listPage, LayoutViewModel viewModel, string siteUrl, bool isCategory)
         {
             var rssUrl = new Uri(
                 new Uri(siteUrl),
@@ -543,7 +542,12 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     rssUrl,
                     rssUrl.ToString(),
                     lastUpdatedTimeOffset));
-            return rssXmlBuilder.BuildActionResult();
+
+            var result = rssXmlBuilder.BuildActionResult();
+
+            this.LogTime();
+
+            return result;
         }
 
         private void LogTime()
