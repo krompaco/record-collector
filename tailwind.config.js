@@ -5,7 +5,6 @@ module.exports = {
 		'./docs/content-record-collector-net/**/*.html',
 		'./src/Krompaco.RecordCollector.Web/Views/**/*.cshtml',
 		'./src/stimulus_controllers/**/*.js',
-		'./safe-classes.html',
 	],
 	theme: {
 		extend: {

@@ -18,14 +18,18 @@
 		font-named-instance: 'Regular';
 		src: url('manrope-wght.woff2') format('woff2');
 	}
+}
 
-	.iframe-wrapper {
+@tailwind components;
+
+@layer components {
+	.prose .iframe-wrapper {
 		position: relative;
 		overflow: hidden;
 		padding-top: 56.25%;
 	}
 
-	.iframe-wrapper iframe {
+	.prose .iframe-wrapper iframe {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -34,21 +38,15 @@
 		border: 0;
 	}
 
-	.table-wrapper {
+	.prose .table-wrapper {
 		max-width: 100%;
 		overflow-x: auto;
 	}
 
-	img[src$="files/flow.png"] {
+	.prose img[src$="files/flow.png"] {
 		width: 360px;
 	}
-}
 
-@tailwind components;
-
-@tailwind utilities;
-
-@layer utilities {
 	.prose a, .rc-link {
 		@apply underline text-blue-600 hover:bg-yellow-200 hover:text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none;
 	}
@@ -57,3 +55,5 @@
 		@apply hover:bg-yellow-200 text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none focus:ring-2 focus:ring-black;
 	}
 }
+
+@tailwind utilities;
