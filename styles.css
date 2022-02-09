@@ -1,3 +1,5 @@
+@tailwind base;
+
 @layer base {
 	@font-face {
 		font-family: 'JetBrainsMono';
@@ -16,18 +18,13 @@
 		font-named-instance: 'Regular';
 		src: url('manrope-wght.woff2') format('woff2');
 	}
-}
 
-@tailwind base;
-
-@tailwind components;
-
-@layer components {
 	.iframe-wrapper {
 		position: relative;
 		overflow: hidden;
 		padding-top: 56.25%;
 	}
+
 	.iframe-wrapper iframe {
 		position: absolute;
 		top: 0;
@@ -36,17 +33,10 @@
 		height: 100%;
 		border: 0;
 	}
+
 	.table-wrapper {
 		max-width: 100%;
 		overflow-x: auto;
-	}
-
-	.prose a, .rc-link {
-		@apply underline text-blue-600 hover:bg-yellow-200 hover:text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none;
-	}
-
-	.rc-menu-link {
-		@apply hover:bg-yellow-200 text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none focus:ring-2 focus:ring-black;
 	}
 
 	img[src$="files/flow.png"] {
@@ -54,4 +44,16 @@
 	}
 }
 
+@tailwind components;
+
 @tailwind utilities;
+
+@layer utilities {
+	.prose a, .rc-link {
+		@apply underline text-blue-600 hover:bg-yellow-200 hover:text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none;
+	}
+
+	.rc-menu-link {
+		@apply hover:bg-yellow-200 text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none focus:ring-2 focus:ring-black;
+	}
+}
