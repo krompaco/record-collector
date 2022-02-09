@@ -4,8 +4,8 @@ module.exports = {
 	content: [
 		'./docs/content-record-collector-net/**/*.html',
 		'./src/Krompaco.RecordCollector.Web/Views/**/*.cshtml',
-		'./src/Krompaco.RecordCollector.Web/Extensions/HtmlTableWithWrapperRenderer.cs',
 		'./src/stimulus_controllers/**/*.js',
+		'./safe-classes.html',
 	],
 	theme: {
 		extend: {
