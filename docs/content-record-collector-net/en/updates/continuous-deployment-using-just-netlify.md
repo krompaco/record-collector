@@ -22,7 +22,7 @@ You just use the built-in Netlify features to give access to your Git repository
 
 ## Paths to use in configuration
 
-First go to Build & deploy and add an Environment variable. Set the key `ASPNETCORE_ENVIRONMENT` and value to `Netlify`.
+First go to [app.netlify.com](https://app.netlify.com/) and add or find your site. Find the section for Build & deploy and add an Environment variable. Set the key `ASPNETCORE_ENVIRONMENT` and value to `Netlify`.
 
 This means the config used will come from **appsettings.Netlify.json** and this is how I've configured the sample site in that file.
 
