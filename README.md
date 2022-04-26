@@ -35,7 +35,7 @@ Other things such as Webpack can be involved too but these are the ones I refere
 * [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
 * [Microsoft.CodeAnalysis.NetAnalyzers](https://github.com/dotnet/roslyn-analyzers)
 
-### [Main web site](https://record-collector.net)
+## [Main web site](https://record-collector.net)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
 
@@ -43,7 +43,7 @@ The main web site is generated and [deployed with Netlify using their build-imag
 
 It has the `default` frontend.
 
-### [Demo web site](https://record-collector.netlify.app)
+## [Demo web site](https://record-collector.netlify.app)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
