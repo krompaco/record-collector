@@ -37,19 +37,19 @@ Other things such as Webpack can be involved too but these are the ones I refere
 
 ### [Main web site](https://record-collector.net)
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
+
 The main web site is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
 
 It has the `default` frontend.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
-
 ### [Demo web site](https://record-collector.netlify.app)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
 This other instance with the same content is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/deploy-to-netlify-using-a-github-action.md).
 
 It has the `simplecss` frontend configuration.
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
 ## License
 
