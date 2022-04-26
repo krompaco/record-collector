@@ -50,7 +50,7 @@ var frontendSetup = app.Configuration.GetAppSettingsFrontendSetup();
 
 if (frontendSetup == "simplecss")
 {
-    // Trying out a way to strip class attributes from HTML if Simple.css {} is used
+    // Trying out a way to strip class attributes from HTML if Simple.css is used
     app.Use(async (context, next) =>
     {
         // Way that should work to only process HTML output
