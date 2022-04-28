@@ -124,7 +124,7 @@
 			var isRootWithCultureSelection = Model.RootCultures?.Count > 0 && Model.CurrentPath == "/";
 		}
 
-		@if (isRootWithCultureSelection == false && Model.RootCultures?.Count > 0 || Model.ContentProperties?.FrontendSetup != "simplecss")
+		@if (isRootWithCultureSelection == false && Model.RootCultures?.Count > 0 && Model.ContentProperties?.FrontendSetup != "simplecss")
 		{
 			<h2 class="text-center text-lg">@Model.Localizer["Change language"]</h2>
 			<div class="flex flex-wrap justify-center">

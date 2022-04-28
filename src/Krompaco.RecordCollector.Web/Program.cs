@@ -1,12 +1,8 @@
 ﻿using System.Globalization;
-using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Krompaco.RecordCollector.Web;
 using Krompaco.RecordCollector.Web.Extensions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
