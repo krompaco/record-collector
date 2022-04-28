@@ -170,20 +170,20 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 {
                     var rangeToAdd = this.allFileModels
                         .Where(x =>
-                            mainNavigationSections.Contains(x.Section)
+                            mainNavigationSections.Contains(x.Section ?? string.Empty)
                             && x.RelativeUrl
                                 .ToString()
                                 .TrimStart('/')
                                 .StartsWith($"{this.currentCulture.Name}/", StringComparison.OrdinalIgnoreCase))
                         .Select(x => x as SinglePage)
                         .Where(x => x?.Title != null && x.Level == 1)
-                        .OrderByDescending(x => x.Weight)
-                        .ThenBy(x => x.Title)
+                        .OrderByDescending(x => x?.Weight ?? int.MinValue)
+                        .ThenBy(x => x?.Title)
                         .ToList();
 
                     if (rangeToAdd.Any())
                     {
-                        this.pagesForNavigation.AddRange(rangeToAdd);
+                        this.pagesForNavigation.AddRange(rangeToAdd!);
                     }
                 }
                 else if (!this.rootCultures.Any())
@@ -192,11 +192,11 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     List<SinglePage> rangeToAdd = this.allFileModels
 #pragma warning restore IDE0007 // Use implicit type
                         .Where(x =>
-                            mainNavigationSections.Contains(x.Section))
+                            mainNavigationSections.Contains(x.Section ?? string.Empty))
                         .Select(x => x as SinglePage)
                         .Where(x => x != null && x?.Title != null && x.Level == 1)
-                        .OrderByDescending(x => x.Weight)
-                        .ThenBy(x => x.Title)
+                        .OrderByDescending(x => x?.Weight ?? int.MinValue)
+                        .ThenBy(x => x?.Title)
                         .ToList() !;
 
                     if (rangeToAdd.Any())
@@ -244,13 +244,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     .WithNavigationItems(this.pagesForNavigation)
                     .GetViewModel();
 
-                if (isPaginationPath && listViewModel.PagedDescendantPages.Count == 0)
+                if (isPaginationPath && listViewModel?.PagedDescendantPages?.Count == 0)
                 {
                     this.LogTime();
                     return this.NotFound();
                 }
 
-                listViewModel.Title = rootPage.Title ?? this.localizer["Updates"];
+                listViewModel!.Title = rootPage.Title ?? this.localizer["Updates"];
 
                 if (rssForList)
                 {
@@ -290,13 +290,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
                         .WithNavigationItems(this.pagesForNavigation)
                         .GetViewModel();
 
-                    if (isPaginationPath && listViewModel.PagedDescendantPages.Count == 0)
+                    if (isPaginationPath && listViewModel?.PagedDescendantPages?.Count == 0)
                     {
                         this.LogTime();
                         return this.NotFound();
                     }
 
-                    listViewModel.Title = listPage.Title ?? cultureInfo.NativeName.FirstCharToUpper();
+                    listViewModel!.Title = listPage.Title ?? cultureInfo.NativeName.FirstCharToUpper();
 
                     if (rssForList)
                     {
@@ -326,7 +326,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
                 contentTypeProvider.TryGetContentType(foundFullName, out var contentType);
 
                 this.LogTime();
-                return this.PhysicalFile(foundFullName, contentType);
+                return this.PhysicalFile(foundFullName, contentType ?? "text/plain");
             }
 
             // Some kind of page
@@ -387,13 +387,13 @@ namespace Krompaco.RecordCollector.Web.Controllers
                     .WithNavigationItems(this.pagesForNavigation)
                     .GetViewModel();
 
-                if (isPaginationPath && listViewModel.PagedDescendantPages.Count == 0)
+                if (isPaginationPath && listViewModel?.PagedDescendantPages?.Count == 0)
                 {
                     this.LogTime();
                     return this.NotFound();
                 }
 
-                listViewModel.Title = listPageForCategory.Title;
+                listViewModel!.Title = listPageForCategory.Title;
 
                 if (rssForList)
                 {
@@ -438,7 +438,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             return this.View(viewPrefix + "Single", singleViewModel);
         }
 
-        private static string RemovePaginationFromPath(string path)
+        private static string RemovePaginationFromPath(string? path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
@@ -451,7 +451,7 @@ namespace Krompaco.RecordCollector.Web.Controllers
             return Regex.Replace(path, "/page-\\d+/$", string.Empty, RegexOptions.IgnoreCase);
         }
 
-        private static bool IsPaginationPath(string path)
+        private static bool IsPaginationPath(string? path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {

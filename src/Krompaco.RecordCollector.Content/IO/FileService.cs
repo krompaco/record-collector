@@ -53,7 +53,7 @@ namespace Krompaco.RecordCollector.Content.IO
             this.sectionsToExcludeFromLists = sectionsToExcludeFromLists;
         }
 
-        public static bool IsSameDirectory(string path1, string path2)
+        public static bool IsSameDirectory(string? path1, string? path2)
         {
             if (path1 == null)
             {
@@ -148,9 +148,9 @@ namespace Krompaco.RecordCollector.Content.IO
 
             foreach (var sp in allOnSameLevel)
             {
-                if (sp.FullName.Equals(
+                if (sp.FullName?.Equals(
                     current.FullName,
-                    StringComparison.OrdinalIgnoreCase))
+                    StringComparison.OrdinalIgnoreCase) ?? false)
                 {
                     if (i > 0 && allOnSameLevel.Count > i - 1)
                     {
@@ -456,7 +456,7 @@ namespace Krompaco.RecordCollector.Content.IO
             {
                 var sr = new StreamReader(fullName);
                 var typeDetector = new TypeDetector(sr);
-                ListPage list = null;
+                ListPage? list = null;
 
                 switch (typeDetector.GetFrontMatterType())
                 {
@@ -490,7 +490,7 @@ namespace Krompaco.RecordCollector.Content.IO
                 var summary = summaryExtractor.GetSummaryFromContent();
 
                 var typeDetector = new TypeDetector(sr);
-                SinglePage single = null;
+                SinglePage? single = null;
 
                 switch (typeDetector.GetFrontMatterType())
                 {
@@ -628,20 +628,15 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             var fileInfo = new FileInfo(current.FullName);
-            var directoryName = fileInfo.DirectoryName;
+            var directoryName = fileInfo.DirectoryName ?? string.Empty;
 
             return allFileModels
                 .Where(x =>
                     ((IsListPartialPageFile(current.FullName)
                         && !x.FullName.Equals(current.FullName, StringComparison.OrdinalIgnoreCase)
-
-                        // ReSharper disable once AssignNullToNotNullAttribute
                         && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
-                        && this.sectionsToExcludeFromLists != null
                         && !this.sectionsToExcludeFromLists.Any(y => y.Equals(x.Section, StringComparison.OrdinalIgnoreCase)))
                      || (!IsListPartialPageFile(current.FullName)
-
-                         // ReSharper disable once AssignNullToNotNullAttribute
                          && x.FullName.StartsWith(directoryName, StringComparison.OrdinalIgnoreCase)
                           && !IsSameDirectory(new FileInfo(x.FullName).DirectoryName, directoryName)))
                     && !IsSameDirectory(new FileInfo(x.FullName).DirectoryName, current.FullName))
@@ -666,62 +661,55 @@ namespace Krompaco.RecordCollector.Content.IO
             }
 
             var fileInfo = new FileInfo(current.FullName);
-
-            // ReSharper disable once PossibleNullReferenceException
-            var directoryName = fileInfo.Directory.FullName;
+            var directoryName = fileInfo.Directory?.FullName ?? string.Empty;
 
             while (true)
             {
                 if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryName))
                 {
-                    return (SinglePage)allFileModels.FirstOrDefault(x => x.Level == 1);
+                    return (SinglePage?)allFileModels.FirstOrDefault(x => x.Level == 1);
                 }
 
-                var directoryInfo = new DirectoryInfo(directoryName);
-                var indexPageFileInfo = GetListPartialPageFileInfo(directoryInfo.Parent.FullName);
+                var directoryInfo = new DirectoryInfo(directoryName!);
+                var indexPageFileInfo = GetListPartialPageFileInfo(directoryInfo.Parent?.FullName ?? string.Empty);
 
                 if (indexPageFileInfo != null)
                 {
-                    return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(indexPageFileInfo.FullName, StringComparison.OrdinalIgnoreCase));
+                    return (SinglePage?)allFileModels.FirstOrDefault(x => x.FullName.Equals(indexPageFileInfo.FullName, StringComparison.OrdinalIgnoreCase));
                 }
 
-                var supportedFiles = directoryInfo.Parent.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly)
+                var supportedFiles = directoryInfo?.Parent?.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly)
                     .Where(x => IsSupportedPageFile(x.Name))
-                    .ToList();
+                    .ToList() ?? new List<FileInfo>();
 
                 foreach (var fi in supportedFiles)
                 {
                     if (IsIndexPage(fi.Name) || IsListPartialPageFile(fi.Name))
                     {
-                        return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
+                        return (SinglePage?)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
                     }
-
-                    ////if (supportedFiles.Count == 1)
-                    ////{
-                    ////    return (SinglePage)allFileModels.FirstOrDefault(x => x.FullName.Equals(fi.FullName, StringComparison.OrdinalIgnoreCase));
-                    ////}
                 }
 
-                if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryInfo.Parent.FullName))
+                if (IsSameDirectory(this.contentRootDirectoryInfo.FullName, directoryInfo?.Parent?.FullName))
                 {
-                    return (SinglePage)allFileModels.FirstOrDefault(x => x.Level == 1);
+                    return (SinglePage?)allFileModels.FirstOrDefault(x => x.Level == 1);
                 }
 
-                directoryName = directoryInfo.Parent.FullName;
+                directoryName = directoryInfo?.Parent?.FullName;
             }
         }
 
         public string GetNestedSectionDirectory(string fullName)
         {
             var fileInfo = new FileInfo(fullName);
-            var directoryName = fileInfo.DirectoryName;
-            string nestedSection = null;
+            var directoryName = fileInfo.DirectoryName ?? string.Empty;
+            string? nestedSection = null;
 
             while (nestedSection == null)
             {
-                var directoryInfo = new DirectoryInfo(directoryName);
+                var directoryInfo = new DirectoryInfo(directoryName!);
 
-                if (GetListPartialPageFileInfo(directoryName) != null)
+                if (GetListPartialPageFileInfo(directoryName!) != null)
                 {
                     nestedSection = directoryInfo.FullName;
                 }

@@ -1,6 +1,6 @@
 ﻿@model PaginationViewModel
 
-@if (Model.Items.Count > 1)
+@if (Model.Items?.Count > 1 && Model.Layout?.Localizer != null)
 {
 	var numbersOpened = false;
 	var numbersClosed = false;

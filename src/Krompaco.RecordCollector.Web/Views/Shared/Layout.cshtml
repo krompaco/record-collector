@@ -1,7 +1,8 @@
 ﻿@using Krompaco.RecordCollector.Web.Extensions
+@using System.Globalization
 @model LayoutViewModel
 <!DOCTYPE html>
-<html lang="@Model.CurrentCulture.Name">
+<html lang="@Model.CurrentCulture?.Name">
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,7 +20,7 @@
 	}
 	@await RenderSectionAsync("head", false)
 
-	@if (Model.ContentProperties.FrontendSetup == "simplecss")
+	@if (Model.ContentProperties?.FrontendSetup == "simplecss")
 	{
 		<link href="/simple.min.css" rel="stylesheet" asp-append-version="true" />
 	}
@@ -30,26 +31,26 @@
 	}
 </head>
 <body class="bg-white text-gray-900 font-rc">
-	@if (Model.RootCultures.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems.Count > 0)
+	@if (Model.RootCultures?.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems?.Count > 0)
 	{
-		@if (Model.ContentProperties.FrontendSetup == "simplecss")
+		@if (Model.ContentProperties?.FrontendSetup == "simplecss")
 		{
 			<header>
 				<h1>
 					@Model.Title
 				</h1>
 				<nav aria-label="@Model.Localizer["Main navigation"]">
-					@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
+					@if (Model.CurrentPath == "/" || Model.RootCultures?.Count > 0 && Model.CurrentCulture?.Name == Model.CurrentPath?.Replace("/", string.Empty))
 					{
-						<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" aria-current="page"><b>@Model.Localizer["Home"]</b></a>
+						<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" aria-current="page"><b>@Model.Localizer["Home"]</b></a>
 					}
 					else
 					{
-						<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")">@Model.Localizer["Home"]</a>
+						<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")">@Model.Localizer["Home"]</a>
 					}
-					@foreach (var ni in Model.NavigationItems)
+					@foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
 					{
-						@if (Model.CurrentPath == ni.RelativeUrl.ToString())
+						@if (Model.CurrentPath == ni.RelativeUrl?.ToString())
 						{
 							<a aria-current="page" href="@ni.RelativeUrl"><b>@ni.Text</b></a>
 						}
@@ -72,13 +73,13 @@
 					<div role="banner" class="mt-1" data-controller="menu" data-menu-open-text-value="@Model.Localizer["Open menu"]" data-menu-close-text-value="@Model.Localizer["Close menu"]">
 						<div class="flex justify-between items-center">
 							<div class="-mb-px flex text-2xl sm:text-2xl font-bold">
-								@if (Model.CurrentPath == "/" || Model.RootCultures.Count > 0 && Model.CurrentCulture.Name == Model.CurrentPath.Replace("/", string.Empty))
+								@if (Model.CurrentPath == "/" || Model.RootCultures?.Count > 0 && Model.CurrentCulture?.Name == Model.CurrentPath?.Replace("/", string.Empty))
 								{
-									<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>
+									<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>
 								}
 								else
 								{
-									<a href="@(Model.RootCultures.Count > 0 ? $"/{Model.CurrentCulture.Name}/" : "/")" class="@linkClasses">@Model.Localizer["Home"]</a>
+									<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses">@Model.Localizer["Home"]</a>
 								}
 							</div>
 							<div>
@@ -99,7 +100,7 @@
 									<div class="flex-1" role="navigation">
 										<h2 class="sr-only">@Model.Localizer["Main navigation"]</h2>
 										<ul class="w-full">
-											@foreach (var ni in Model.NavigationItems)
+											@foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
 											{
 												@await Html.PartialAsync("MenuItem", ni)
 											}
@@ -120,14 +121,14 @@
 	<footer class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-gray-500">
 		@{
 			var footerLinkClasses = "rc-link text-lg";
-			var isRootWithCultureSelection = Model.RootCultures.Count > 0 && Model.CurrentPath == "/";
+			var isRootWithCultureSelection = Model.RootCultures?.Count > 0 && Model.CurrentPath == "/";
 		}
 
-		@if (isRootWithCultureSelection == false && Model.RootCultures.Count > 0 || Model.ContentProperties.FrontendSetup != "simplecss")
+		@if (isRootWithCultureSelection == false && Model.RootCultures?.Count > 0 || Model.ContentProperties?.FrontendSetup != "simplecss")
 		{
 			<h2 class="text-center text-lg">@Model.Localizer["Change language"]</h2>
 			<div class="flex flex-wrap justify-center">
-				@foreach (var c in Model.RootCultures)
+				@foreach (var c in Model.RootCultures ?? new List<CultureInfo>())
 				{
 					<div class="px-3 py-2">
 						<a lang="@c.Name" href="/@c.Name.ToLower(Model.CurrentCulture)/" class="@footerLinkClasses">@c.NativeName.FirstCharToUpper()</a>

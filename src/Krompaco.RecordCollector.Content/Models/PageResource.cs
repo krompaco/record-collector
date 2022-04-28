@@ -4,18 +4,13 @@ namespace Krompaco.RecordCollector.Content.Models
 {
     public class PageResource : IRecordCollectorFile
     {
-        public PageResource()
-        {
-            this.Level = -1;
-        }
-
         public string? Name { get; set; }
 
         public string? Title { get; set; }
 
-        public Dictionary<string, string> Params { get; set; }
+        public Dictionary<string, string> Params { get; set; } = new();
 
-        public string? FullName { get; set; }
+        public string FullName { get; set; } = string.Empty;
 
         public bool IsVirtual { get; set; }
 
@@ -23,11 +18,11 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public string? ClosestSectionDirectory { get; set; }
 
-        public CultureInfo Culture { get; set; }
+        public CultureInfo Culture { get; set; } = null!;
 
-        public Uri RelativeUrl { get; set; }
+        public Uri RelativeUrl { get; set; } = null!;
 
-        public Uri RelativePath { get; set; }
+        public Uri RelativePath { get; set; } = null!;
 
         public bool IsSlug { get; set; }
 
@@ -53,12 +48,12 @@ namespace Krompaco.RecordCollector.Content.Models
 
         public SinglePage? Parent { get; set; }
 
-        public List<SinglePage> Siblings { get; set; }
+        public List<SinglePage> Siblings { get; set; } = new();
 
-        public List<SinglePage> Ancestors { get; set; }
+        public List<SinglePage> Ancestors { get; set; } = new();
 
-        public List<IRecordCollectorFile> Descendants { get; set; }
+        public List<IRecordCollectorFile> Descendants { get; set; } = new();
 
-        public int Level { get; set; }
+        public int Level { get; set; } = -1;
     }
 }

@@ -17,12 +17,12 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
         private int pageSize;
 
         public PaginationViewModelBuilder(
-            string currentPath,
+            string? currentPath,
             int totalCount,
             int pageCount,
             int pageSize)
         {
-            this.currentPath = currentPath;
+            this.currentPath = currentPath ?? string.Empty;
             this.totalCount = totalCount;
             this.pageCount = pageCount;
             this.pageSize = pageSize;
