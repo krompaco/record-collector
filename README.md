@@ -35,19 +35,25 @@ Other things such as Webpack can be involved too but these are the ones I refere
 * [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
 * [Microsoft.CodeAnalysis.NetAnalyzers](https://github.com/dotnet/roslyn-analyzers)
 
-## [Main web site](https://record-collector.net)
+## [Official web site](https://record-collector.net)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
 
-The main web site is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/continuous-deployment-using-just-netlify.md).
+The official web site is generated and [deployed with Netlify using their build-image](https://github.com/krompaco/record-collector/blob/main/content/record-collector-dotnet/updates/continuous-deployment-using-just-netlify.md).
 
 It has the `default` frontend.
 
-## [Demo web site](https://record-collector.netlify.app)
+## [Demo web site with default frontend](https://record-collector.netlify.app)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
 This other instance with the same content is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/docs/content-record-collector-net/en/updates/deploy-to-netlify-using-a-github-action.md).
+
+## [Demo web site with Simple.css frontend](https://record-collector-simplecss.netlify.app)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/471c792b-b666-4bb4-aa60-270f22c98180/deploy-status)](https://app.netlify.com/sites/record-collector-simplecss/deploys)
+
+The Simple.css demo web site is generated and deployed with Netlify using their build-image.
 
 It has the `simplecss` frontend configuration.
 

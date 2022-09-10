@@ -36,8 +36,8 @@ Note that `C:\github\record-collector\` is where I put the repository on my mach
 
 Two options are in the repository. The `default` setup is based on [Tailwind CSS](https://tailwindcss.com/) and [Hotwire](https://hotwired.dev/) and requires npm steps, you can also use [Simple.css](https://simplecss.org/) by having the line set as `"FrontendSetup": "simplecss",` in your appsettings files.
 
-* [record-collector.net](https://record-collector.net/) is published with `default`
-* [record-collector.netlify.app](https://record-collector.netlify.app/) is using `simplecss`
+* [record-collector.netlify.app](https://record-collector.netlify.app/) is published with `default`
+* [record-collector-simplecss.netlify.app](https://record-collector-simplecss.netlify.app/) is using `simplecss`
 
 If you are using `simplecss` you should remove the two `npm` commands from the Netlify deploy guides.
 
@@ -75,8 +75,8 @@ To verify the static site you can check the file `run-docker-nginx-static-site.p
 
 These two blog posts should help with most deployment scenarios using different Git and build server providers. I think the most elegant way is to just use Netlify for the build which works with GitHub, GitLab, or Bitbucket for your repository copy.
 
-* [Continuous Deployment using just Netlify](/en/updates/continuous-deployment-using-just-netlify/)
-* [Deploy to Netlify using a GitHub Action](/en/updates/deploy-to-netlify-using-a-github-action/)
+* [Continuous Deployment using just Netlify](/updates/continuous-deployment-using-just-netlify/)
+* [Deploy to Netlify using a GitHub Action](/updates/deploy-to-netlify-using-a-github-action/)
 
 ## Customize templates using the `ViewPrefix` setting
 
