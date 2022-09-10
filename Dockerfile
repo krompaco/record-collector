@@ -7,7 +7,7 @@ COPY src/Krompaco.RecordCollector.Generator/ src/Krompaco.RecordCollector.Genera
 COPY .editorconfig .
 
 # This is where you probably have your own content somewhere
-COPY docs/content-record-collector-net/ docs/content-record-collector-net/
+COPY content/demo-site/ docs/demo-site/
 
 ENV ASPNETCORE_ENVIRONMENT Docker
 

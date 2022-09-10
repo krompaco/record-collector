@@ -28,7 +28,7 @@ This means the config used will come from **appsettings.Netlify.json** and this 
 {
   "AppSettings": {
     "SiteUrl": "https://record-collector.netlify.app/",
-    "ContentRootPath": "/opt/build/repo/docs/content-record-collector-net/",
+    "ContentRootPath": "/opt/build/repo/content/demo-site/",
     "StaticSiteRootPath": "/opt/build/repo/artifacts/static-site/",
     "FrontendSetup": "default",
     "ViewPrefix": "",
