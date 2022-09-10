@@ -5,8 +5,6 @@ description: "How to set up deployment of a Record Collector site to Netlify usi
 categories:
   - Deployment
   - Automation
-images:
-  - /files/photo-1.jpg
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 ---

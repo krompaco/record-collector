@@ -5,8 +5,6 @@ description: "How to set up deployment of a Record Collector site using only Net
 categories:
   - Deployment
   - Automation
-images:
-  - /files/photo-8.jpg
 authorname: "Johan Kronberg"
 authorimage: "/files/jk.jpg"
 ---

@@ -3,9 +3,8 @@ linkTitle = "Om Record Collector"
 title = "Vad är Record Collector?"
 description = "Information om vad Record Collector innehåller."
 weight = 15
+robots = "noindex"
 +++
 Så här fungerar Record Collector.
 
-![Skiss på Record Collectors flöde](https://record-collector.net/files/flow.png)
-
-Mer information hittar du på [den engelska About-sidan](/en/pages/about/).
+Mer information finns på den [den engelska webbplatsen för Record Collector](https://record-collector.net/).
