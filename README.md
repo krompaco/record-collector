@@ -1,6 +1,6 @@
 # Record Collector
 
-The [Record Collector example and documentation web site](https://record-collector.net) is being filled with content and will have all the information on what the project is and does. Easiest starting point is to set up the repository locally and run the web project, see the [getting started](https://record-collector.net/en/pages/getting-started/) page for instructions.
+Record Collector's offical web site is being filled with content and will have all the information on what the project is and does. Easiest starting point is to set up the repository locally and run the web project, see the [getting started](https://record-collector.net/pages/getting-started/) page for instructions.
 
 ## Inspiration
 

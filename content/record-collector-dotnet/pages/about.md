@@ -20,4 +20,4 @@ You could also find a great fit if your site is just a few pages but you still w
 
 Thanks for your interest in Record Collector and reading this far!
 
-See the getting started page for [instructions on how to get going](/en/pages/getting-started/) with Record Collector.
+See the getting started page for [instructions on how to get going](/pages/getting-started/) with Record Collector.
