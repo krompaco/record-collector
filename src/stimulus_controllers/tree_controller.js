@@ -2,10 +2,13 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ['button']
-  static values = { open: Boolean }
+  static values = {
+    open: { type: Boolean, default: false },
+  }
 
   initialize() {
     this.toggleClass = 'hidden';
+    this.isConnected = false;
   }
 
   connect() {
@@ -13,7 +16,11 @@ export default class extends Controller {
       var listId = target.getAttribute('data-aria-controls');
       target.setAttribute('aria-controls', listId);
       target.setAttribute('aria-expanded', this.openValue);
+
+      document.getElementById(listId).classList.add(this.toggleClass);
     })
+
+    this.isConnected = true;
   }
 
   toggle(event) {
@@ -22,6 +29,8 @@ export default class extends Controller {
   }
 
   openValueChanged() {
+    if (!this.isConnected) { return }
+
     if (!this.toggleClass) { return }
 
     this.buttonTargets.forEach(target => {

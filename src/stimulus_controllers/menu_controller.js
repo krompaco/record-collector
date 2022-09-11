@@ -3,13 +3,14 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ['toggleable', 'button']
   static values = {
-    open: Boolean,
+    open: { type: Boolean, default: false },
     openText: String,
     closeText: String,
   }
 
   initialize() {
     this.toggleClass = 'hidden';
+    this.isConnected = false;
   }
 
   connect() {
@@ -20,6 +21,12 @@ export default class extends Controller {
       target.setAttribute('aria-controls', 'header-menu');
       target.querySelector('.js-text-content').textContent = this.openTextValue;
     });
+
+    this.toggleableTargets.forEach(target => {
+      target.classList.add(this.toggleClass);
+    });
+
+    this.isConnected = true;
   }
 
   toggle(event) {
@@ -34,6 +41,8 @@ export default class extends Controller {
   }
 
   openValueChanged() {
+    if (!this.isConnected) { return }
+
     if (!this.toggleClass) { return }
 
     this.buttonTargets.forEach(target => {
