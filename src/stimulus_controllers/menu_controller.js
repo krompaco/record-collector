@@ -3,59 +3,65 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ['toggleable', 'button']
   static values = {
-    open: { type: Boolean, default: false },
     openText: String,
     closeText: String,
   }
 
   initialize() {
     this.toggleClass = 'hidden';
-    this.isConnected = false;
+    this.isOpen = false;
   }
 
   connect() {
     document.body.addEventListener("keydown", this._onBodyKeydown);
+    this.setMenuState(false);
+  }
 
-    this.buttonTargets.forEach(target => {
-      target.setAttribute('aria-expanded', 'false');
-      target.setAttribute('aria-controls', 'header-menu');
-      target.querySelector('.js-text-content').textContent = this.openTextValue;
-    });
+  disconnect() {
+    document.body.removeEventListener("keydown", this._onBodyKeydown);
 
-    this.toggleableTargets.forEach(target => {
-      target.classList.add(this.toggleClass);
-    });
-
-    this.isConnected = true;
+    this.isOpen = false;
+    this.setMenuState(false);
   }
 
   toggle(event) {
     event.preventDefault();
-    this.openValue = !this.openValue;
+
+    this.isOpen = !this.isOpen;
+    this.setMenuState(this.isOpen);
   }
 
   _onBodyKeydown = event => {
     if (event.key === 'Escape') {
-      this.openValue = false;
+      this.isOpen = false;
+      this.setMenuState(false);
     }
   }
 
-  openValueChanged() {
-    if (!this.isConnected) { return }
-
-    if (!this.toggleClass) { return }
-
+  setMenuState(open) {
     this.buttonTargets.forEach(target => {
-      target.setAttribute('aria-expanded', this.openValue);
-      target.setAttribute('aria-label', this.openValue ? this.closeTextValue : this.openTextValue);
+      target.setAttribute('aria-expanded', open);
+      target.setAttribute('aria-label', open ? this.closeTextValue : this.openTextValue);
+      target.querySelector('.js-text-content').textContent = open ? this.closeTextValue : this.openTextValue;
 
       // Hamburger graphics
-      target.querySelector('.js-content-expanded').classList.toggle(this.toggleClass);
-      target.querySelector('.js-content-collapsed').classList.toggle(this.toggleClass);
+      if (open) {
+        target.querySelector('.js-content-expanded').classList.remove(this.toggleClass);
+        target.querySelector('.js-content-collapsed').classList.add(this.toggleClass);
+      }
+      else {
+        target.querySelector('.js-content-expanded').classList.add(this.toggleClass);
+        target.querySelector('.js-content-collapsed').classList.remove(this.toggleClass);
+      }
     });
 
     this.toggleableTargets.forEach(target => {
-      target.classList.toggle(this.toggleClass);
+      if (open) {
+        target.classList.remove(this.toggleClass);
+      }
+      else {
+        target.classList.add(this.toggleClass);
+      }
     });
   }
 }

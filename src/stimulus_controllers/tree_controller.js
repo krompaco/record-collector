@@ -2,46 +2,49 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ['button']
-  static values = {
-    open: { type: Boolean, default: false },
-  }
 
   initialize() {
     this.toggleClass = 'hidden';
-    this.isConnected = false;
+    this.isOpen = false;
   }
 
   connect() {
-    this.buttonTargets.forEach(target => {
-      var listId = target.getAttribute('data-aria-controls');
-      target.setAttribute('aria-controls', listId);
-      target.setAttribute('aria-expanded', this.openValue);
+    this.setMenuState(false);
+  }
 
-      document.getElementById(listId).classList.add(this.toggleClass);
-    })
-
-    this.isConnected = true;
+  disconnect() {
+    this.isOpen = false;
+    this.setMenuState(false);
   }
 
   toggle(event) {
     event.preventDefault();
-    this.openValue = !this.openValue;
+    this.isOpen = !this.isOpen;
+    this.setMenuState(this.isOpen);
   }
 
-  openValueChanged() {
-    if (!this.isConnected) { return }
-
-    if (!this.toggleClass) { return }
-
+  setMenuState(open) {
     this.buttonTargets.forEach(target => {
-      target.setAttribute('aria-expanded', this.openValue);
-
       var listId = target.getAttribute('data-aria-controls');
-      document.getElementById(listId).classList.toggle(this.toggleClass);
+      target.setAttribute('aria-controls', listId);
+      target.setAttribute('aria-expanded', open);
+
+      if (open) {
+        document.getElementById(listId).classList.remove(this.toggleClass);
+      }
+      else {
+        document.getElementById(listId).classList.add(this.toggleClass);
+      }
 
       // SVGs
-      target.querySelector('.js-content-expanded').classList.toggle(this.toggleClass);
-      target.querySelector('.js-content-collapsed').classList.toggle(this.toggleClass);
+      if (open) {
+        target.querySelector('.js-content-expanded').classList.remove(this.toggleClass);
+        target.querySelector('.js-content-collapsed').classList.add(this.toggleClass);
+      }
+      else {
+        target.querySelector('.js-content-expanded').classList.add(this.toggleClass);
+        target.querySelector('.js-content-collapsed').classList.remove(this.toggleClass);
+      }
     })
   }
 }
