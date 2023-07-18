@@ -45,6 +45,8 @@ It has the `default` frontend.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
 
+[![Build and deploy to Netlify](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml/badge.svg)](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml)
+
 This site is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/content/record-collector-dotnet/updates/deploy-to-netlify-using-a-github-action.md).
 
 It has the `default` frontend.
