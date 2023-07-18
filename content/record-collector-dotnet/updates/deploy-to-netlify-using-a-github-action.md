@@ -16,8 +16,6 @@ It will deploy to production (publish) on **push to main** and deploy a draft th
 
 YAML file now has .NET 6.0 support and npm steps for the CSS and JS setup used in the new default templates.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://record-collector.netlify.app/)
-
 ## Secret variables
 
 You first need to add secrets to you GitHub repo for `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`, these are easily created/found in and copied from your Netlify site settings.

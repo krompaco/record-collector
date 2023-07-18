@@ -41,16 +41,6 @@ The official web site is generated and [deployed with Netlify using their build-
 
 It has the `default` frontend.
 
-## [Demo web site with default frontend](https://record-collector.netlify.app)
-
-[![Netlify Status](https://api.netlify.com/api/v1/badges/97fc0268-36e9-408f-995c-13ed2605a11e/deploy-status)](https://app.netlify.com/sites/record-collector/deploys)
-
-[![Build and deploy to Netlify](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml/badge.svg)](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml)
-
-This site is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/content/record-collector-dotnet/updates/deploy-to-netlify-using-a-github-action.md).
-
-It has the `default` frontend.
-
 ## [Demo web site with Simple.css frontend](https://record-collector-simplecss.netlify.app)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/471c792b-b666-4bb4-aa60-270f22c98180/deploy-status)](https://app.netlify.com/sites/record-collector-simplecss/deploys)
@@ -58,6 +48,14 @@ It has the `default` frontend.
 The Simple.css demo web site is generated and deployed with Netlify using their build-image.
 
 It has the `simplecss` frontend configuration.
+
+## [Demo web site with default frontend](https://record-collector.netlify.app)
+
+[![Build and deploy to Netlify](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml/badge.svg)](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml)
+
+This site is generated on push and [deployed to Netlify using a GitHub Action](https://github.com/krompaco/record-collector/blob/main/content/record-collector-dotnet/updates/deploy-to-netlify-using-a-github-action.md).
+
+It has the `default` frontend.
 
 ## License
 
