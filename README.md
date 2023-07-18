@@ -21,8 +21,6 @@ Built using .NET 6.0 (through 3.1 and 5.0) and with these packages and projects.
 | [YamlDotNet](https://github.com/aaubry/YamlDotNet/wiki)   | MIT                       |
 | [Tomlyn](https://github.com/xoofx/Tomlyn)                 | BSD-Clause 2              |
 | [Markdig](https://github.com/lunet-io/markdig)            | BSD-Clause 2              |
-| [Manrope font](https://manropefont.com/)                  | SIL Open Font License 1.1 |
-| [JetBrains Mono font](https://www.jetbrains.com/lp/mono/) | SIL Open Font License 1.1 |
 | [Tailwind CSS](https://tailwindcss.com/)                  | MIT                       |
 | [Hotwire](https://hotwired.dev/)                          | MIT                       |
 | [Simple.css](https://simplecss.org/)                      | MIT                       |

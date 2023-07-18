@@ -1,43 +1,8 @@
 @tailwind base;
 
-@layer base {
-	@font-face {
-		font-family: 'JetBrainsMono';
-		font-weight: 100 900;
-		font-display: swap;
-		font-style: normal;
-		font-named-instance: 'Regular';
-		src: url('jetbrainsmono-regular.woff2') format('woff2');
-	}
-
-	@font-face {
-		font-family: 'Manrope';
-		font-weight: 100 900;
-		font-display: swap;
-		font-style: normal;
-		font-named-instance: 'Regular';
-		src: url('manrope-wght.woff2') format('woff2');
-	}
-}
-
 @tailwind components;
 
 @layer components {
-	.prose .iframe-wrapper {
-		position: relative;
-		overflow: hidden;
-		padding-top: 56.25%;
-	}
-
-	.prose .iframe-wrapper iframe {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		border: 0;
-	}
-
 	.prose .table-wrapper {
 		max-width: 100%;
 		overflow-x: auto;

@@ -69,6 +69,8 @@ if (frontendSetup == "simplecss")
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
+            var paginationLinkNodes = new List<HtmlNode>();
+
             foreach (var node in doc.DocumentNode.Descendants())
             {
                 if (node.NodeType != HtmlNodeType.Element)
@@ -80,6 +82,23 @@ if (frontendSetup == "simplecss")
                 {
                     node.Attributes["class"].Remove();
                 }
+
+                if (node.NodeType == HtmlNodeType.Element
+                    && node.Attributes.Contains("data-id")
+                    && node.GetDataAttribute("id").Value == "pagination")
+                {
+                    var links = node.Descendants().Where(x => x.NodeType == HtmlNodeType.Element && x.Name == "a").ToList();
+
+                    if (links.Any())
+                    {
+                        paginationLinkNodes.AddRange(links);
+                    }
+                }
+            }
+
+            foreach (var node in paginationLinkNodes)
+            {
+                node.Attributes.Add("class", "button");
             }
 
             await context.Response.WriteAsync(doc.DocumentNode.OuterHtml);
