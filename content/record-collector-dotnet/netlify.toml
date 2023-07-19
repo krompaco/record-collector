@@ -11,5 +11,6 @@
     X-XSS-Protection = "0"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer"
-    Permissions-Policy = "accelerometer=(), autoplay=(), camera=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), interest-cohort=(), hid=(), idle-detection=(), interest-cohort=(), serial=()"
+    Permissions-Policy = "accelerometer=(), autoplay=(), camera=(), cross-origin-isolated=(), display-capture=(), encrypted-media=(), fullscreen=(), geolocation=(), gyroscope=(), keyboard-map=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), sync-xhr=(), usb=(), xr-spatial-tracking=(), clipboard-read=(), clipboard-write=(), gamepad=(), interest-cohort=(), hid=(), idle-detection=(), serial=()"
+    Feature-Policy = "interest-cohort 'none';"
     Content-Security-Policy = "default-src 'none'; base-uri 'self'; script-src 'self'; img-src 'self' cloudfront.net *.cloudfront.net api.netlify.com/api/v1/badges/; style-src 'self' 'unsafe-inline'; font-src 'self'; form-action 'none';  frame-src 'none'; connect-src 'self'; media-src 'self'; child-src 'self'; frame-ancestors 'none'; worker-src 'none'; manifest-src 'none';"
