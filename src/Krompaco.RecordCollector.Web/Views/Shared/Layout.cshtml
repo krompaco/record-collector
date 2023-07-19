@@ -64,52 +64,50 @@
 		else
 		{
 			var linkClasses = "rc-link";
-			<div role="banner">
-				<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div class="h-12 sm:h-16 pt-4 sm:pt-6 text-lg sm:text-xl">
-						<a class="@linkClasses sr-only focus:not-sr-only" href="#main">@Model.Localizer["Skip to main content"]</a>
-					</div>
-					<div role="banner" class="mt-1" data-controller="menu" data-menu-open-text-value="@Model.Localizer["Open menu"]" data-menu-close-text-value="@Model.Localizer["Close menu"]">
-						<div class="flex justify-between items-center">
-							<div class="-mb-px flex text-2xl sm:text-2xl font-bold">
-								@if (Model.CurrentPath == "/" || Model.RootCultures?.Count > 0 && Model.CurrentCulture?.Name == Model.CurrentPath?.Replace("/", string.Empty))
-								{
-									<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>
-								}
-								else
-								{
-									<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses">@Model.Localizer["Home"]</a>
-								}
-							</div>
-							<div>
-								<button data-menu-target="button" data-action="click->menu#toggle touch->menu#toggle" type="button" class="p-[4px] rc-menu-link justify-self-end">
-									<span class="sr-only js-text-content">@Model.Localizer["Open menu"]</span>
-									<span class="block js-content-collapsed">
-										<svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-									</span>
-									<span class="block hidden js-content-expanded">
-										<svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-									</span>
-								</button>
-							</div>
+			<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+				<div class="h-12 sm:h-16 pt-4 sm:pt-6 text-lg sm:text-xl">
+					<a class="@linkClasses sr-only focus:not-sr-only" href="#main">@Model.Localizer["Skip to main content"]</a>
+				</div>
+				<header class="mt-1" data-controller="menu" data-menu-open-text-value="@Model.Localizer["Open menu"]" data-menu-close-text-value="@Model.Localizer["Close menu"]">
+					<div class="flex justify-between items-center">
+						<div class="-mb-px flex text-2xl sm:text-2xl font-bold">
+							@if (Model.CurrentPath == "/" || Model.RootCultures?.Count > 0 && Model.CurrentCulture?.Name == Model.CurrentPath?.Replace("/", string.Empty))
+							{
+								<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>
+							}
+							else
+							{
+								<a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses">@Model.Localizer["Home"]</a>
+							}
 						</div>
-						<div data-menu-target="toggleable" class="flex justify-center w-full hidden border-t border-b mt-3" id="header-menu">
-							<div class="flex-none flex py-3">
-								<div class="relative flex-1 flex flex-col">
-									<div class="flex-1" role="navigation">
-										<h2 class="sr-only">@Model.Localizer["Main navigation"]</h2>
-										<ul class="w-full">
-											@foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
-											{
-												@await Html.PartialAsync("MenuItem", ni)
-											}
-										</ul>
-									</div>
+						<div>
+							<button data-menu-target="button" data-action="click->menu#toggle touch->menu#toggle" type="button" class="p-[4px] rc-menu-link justify-self-end">
+								<span class="sr-only js-text-content">@Model.Localizer["Open menu"]</span>
+								<span class="block js-content-collapsed">
+									<svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+								</span>
+								<span class="block hidden js-content-expanded">
+									<svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+								</span>
+							</button>
+						</div>
+					</div>
+					<div data-menu-target="toggleable" class="flex justify-center w-full hidden border-t border-b mt-3" id="header-menu">
+						<div class="flex-none flex py-3">
+							<div class="relative flex-1 flex flex-col">
+								<div class="flex-1" role="navigation">
+									<h2 class="sr-only">@Model.Localizer["Main navigation"]</h2>
+									<ul class="w-full">
+										@foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
+										{
+											@await Html.PartialAsync("MenuItem", ni)
+										}
+									</ul>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
+				</header>
 			</div>
 		}
 	}
