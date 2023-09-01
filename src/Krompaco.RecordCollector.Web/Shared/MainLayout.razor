@@ -1,0 +1,167 @@
+@inject ILogger<MainLayout> Logger
+@using Krompaco.RecordCollector.Web.Extensions
+@using System.Globalization
+<!DOCTYPE html>
+<html lang="@Model.CurrentCulture?.Name">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.Title</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/ico" />
+    @if (!string.IsNullOrWhiteSpace(Model.Robots))
+    {
+        <meta name="robots" content="@Model.Robots" />
+    }
+    <meta name="description" content="@Model.Description" />
+    @if (!string.IsNullOrWhiteSpace(Model.Keywords))
+    {
+        <meta name="keywords" content="@Model.Keywords" />
+    }
+    @PageHead
+
+    @if (Model.ContentProperties?.FrontendSetup == "simplecss")
+    {
+        <link href="/simple.min.css" rel="stylesheet" asp-append-version="true" />
+    }
+    else
+    {
+        <link href="/dist/styles.css" rel="stylesheet" asp-append-version="true" />
+        <script src="/dist/main.js" async asp-append-version="true"></script>
+    }
+</head>
+<body class="bg-white text-gray-900 font-rc">
+    @if (Model.RootCultures?.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems?.Count > 0)
+    {
+        @if (Model.ContentProperties?.FrontendSetup == "simplecss")
+        {
+            <header>
+                <h1>
+                    @Model.Title
+                </h1>
+                <nav aria-label="@Model.Localizer["Main navigation"]">
+                    @if (Model.CurrentPath == "/" || Model.RootCultures?.Count > 0 && Model.CurrentCulture?.Name == Model.CurrentPath?.Replace("/", string.Empty))
+                    {
+                        <a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" aria-current="page"><b>@Model.Localizer["Home"]</b></a>
+                    }
+                    else
+                    {
+                        <a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")">@Model.Localizer["Home"]</a>
+                    }
+                    @foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
+                    {
+                        @if (Model.CurrentPath == ni.RelativeUrl?.ToString())
+                        {
+                            <a aria-current="page" href="@ni.RelativeUrl"><b>@ni.Text</b></a>
+                        }
+                        else
+                        {
+                            <a href="@ni.RelativeUrl">@ni.Text</a>
+                        }
+                    }
+                </nav>
+            </header>
+        }
+        else
+        {
+            var linkClasses = "rc-link";
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="h-12 sm:h-16 pt-4 sm:pt-6 text-lg sm:text-xl">
+                    <a class="@linkClasses sr-only focus:not-sr-only" href="#main">@Model.Localizer["Skip to main content"]</a>
+                </div>
+                <header class="mt-1" data-controller="menu" data-menu-open-text-value="@Model.Localizer["Open menu"]" data-menu-close-text-value="@Model.Localizer["Close menu"]">
+                    <div class="flex justify-between items-center">
+                        <div class="-mb-px flex text-2xl sm:text-2xl font-bold">
+                            @if (Model.CurrentPath == "/" || Model.RootCultures?.Count > 0 && Model.CurrentCulture?.Name == Model.CurrentPath?.Replace("/", string.Empty))
+                            {
+                                <a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses" aria-current="page">@Model.Localizer["Home"]</a>
+                            }
+                            else
+                            {
+                                <a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses">@Model.Localizer["Home"]</a>
+                            }
+                        </div>
+                        <div>
+                            <button data-menu-target="button" data-action="click->menu#toggle touch->menu#toggle" type="button" class="p-[4px] rc-menu-link justify-self-end">
+                                <span class="sr-only js-text-content">@Model.Localizer["Open menu"]</span>
+                                <span class="block js-content-collapsed">
+                                    <svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                                </span>
+                                <span class="block hidden js-content-expanded">
+                                    <svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div data-menu-target="toggleable" class="flex justify-center w-full hidden border-t border-b mt-3" id="header-menu">
+                        <div class="flex-none flex py-3">
+                            <div class="relative flex-1 flex flex-col">
+                                <div class="flex-1" role="navigation">
+                                    <h2 class="sr-only">@Model.Localizer["Main navigation"]</h2>
+                                    <ul class="w-full">
+                                        @foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
+                                        {
+                                            @* @await Html.PartialAsync("MenuItem", ni) *@
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+            </div>
+        }
+    }
+    @PageHeader
+    <main id="main">
+        @PageBody
+    </main>
+    <footer class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-gray-500">
+        @{
+            var footerLinkClasses = "rc-link text-lg";
+            var isRootWithCultureSelection = Model.RootCultures?.Count > 0 && Model.CurrentPath == "/";
+        }
+
+        @if (isRootWithCultureSelection == false && Model.RootCultures?.Count > 0 && Model.ContentProperties?.FrontendSetup != "simplecss")
+        {
+            <h2 class="text-center text-lg">@Model.Localizer["Change language"]</h2>
+            <div class="flex flex-wrap justify-center">
+                @foreach (var c in Model.RootCultures ?? new List<CultureInfo>())
+                {
+                    <div class="px-3 py-2">
+                        <a lang="@c.Name" href="/@c.Name.ToLower(Model.CurrentCulture)/" class="@footerLinkClasses">@c.NativeName.FirstCharToUpper()</a>
+                    </div>
+                }
+            </div>
+        }
+        <div class="mt-8">
+            <h2 class="text-center text-lg">@Model.Localizer["Generated by"]</h2>
+            <p class="text-center py-2">
+                <a href="https://record-collector.net/" class="@footerLinkClasses">Record Collector</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+@code {
+    [Parameter]
+    public RenderFragment? PageTitle { get; set; }
+
+    [Parameter]
+    public RenderFragment? PageHead { get; set; }
+
+    [Parameter]
+    public RenderFragment? PageHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment? PageBody { get; set; }
+
+    [Parameter]
+    public LayoutViewModel? Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("Hello from MainLayout.OnInitialized()");
+    }
+}

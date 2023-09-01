@@ -5,14 +5,14 @@ using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Content.Tests.Converters;
 using Xunit;
 
-namespace Krompaco.RecordCollector.Content.Tests
+namespace Krompaco.RecordCollector.Content.Tests;
+
+public class SummaryExtractorTests
 {
-    public class SummaryExtractorTests
+    [Fact]
+    public void SummaryFromFileWithYamlFrontMatterTest()
     {
-        [Fact]
-        public void SummaryFromFileWithYamlFrontMatterTest()
-        {
-            string input = @"
+        string input = @"
 ---
 title: About
 categories:
@@ -31,31 +31,31 @@ That can be on another line.
 <!--more-->
 Lorem ipsum";
 
-            using TextReader sr = new StringReader(input);
-            var parser = new YamlParser<SinglePage>(sr, string.Empty);
-            var single = parser.GetAsSinglePage();
+        using TextReader sr = new StringReader(input);
+        var parser = new YamlParser<SinglePage>(sr, string.Empty);
+        var single = parser.GetAsSinglePage();
 
-            var converter = new StringToStreamConverter(input);
-            var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
+        var converter = new StringToStreamConverter(input);
+        var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
 
-            var summary = extractor.GetSummaryFromContent();
+        var summary = extractor.GetSummaryFromContent();
 
-            Assert.Equal(@"Summary.
+        Assert.Equal(@"Summary.
 
 That can be on another line.
 ", summary);
 
-            Assert.Equal(@"Summary.
+        Assert.Equal(@"Summary.
 
 That can be on another line.
 <!--more-->
 Lorem ipsum", single.Content);
-        }
+    }
 
-        [Fact]
-        public void SummaryFromFileWithTomlFrontMatterTest()
-        {
-            string input = @"
+    [Fact]
+    public void SummaryFromFileWithTomlFrontMatterTest()
+    {
+        string input = @"
  +++
 title =  ""About"" 
  categories = [""Development"", ""VIM""]
@@ -70,31 +70,31 @@ That can be on another line.
 <!--more-->
 Lorem ipsum";
 
-            using TextReader sr = new StringReader(input);
-            var parser = new TomlParser<SinglePage>(sr, string.Empty);
-            var single = parser.GetAsSinglePage();
+        using TextReader sr = new StringReader(input);
+        var parser = new TomlParser<SinglePage>(sr, string.Empty);
+        var single = parser.GetAsSinglePage();
 
-            var converter = new StringToStreamConverter(input);
-            var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
+        var converter = new StringToStreamConverter(input);
+        var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
 
-            var summary = extractor.GetSummaryFromContent();
+        var summary = extractor.GetSummaryFromContent();
 
-            Assert.Equal(@"Summary.
+        Assert.Equal(@"Summary.
 
 That can be on another line.
 ", summary);
 
-            Assert.Equal(@"Summary.
+        Assert.Equal(@"Summary.
 
 That can be on another line.
 <!--more-->
 Lorem ipsum", single.Content);
-        }
+    }
 
-        [Fact]
-        public void SummaryFromFileWithJsonFrontMatterTest()
-        {
-            string input = @"{
+    [Fact]
+    public void SummaryFromFileWithJsonFrontMatterTest()
+    {
+        string input = @"{
        ""categories"": [
       ""Development"",
       ""VIM""
@@ -111,25 +111,24 @@ That can be on another line.
 <!--more-->
 Lorem ipsum";
 
-            using TextReader sr = new StringReader(input);
-            var parser = new JsonParser<SinglePage>(sr, string.Empty);
-            var single = parser.GetAsSinglePage();
+        using TextReader sr = new StringReader(input);
+        var parser = new JsonParser<SinglePage>(sr, string.Empty);
+        var single = parser.GetAsSinglePage();
 
-            var converter = new StringToStreamConverter(input);
-            var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
+        var converter = new StringToStreamConverter(input);
+        var extractor = new SummaryExtractor(new StreamReader(converter.GetStreamFromString()));
 
-            var summary = extractor.GetSummaryFromContent();
+        var summary = extractor.GetSummaryFromContent();
 
-            Assert.Equal(@"Summary.
+        Assert.Equal(@"Summary.
 
 That can be on another line.
 ", summary);
 
-            Assert.Equal(@"Summary.
+        Assert.Equal(@"Summary.
 
 That can be on another line.
 <!--more-->
 Lorem ipsum", single.Content);
-        }
     }
 }

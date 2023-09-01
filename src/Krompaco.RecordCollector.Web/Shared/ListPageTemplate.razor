@@ -1,0 +1,29 @@
+@inject ILogger<ListPageTemplate> Logger
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+<MainLayout Model="@Model">
+    <PageTitle>list</PageTitle>
+    <PageHead>
+        <!-- What? -->
+        @* @if (Model.PagedDescendantPages?.Count > 0)
+        {
+            <link rel="alternate" type="application/rss+xml" title="@Model.Title" href="@Model.ContentProperties.SiteUrl.TrimEnd('/')@(Model.CurrentPage?.RelativeUrl)rss.xml" />
+        }
+        <link rel="canonical" href="@Model.ContentProperties.SiteUrl.TrimEnd('/')@(Model.CurrentPage?.RelativeUrl)" /> *@
+    </PageHead>
+    <PageBody>
+        <div>list @Model?.CurrentPage?.Title</div>
+    </PageBody>
+</MainLayout>
+
+@code {
+    [Parameter]
+    public ListPageViewModel Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("Hello from List.OnInitialized()");
+    }
+}
+

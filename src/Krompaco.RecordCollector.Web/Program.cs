@@ -3,13 +3,17 @@ using HtmlAgilityPack;
 using Krompaco.RecordCollector.Web;
 using Krompaco.RecordCollector.Web.Extensions;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Logging.Console;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace);
 
 // Add services to the container
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddHostedService<FileSystemWatcherService>();
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
@@ -27,13 +31,22 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 
 builder.Services.AddLocalization();
 
+builder.Services.AddRazorComponents();
 builder.Services.AddControllersWithViews();
+
+using var loggerFactory = LoggerFactory.Create(builderInside =>
+{
+    builderInside.AddSimpleConsole(i => i.ColorBehavior = LoggerColorBehavior.Default);
+});
+var logger = loggerFactory.CreateLogger<Program>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-app.Logger.LogInformation("\r\nRecord Collector Version 2.0\r\n");
+logger.LogInformation("\r\nStarting the app\r\n");
 
+logger.LogInformation("\r\nRecord Collector Version 3.0 with Blazor SSR!\r\n");
+
+// Configure the HTTP request pipeline
 app.UseRequestLocalization();
 
 app.UseDeveloperExceptionPage();
@@ -41,6 +54,8 @@ app.UseDeveloperExceptionPage();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAntiforgery();
 
 var frontendSetup = app.Configuration.GetAppSettingsFrontendSetup();
 
@@ -110,25 +125,25 @@ if (frontendSetup == "simplecss")
     });
 }
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "rc-content-report",
-        pattern: "rc-content-report",
-        defaults: new { controller = "Content", action = "Report" });
+////app.MapRazorComponents<App>();
 
-    endpoints.MapControllerRoute(
-        name: "rc-content-properties",
-        pattern: "rc-content-properties",
-        defaults: new { controller = "Content", action = "Properties" });
+app.MapControllerRoute(
+    name: "rc-content-report",
+    pattern: "rc-content-report",
+    defaults: new { controller = "Content", action = "Report" });
 
-    endpoints.MapControllerRoute(
-        name: "files",
-        pattern: "{**path}",
-        defaults: new { controller = "Content", action = "Files" });
-});
+app.MapControllerRoute(
+    name: "rc-content-properties",
+    pattern: "rc-content-properties",
+    defaults: new { controller = "Content", action = "Properties" });
 
-app.Logger.LogInformation($"In {app.Environment.EnvironmentName} using {builder.Configuration.GetAppSettingsContentRootPath()}");
+// This is the catch all action used to serve the correct content or static file
+app.MapControllerRoute(
+    name: "files",
+    pattern: "{**path}",
+    defaults: new { controller = "Content", action = "Files" });
+
+logger.LogInformation($"In {app.Environment.EnvironmentName} using {builder.Configuration.GetAppSettingsContentRootPath()}");
 
 app.Run();
 

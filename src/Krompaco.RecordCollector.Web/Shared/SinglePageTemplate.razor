@@ -1,0 +1,20 @@
+@inject ILogger<SinglePageTemplate> Logger
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+<MainLayout Model="@Model">
+    <PageTitle>single</PageTitle>
+    <PageBody>
+        <div>single @Model?.CurrentPage?.Title</div>
+    </PageBody>
+</MainLayout>
+
+@code {
+    [Parameter]
+    public SinglePageViewModel Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Logger.LogInformation("Hello from Single.OnInitialized()");
+    }
+}

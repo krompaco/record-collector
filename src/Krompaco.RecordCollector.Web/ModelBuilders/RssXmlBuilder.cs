@@ -2,77 +2,72 @@
 using System.Text;
 using System.Xml;
 using Krompaco.RecordCollector.Content.Models;
-using Microsoft.AspNetCore.Mvc;
 
-namespace Krompaco.RecordCollector.Web.ModelBuilders
+namespace Krompaco.RecordCollector.Web.ModelBuilders;
+
+public class RssXmlBuilder
 {
-    public class RssXmlBuilder
+    private readonly Uri siteUrl;
+
+    private readonly List<SinglePage> posts;
+
+    private readonly SyndicationFeed feed;
+
+    public RssXmlBuilder(Uri siteUrl, List<SinglePage> posts, SyndicationFeed feed)
     {
-        private readonly Uri siteUrl;
+        this.siteUrl = siteUrl;
+        this.posts = posts;
+        this.feed = feed;
+    }
 
-        private readonly Controller controller;
+    public IResult BuildResult()
+    {
+        var items = new List<SyndicationItem>();
+        var postings = this.posts;
 
-        private readonly List<SinglePage> posts;
-
-        private readonly SyndicationFeed feed;
-
-        public RssXmlBuilder(Uri siteUrl, Controller controller, List<SinglePage> posts, SyndicationFeed feed)
+        foreach (var item in postings)
         {
-            this.siteUrl = siteUrl;
-            this.controller = controller;
-            this.posts = posts;
-            this.feed = feed;
-        }
+            var postUrl = new Uri(this.siteUrl, item.RelativeUrl);
 
-        public IActionResult BuildActionResult()
-        {
-            var items = new List<SyndicationItem>();
-            var postings = this.posts;
-
-            foreach (var item in postings)
+            var si = new SyndicationItem(
+                item.Title,
+                new TextSyndicationContent(item.Description),
+                postUrl,
+                postUrl.ToString(),
+                item.Date.ToUniversalTime())
             {
-                var postUrl = new Uri(this.siteUrl, item.RelativeUrl);
-
-                var si = new SyndicationItem(
-                    item.Title,
-                    new TextSyndicationContent(item.Description),
-                    postUrl,
-                    postUrl.ToString(),
-                    item.Date.ToUniversalTime())
-                {
-                    PublishDate = item.Date.ToUniversalTime(),
-                };
-
-                if (item.Categories != null && item.Categories.Any())
-                {
-                    foreach (var category in item.Categories)
-                    {
-                        si.Categories.Add(new SyndicationCategory(category));
-                    }
-                }
-
-                items.Add(si);
-            }
-
-            this.feed.Items = items;
-
-            var settings = new XmlWriterSettings
-            {
-                Encoding = Encoding.UTF8,
-                NewLineHandling = NewLineHandling.Entitize,
-                NewLineOnAttributes = true,
-                Indent = true,
+                PublishDate = item.Date.ToUniversalTime(),
             };
 
-            using var stream = new MemoryStream();
-            using (var xmlWriter = XmlWriter.Create(stream, settings))
+            if (item.Categories != null && item.Categories.Any())
             {
-                var rssFormatter = new Rss20FeedFormatter(this.feed, false);
-                rssFormatter.WriteTo(xmlWriter);
-                xmlWriter.Flush();
+                foreach (var category in item.Categories)
+                {
+                    si.Categories.Add(new SyndicationCategory(category));
+                }
             }
 
-            return this.controller.File(stream.ToArray(), "application/rss+xml; charset=utf-8");
+            items.Add(si);
         }
+
+        this.feed.Items = items;
+
+        var settings = new XmlWriterSettings
+        {
+            Encoding = Encoding.UTF8,
+            NewLineHandling = NewLineHandling.Entitize,
+            NewLineOnAttributes = true,
+            Indent = true,
+        };
+
+        using var stream = new MemoryStream();
+        using (var xmlWriter = XmlWriter.Create(stream, settings))
+        {
+            var rssFormatter = new Rss20FeedFormatter(this.feed, false);
+            rssFormatter.WriteTo(xmlWriter);
+            xmlWriter.Flush();
+        }
+
+        return Results.File(stream.ToArray(), "application/rss+xml; charset=utf-8");
     }
 }

@@ -1,64 +1,63 @@
 ﻿using Krompaco.RecordCollector.Content.Models;
 using YamlDotNet.Serialization;
 
-namespace Krompaco.RecordCollector.Content.FrontMatterParsers
+namespace Krompaco.RecordCollector.Content.FrontMatterParsers;
+
+public class YamlParser<TModel> : ParserBase
+    where TModel : SinglePage, new()
 {
-    public class YamlParser<TModel> : ParserBase
-        where TModel : SinglePage, new()
+    private readonly TextReader tr;
+
+    public YamlParser(TextReader tr, string fullName)
     {
-        private readonly TextReader tr;
+        this.tr = tr;
+        this.FullName = fullName;
+    }
 
-        public YamlParser(TextReader tr, string fullName)
+    public TModel GetAsSinglePage()
+    {
+        var fm = string.Empty;
+        var frontMatterOpened = false;
+
+        while (this.tr.Peek() >= 0)
         {
-            this.tr = tr;
-            this.FullName = fullName;
-        }
+            var line = this.tr.ReadLine()?.TrimEnd();
 
-        public TModel GetAsSinglePage()
-        {
-            var fm = string.Empty;
-            var frontMatterOpened = false;
-
-            while (this.tr.Peek() >= 0)
+            if (line == "---")
             {
-                var line = this.tr.ReadLine()?.TrimEnd();
-
-                if (line == "---")
-                {
-                    if (frontMatterOpened)
-                    {
-                        break;
-                    }
-
-                    frontMatterOpened = true;
-                    line = this.tr.ReadLine()?.TrimEnd();
-                }
-
                 if (frontMatterOpened)
                 {
-                    fm += line + "\r\n";
+                    break;
                 }
+
+                frontMatterOpened = true;
+                line = this.tr.ReadLine()?.TrimEnd();
             }
 
-            using var fmr = new StringReader(fm);
-            var deserializer = new DeserializerBuilder().Build();
-            var yamlObject = deserializer.Deserialize(fmr);
-            var serializer = new SerializerBuilder()
-                .JsonCompatible()
-                .Build();
-#pragma warning disable CS8604
-            var json = serializer.Serialize(yamlObject);
-#pragma warning restore CS8604
-            using TextReader sr = new StringReader(json);
-            var jsonParser = new JsonParser<TModel>(sr, this.FullName);
-            var single = jsonParser.GetAsSinglePage();
-
-            using (this.tr)
+            if (frontMatterOpened)
             {
-                single.Content = this.tr.ReadToEnd();
+                fm += line + "\r\n";
             }
-
-            return single;
         }
+
+        using var fmr = new StringReader(fm);
+        var deserializer = new DeserializerBuilder().Build();
+        var yamlObject = deserializer.Deserialize(fmr);
+        var serializer = new SerializerBuilder()
+            .JsonCompatible()
+            .Build();
+#pragma warning disable CS8604
+        var json = serializer.Serialize(yamlObject);
+#pragma warning restore CS8604
+        using TextReader sr = new StringReader(json);
+        var jsonParser = new JsonParser<TModel>(sr, this.FullName);
+        var single = jsonParser.GetAsSinglePage();
+
+        using (this.tr)
+        {
+            single.Content = this.tr.ReadToEnd();
+        }
+
+        return single;
     }
 }
