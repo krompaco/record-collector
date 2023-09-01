@@ -3,48 +3,49 @@
 @model SinglePageViewModel
 
 @section head {
-	<link rel="canonical" href="@Model.ContentProperties.SiteUrl.TrimEnd('/')@(Model.CurrentPage.RelativeUrl)" />
+	<link rel="canonical" href="@Model.ContentProperties?.SiteUrl.TrimEnd('/')@(Model.CurrentPage?.RelativeUrl)" />
 }
 
-<div class="max-w-4xl mx-auto px-4 pt-10 sm:px-6 lg:px-8">
-	<h1 class="max-w-6xl text-4xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-5xl">
-		@Model.Title
-	</h1>
-</div>
+@if (Model.ContentProperties?.FrontendSetup != "simplecss")
+{
+	<div class="max-w-4xl mx-auto px-4 pt-10 sm:px-6 lg:px-8">
+		<h1 class="max-w-6xl text-4xl sm:leading-[1.27em] tracking-tight font-extrabold text-gray-900 sm:text-5xl">
+			@Model.Title
+		</h1>
+	</div>
+}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 	<div class="single prose prose-lg max-w-none sm:prose-xl pb-10">
-		@if (Model.CurrentPage.ContentType == ContentType.Markdown)
+		@if (Model.CurrentPage?.ContentType == ContentType.Markdown)
 		{
-			@Html.Raw(Markdown.ToHtml(Model.CurrentPage.Content, Model.MarkdownPipeline))
+			@Html.Raw(Markdown.ToHtml(Model.CurrentPage?.Content ?? string.Empty, Model.MarkdownPipeline))
 		}
 		else
 		{
-			@Html.Raw(Model.CurrentPage.Content)
+			@Html.Raw(Model.CurrentPage?.Content ?? string.Empty)
 		}
 	</div>
 
 	@if (Model.Categories.Count > 0)
 	{
-		<div class="mt-6 flex flex-row space-x-2">
+		<nav class="mt-6 flex flex-row space-x-2" aria-label="@Model.Localizer["Categories"]">
 			@foreach (var category in Model.Categories)
 			{
 				if (!string.IsNullOrWhiteSpace(category.RelativeUrl?.ToString()))
 				{
-					<a href="@category.RelativeUrl" class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:bg-yellow-200 hover:bg-yellow-200">
-						@category.Text
-					</a>
+					<a href="@category.RelativeUrl" class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800 focus:outline-none focus:ring-2 focus:ring-black focus:bg-yellow-200 hover:bg-yellow-200">@category.Text</a>@(Model.ContentProperties?.FrontendSetup == "simplecss" ? " " : string.Empty)
 				}
-				else
+				else if (Model.ContentProperties?.FrontendSetup != "simplecss")
 				{
 					<span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800">
 						@category.Text
 					</span>
 				}
 			}
-		</div>
+		</nav>
 	}
 
-	@await Html.PartialAsync("SingleData", Model.CurrentPage)
+	@await Html.PartialAsync("SingleData", Model.CurrentPage, new ViewDataDictionary(ViewData) { { "FrontendSetup", Model.ContentProperties?.FrontendSetup ?? string.Empty } })
 
 	@* Confusing when having category pages that can also list and not only list by date.
 	Could be nice if you don't have category/tag pages though...

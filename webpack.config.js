@@ -1,6 +1,4 @@
 const path = require('path');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const WriteFileWebpackPlugin = require('write-file-webpack-plugin');
 
 module.exports = {
 	entry: './index.js',
@@ -29,45 +27,7 @@ module.exports = {
 						}
 					}
 				]
-			},
-			{
-				test: /\.css$/,
-				use: [MiniCssExtractPlugin.loader,
-				{
-					loader: 'css-loader',
-					options: {
-						importLoaders: 1,
-						sourceMap: true,
-						url: false
-					}
-				},
-				{
-					loader: 'postcss-loader',
-					options: {
-						sourceMap: true
-					}
-				}],
-			},
-			// // {
-			// // 	test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-			// // 	use: [
-			// // 		{
-			// // 			loader: 'url-loader',
-			// // 			options: {
-			// // 				limit: 10000,
-			// // 			},
-			// // 		},
-			// // 	],
-			// // }
+			}
 		]
-	},
-	plugins: [
-		new MiniCssExtractPlugin({
-			filename: './styles.css'
-		}),
-		new WriteFileWebpackPlugin({
-			test: /\.css$/,
-			useHashIndex: true
-		}),
-	]
+	}
 };

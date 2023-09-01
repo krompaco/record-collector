@@ -81,7 +81,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
             listPageViewModel.PagedDescendantPages = pageToList.Skip(pageSize * (builder.SelectedPage - 1)).Take(pageSize).ToList();
 
             // This updates builder.SelectedPage to the highest available page
-            listPageViewModel.Pagination.Items = builder.GetPaginationItems().ToList();
+            listPageViewModel.Pagination!.Items = builder.GetPaginationItems().ToList();
 
             return this;
         }
@@ -95,7 +95,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
 
             foreach (var page in pages)
             {
-                this.vm.NavigationItems.Add(this.GetMenuItemViewModelFromPage(page));
+                this.vm.NavigationItems?.Add(this.GetMenuItemViewModelFromPage(page));
             }
 
             return this;
@@ -135,7 +135,7 @@ namespace Krompaco.RecordCollector.Web.ModelBuilders
         {
             var item = new MenuItemViewModel();
 
-            if (this.vm.CurrentPath.Equals(page.RelativeUrl.ToString(), StringComparison.OrdinalIgnoreCase))
+            if (this.vm.CurrentPath?.Equals(page.RelativeUrl.ToString(), StringComparison.OrdinalIgnoreCase) ?? false)
             {
                 item.IsSelected = true;
             }

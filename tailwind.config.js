@@ -1,25 +1,21 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-	mode: 'jit',
-	purge: {
-		content: [
-			'./docs/content-record-collector-net/**/*.html',
-			'./src/Krompaco.RecordCollector.Web/Views/**/*.cshtml',
-			'./src/stimulus_controllers/**/*.js',
-		]
-	},
+	content: [
+		'./content/**/*.html',
+		'./src/Krompaco.RecordCollector.Web/Views/**/*.cshtml',
+		'./src/stimulus_controllers/**/*.js',
+	],
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', '"Ubuntu"', '"Roboto"', '"Noto Sans"', '"Droid Sans"', 'sans-serif'],
-				mono: ['JetBrainsMono', ...defaultTheme.fontFamily.mono],
+				rc: ['-apple-system', 'BlinkMacSystemFont', '"Avenir Next"' , 'Avenir','"Nimbus Sans L"', 'Roboto', 'Noto', '"Segoe UI"','Arial','Helvetica', '"Helvetica Neue"', 'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"'],
+				mono: ['Consolas', 'Menlo', 'Monaco', '"Andale Mono"', '"Ubuntu Mono"', 'monospace'],
 			},
 		},
 	},
 	plugins: [
 		require('@tailwindcss/forms'),
 		require('@tailwindcss/typography'),
-		require('@tailwindcss/aspect-ratio'),
 	],
 }

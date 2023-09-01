@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -7,15 +6,18 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;SA1601</NoWarn>
+    <NoWarn>1701;1702;SA1601;SA1516</NoWarn>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;SA1601</NoWarn>
+    <NoWarn>1701;1702;SA1601;SA1516</NoWarn>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig.Signed" Version="0.26.0" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+    <PackageReference Include="Markdig.Signed" Version="0.30.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,8 +29,7 @@
     <PackageReference Include="System.ServiceModel.Syndication" Version="6.0.0" />
   </ItemGroup>
 
-    <ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Krompaco.RecordCollector.Content\Krompaco.RecordCollector.Content.csproj" />
   </ItemGroup>
-
 </Project>

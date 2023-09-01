@@ -1,7 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace Krompaco.RecordCollector.Web.Extensions
+﻿namespace Krompaco.RecordCollector.Web.Extensions
 {
+    // TODO: Convert to config model
     public static class IConfigurationExtensions
     {
 #pragma warning disable CA1055 // Uri return values should not be strings
@@ -24,23 +23,29 @@ namespace Krompaco.RecordCollector.Web.Extensions
             return path;
         }
 
+        public static string GetAppSettingsFrontendSetup(this IConfiguration config)
+        {
+            var setup = config.GetValue<string>("AppSettings:FrontendSetup");
+            return setup;
+        }
+
         public static string GetAppSettingsViewPrefix(this IConfiguration config)
         {
-            var path = config.GetValue<string>("AppSettings:ViewPrefix");
-            return path;
+            var viewPrefix = config.GetValue<string>("AppSettings:ViewPrefix");
+            return viewPrefix;
         }
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
-        public static string[]? GetAppSettingsMainNavigationSections(this IConfiguration config)
+        public static List<string> GetAppSettingsMainNavigationSections(this IConfiguration config)
         {
             var sections = config?.GetSection("AppSettings:MainNavigationSections").Get<string[]>();
-            return sections;
+            return sections?.ToList() ?? new List<string>();
         }
 
-        public static string[]? GetAppSettingsSectionsToExcludeFromLists(this IConfiguration config)
+        public static List<string> GetAppSettingsSectionsToExcludeFromLists(this IConfiguration config)
         {
             var sections = config?.GetSection("AppSettings:SectionsToExcludeFromLists").Get<string[]>();
-            return sections;
+            return sections?.ToList() ?? new List<string>();
         }
 #pragma warning restore SA1011 // Closing square brackets should be spaced correctly
 

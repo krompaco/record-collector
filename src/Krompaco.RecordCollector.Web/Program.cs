@@ -1,10 +1,8 @@
 ﻿using System.Globalization;
+using HtmlAgilityPack;
 using Krompaco.RecordCollector.Web;
 using Krompaco.RecordCollector.Web.Extensions;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +41,74 @@ app.UseDeveloperExceptionPage();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+var frontendSetup = app.Configuration.GetAppSettingsFrontendSetup();
+
+if (frontendSetup == "simplecss")
+{
+    // Trying out a way to strip class attributes from HTML if Simple.css is used
+    app.Use(async (context, next) =>
+    {
+        // Way that should work to only process HTML output
+        if (context.Request.Path.HasValue && context.Request.Path.Value.EndsWith("/"))
+        {
+            var responseBody = context.Response.Body;
+
+            await using var newResponseBody = new MemoryStream();
+            context.Response.Body = newResponseBody;
+            await next();
+
+            context.Response.Body = new MemoryStream();
+
+            newResponseBody.Seek(0, SeekOrigin.Begin);
+            context.Response.Body = responseBody;
+
+            var html = new StreamReader(newResponseBody).ReadToEnd();
+
+            // Using HtmlAgilityPack to modify whole document
+            var doc = new HtmlDocument();
+            doc.LoadHtml(html);
+
+            var paginationLinkNodes = new List<HtmlNode>();
+
+            foreach (var node in doc.DocumentNode.Descendants())
+            {
+                if (node.NodeType != HtmlNodeType.Element)
+                {
+                    continue;
+                }
+
+                if (node.Attributes.Contains("class"))
+                {
+                    node.Attributes["class"].Remove();
+                }
+
+                if (node.NodeType == HtmlNodeType.Element
+                    && node.Attributes.Contains("data-id")
+                    && node.GetDataAttribute("id").Value == "pagination")
+                {
+                    var links = node.Descendants().Where(x => x.NodeType == HtmlNodeType.Element && x.Name == "a").ToList();
+
+                    if (links.Any())
+                    {
+                        paginationLinkNodes.AddRange(links);
+                    }
+                }
+            }
+
+            foreach (var node in paginationLinkNodes)
+            {
+                node.Attributes.Add("class", "button");
+            }
+
+            await context.Response.WriteAsync(doc.DocumentNode.OuterHtml);
+        }
+        else
+        {
+            await next();
+        }
+    });
+}
 
 app.UseEndpoints(endpoints =>
 {

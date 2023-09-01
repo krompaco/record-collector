@@ -4,7 +4,7 @@ namespace Krompaco.RecordCollector.Content.Models
 {
     public interface IRecordCollectorFile
     {
-        string? FullName { get; set; }
+        string FullName { get; set; }
 
         bool IsVirtual { get; set; }
 

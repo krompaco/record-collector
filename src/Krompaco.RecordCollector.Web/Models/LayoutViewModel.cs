@@ -26,8 +26,8 @@ namespace Krompaco.RecordCollector.Web.Models
 
         public List<MenuItemViewModel>? NavigationItems { get; set; }
 
-        public IStringLocalizer? Localizer { get; set; }
+        public IStringLocalizer Localizer { get; set; } = null!;
 
-        public ContentProperties? ContentProperties { get; set; }
+        public ContentProperties ContentProperties { get; set; } = null!;
     }
 }

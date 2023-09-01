@@ -70,14 +70,14 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
             {
                 if (key.Equals("aliases", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Aliases = stringValues.Select(x => new Uri(x, UriKind.Relative)).ToList();
                     continue;
                 }
 
                 if (key.Equals("audio", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Audio = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
                     continue;
                 }
@@ -99,7 +99,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                         try
                         {
-                            var stringValues = ((TomlArray)cascadeTable[cascadeKey]).Select(x => x.ToString() ?? string.Empty).ToList();
+                            var stringValues = ((TomlArray)cascadeTable[cascadeKey]).Select(x => x?.ToString() ?? string.Empty).ToList();
                             single.Cascade.CustomArrayProperties.Add(cascadeKey, stringValues);
                             continue;
                         }
@@ -122,7 +122,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (key.Equals("categories", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Categories = stringValues;
                     continue;
                 }
@@ -171,7 +171,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (key.Equals("images", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Images = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
                     continue;
                 }
@@ -273,7 +273,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (key.Equals("series", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Series = stringValues;
                     continue;
                 }
@@ -292,7 +292,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (key.Equals("tags", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Tags = stringValues;
                     continue;
                 }
@@ -318,7 +318,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 if (key.Equals("videos", StringComparison.OrdinalIgnoreCase))
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.Videos = stringValues.Select(x => new Uri(x, UriKind.RelativeOrAbsolute)).ToList();
                     continue;
                 }
@@ -331,7 +331,7 @@ namespace Krompaco.RecordCollector.Content.FrontMatterParsers
 
                 try
                 {
-                    var stringValues = ((TomlArray)table[key]).Select(x => x.ToString() ?? string.Empty).ToList();
+                    var stringValues = ((TomlArray)table[key]).Select(x => x?.ToString() ?? string.Empty).ToList();
                     single.CustomArrayProperties.Add(key, stringValues);
                     continue;
                 }

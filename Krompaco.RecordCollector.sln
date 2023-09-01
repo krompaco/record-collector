@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29905.134
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krompaco.RecordCollector.Web", "src\Krompaco.RecordCollector.Web\Krompaco.RecordCollector.Web.csproj", "{BA2495A2-09B5-4502-8847-417B4EFCE411}"
 EndProject
@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krompaco.RecordCollector.Ge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krompaco.RecordCollector.Content", "src\Krompaco.RecordCollector.Content\Krompaco.RecordCollector.Content.csproj", "{160D0157-17B7-447C-B05F-652C0DF095DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Krompaco.RecordCollector.Content.Tests", "tests\Krompaco.RecordCollector.Content.Tests\Krompaco.RecordCollector.Content.Tests.csproj", "{6E9AF449-342F-426F-9A4C-228FEC504150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Krompaco.RecordCollector.Content.Tests", "tests\Krompaco.RecordCollector.Content.Tests\Krompaco.RecordCollector.Content.Tests.csproj", "{6E9AF449-342F-426F-9A4C-228FEC504150}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -86,8 +86,8 @@ Lorem ipsum";
             Assert.Equal("plugins", single.Tags[1]);
             Assert.Equal("spf13-vim", single.Tags[2]);
             Assert.Equal("vim", single.Tags[3]);
-            Assert.Equal("images/typewriter.jpg", single.Cascade.CustomStringProperties["banner"]);
-            Assert.Equal(".vimrc", single.Cascade.CustomArrayProperties["tags"][0]);
+            Assert.Equal("images/typewriter.jpg", single.Cascade?.CustomStringProperties["banner"]);
+            Assert.Equal(".vimrc", single.Cascade?.CustomArrayProperties["tags"][0]);
             Assert.Equal("Lorem ipsum", single.Content);
         }
     }
