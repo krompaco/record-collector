@@ -42,9 +42,7 @@ var logger = loggerFactory.CreateLogger<Program>();
 
 var app = builder.Build();
 
-logger.LogInformation("\r\nStarting the app\r\n");
-
-logger.LogInformation("\r\nRecord Collector Version 3.0 with Blazor SSR!\r\n");
+logger.LogInformation("Record Collector Version 3.0 with Blazor SSR!");
 
 // Configure the HTTP request pipeline
 app.UseRequestLocalization();
@@ -125,8 +123,6 @@ if (frontendSetup == "simplecss")
     });
 }
 
-////app.MapRazorComponents<App>();
-
 app.MapControllerRoute(
     name: "rc-content-report",
     pattern: "rc-content-report",
@@ -143,7 +139,7 @@ app.MapControllerRoute(
     pattern: "{**path}",
     defaults: new { controller = "Content", action = "Files" });
 
-logger.LogInformation($"In {app.Environment.EnvironmentName} using {builder.Configuration.GetAppSettingsContentRootPath()}");
+logger.LogInformation($"In {app.Environment.EnvironmentName} using content from {builder.Configuration.GetAppSettingsContentRootPath()}");
 
 app.Run();
 

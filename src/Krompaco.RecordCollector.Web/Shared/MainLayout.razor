@@ -100,7 +100,7 @@
                                     <ul class="w-full">
                                         @foreach (var ni in Model.NavigationItems ?? new List<MenuItemViewModel>())
                                         {
-                                            @* @await Html.PartialAsync("MenuItem", ni) *@
+                                            <MenuItem Model="@ni" />
                                         }
                                     </ul>
                                 </div>
@@ -156,9 +156,4 @@
 
     [Parameter]
     public LayoutViewModel? Model { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        Logger.LogInformation("Hello from MainLayout.OnInitialized()");
-    }
 }

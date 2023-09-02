@@ -1,4 +1,4 @@
-@inject ILogger<ListPageTemplate> Logger
+@inject ILogger<ListTemplate> Logger
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor HttpContextAccessor
 
@@ -128,7 +128,7 @@
                 </div>
             </div>
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-8">
-                @* @await Html.PartialAsync("Pagination", Model.Pagination, new ViewDataDictionary(ViewData) {{"FrontendSetup", Model.ContentProperties?.FrontendSetup}}) *@
+                <Pagination FrontendSetup="@Model.ContentProperties?.FrontendSetup" Model="@Model.Pagination" />
             </div>
         }
     </PageBody>
@@ -136,11 +136,16 @@
 
 @code {
     [Parameter]
-    public ListPageViewModel Model { get; set; }
+    public ListPageViewModel? Model { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    // // protected override async Task OnInitializedAsync()
+    // // {
+    // //     Logger.LogInformation("Hello from ListTemplate.OnInitializedAsync()");
+    // // }
+
+    protected override void OnInitialized()
     {
-        Logger.LogInformation("Hello from List.OnInitialized()");
+        Logger.LogInformation("Hello from ListTemplate.OnInitialized()");
     }
 }
 

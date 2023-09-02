@@ -9,8 +9,8 @@ using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.ModelBuilders;
 using Krompaco.RecordCollector.Web.Models;
+using Krompaco.RecordCollector.Web.Pages;
 using Krompaco.RecordCollector.Web.Resources;
-using Krompaco.RecordCollector.Web.Shared;
 using Microsoft.AspNetCore.Components.Endpoints;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -85,7 +85,7 @@ public class ContentController : Controller
             }
         }
 
-        this.allFileModels = allFileModelsFromCache;
+        this.allFileModels = allFileModelsFromCache!;
     }
 
     [HttpGet]
@@ -140,8 +140,7 @@ public class ContentController : Controller
     [HttpGet]
     public IResult Files(string? path)
     {
-        var siteUrl = this.config.GetAppSettingsSiteUrl();
-        var viewPrefix = this.config.GetAppSettingsViewPrefix();
+        var siteUrl = this.config.GetAppSettingsSiteUrl();;
         var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
         this.currentCulture = rqf?.RequestCulture.Culture ?? CultureInfo.CurrentCulture;
         var contentProperties = this.GetContentProperties();
@@ -234,8 +233,8 @@ public class ContentController : Controller
                 rootViewModel.Title = rootPage.Title ?? this.localizer["Select language"];
 
                 this.LogTime();
-                ////return this.View(viewPrefix + "List", rootViewModel);
-                return new RazorComponentResult<ListPageTemplate>(rootViewModel.ToReadOnlyDictionary());
+
+                return new RazorComponentResult<ListTemplate>(rootViewModel.ToReadOnlyDictionary());
             }
 
             var listViewModel = new LayoutViewModelBuilder<ListPageViewModel, ListPage>(rootPage, this.currentCulture, this.rootCultures, this.Request, this.localizer, contentProperties)
@@ -261,8 +260,8 @@ public class ContentController : Controller
             }
 
             this.LogTime();
-            ////return this.View(viewPrefix + "List", listViewModel);
-            return new RazorComponentResult<ListPageTemplate>(listViewModel.ToReadOnlyDictionary());
+
+            return new RazorComponentResult<ListTemplate>(listViewModel.ToReadOnlyDictionary());
         }
 
         var items = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
@@ -308,8 +307,8 @@ public class ContentController : Controller
                 }
 
                 this.LogTime();
-                ////return this.View(viewPrefix + "List", listViewModel);
-                return new RazorComponentResult<ListPageTemplate>(listViewModel.ToReadOnlyDictionary());
+
+                return new RazorComponentResult<ListTemplate>(listViewModel.ToReadOnlyDictionary());
             }
         }
 
@@ -406,8 +405,8 @@ public class ContentController : Controller
             }
 
             this.LogTime();
-            ////return this.View(viewPrefix + "List", listViewModel);
-            return new RazorComponentResult<ListPageTemplate>(listViewModel.ToReadOnlyDictionary());
+
+            return new RazorComponentResult<ListTemplate>(listViewModel.ToReadOnlyDictionary());
         }
 
         // Single page
@@ -441,8 +440,8 @@ public class ContentController : Controller
         }
 
         this.LogTime();
-        ////return this.View(viewPrefix + "Single", singleViewModel);
-        return new RazorComponentResult<SinglePageTemplate>(singleViewModel.ToReadOnlyDictionary());
+
+        return new RazorComponentResult<SingleTemplate>(singleViewModel.ToReadOnlyDictionary());
     }
 
     private static string RemovePaginationFromPath(string? path)

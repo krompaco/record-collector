@@ -29,12 +29,6 @@ public static class IConfigurationExtensions
         return setup;
     }
 
-    public static string GetAppSettingsViewPrefix(this IConfiguration config)
-    {
-        var viewPrefix = config.GetValue<string>("AppSettings:ViewPrefix");
-        return viewPrefix;
-    }
-
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
     public static List<string> GetAppSettingsMainNavigationSections(this IConfiguration config)
     {

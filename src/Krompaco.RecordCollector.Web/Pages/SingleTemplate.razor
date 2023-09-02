@@ -1,4 +1,4 @@
-@inject ILogger<SinglePageTemplate> Logger
+@inject ILogger<SingleTemplate> Logger
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor HttpContextAccessor
 
@@ -53,46 +53,51 @@
             @* Confusing when having category pages that can also list and not only list by date.
             Could be nice if you don't have category/tag pages though...
             @if (!Model.ContentProperties.SectionsToExcludeFromLists
-            .Any(x => x.Equals(Model.CurrentPage.Section, StringComparison.OrdinalIgnoreCase))
+                .Any(x => x.Equals(Model.CurrentPage.Section, StringComparison.OrdinalIgnoreCase))
             && (Model.CurrentPage.NextPage != null || Model.CurrentPage.PreviousPage != null))
             {
-            <div role="navigation" class="mt-16 border-t border-gray-200 px-0 flex items-center justify-between">
-            <h2 class="sr-only">@Model.Localizer["Page navigation"]</h2>
-            @if (Model.CurrentPage.PreviousPage != null)
-            {
-            <div class="w-0 flex-1 flex">
-            <a title="@Model.CurrentPage.PreviousPage.Title" href="@Model.CurrentPage.PreviousPage.RelativeUrl" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline focus:border-gray-400 transition ease-in-out duration-150">
-            <svg class="mr-3 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd"/>
-            </svg>
-            @Model.Localizer["Previous"]
-            </a>
-            </div>
-            }
+                <div role="navigation" class="mt-16 border-t border-gray-200 px-0 flex items-center justify-between">
+                    <h2 class="sr-only">@Model.Localizer["Page navigation"]</h2>
+                    @if (Model.CurrentPage.PreviousPage != null)
+                    {
+                        <div class="w-0 flex-1 flex">
+                            <a title="@Model.CurrentPage.PreviousPage.Title" href="@Model.CurrentPage.PreviousPage.RelativeUrl" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline focus:border-gray-400 transition ease-in-out duration-150">
+                                <svg class="mr-3 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                                </svg>
+                                @Model.Localizer["Previous"]
+                            </a>
+                        </div>
+                    }
 
-            @if (Model.CurrentPage.NextPage != null)
-            {
-            <div class="w-0 flex-1 flex justify-end">
-            <a title="@Model.CurrentPage.NextPage.Title" href="@Model.CurrentPage.NextPage.RelativeUrl" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:border-gray-400 hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline transition ease-in-out duration-150">
-            @Model.Localizer["Next"]
-            <svg class="ml-3 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-            </svg>
-            </a>
-            </div>
-            }
-            </div>
-            }*@
+                    @if (Model.CurrentPage.NextPage != null)
+                    {
+                        <div class="w-0 flex-1 flex justify-end">
+                            <a title="@Model.CurrentPage.NextPage.Title" href="@Model.CurrentPage.NextPage.RelativeUrl" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:border-gray-400 hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline transition ease-in-out duration-150">
+                                @Model.Localizer["Next"]
+                                <svg class="ml-3 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        </div>
+                    }
+                </div>
+            } *@
         </div>
     </PageBody>
 </MainLayout>
 
 @code {
     [Parameter]
-    public SinglePageViewModel Model { get; set; }
+    public SinglePageViewModel? Model { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    // // protected override async Task OnInitializedAsync()
+    // // {
+    // //     Logger.LogInformation("Hello from SingleTemplate.OnInitializedAsync()");
+    // // }
+
+    protected override void OnInitialized()
     {
-        Logger.LogInformation("Hello from Single.OnInitialized()");
+        Logger.LogInformation("Hello from SingleTemplate.OnInitialized()");
     }
 }
