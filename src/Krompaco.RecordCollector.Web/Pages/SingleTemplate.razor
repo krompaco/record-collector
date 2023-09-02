@@ -2,6 +2,13 @@
 @inject NavigationManager NavigationManager
 @inject IHttpContextAccessor HttpContextAccessor
 
+@{
+    if (Model == null)
+    {
+        return;
+    }
+}
+
 <MainLayout Model="@Model">
     <PageHead>
         <link rel="canonical" href="@(Model.ContentProperties?.SiteUrl.TrimEnd('/') + Model.CurrentPage?.RelativeUrl)">

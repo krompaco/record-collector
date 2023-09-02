@@ -8,25 +8,25 @@ public static class IConfigurationExtensions
 #pragma warning restore CA1055 // Uri return values should not be strings
     {
         var path = config.GetValue<string>("AppSettings:SiteUrl");
-        return path;
+        return path!;
     }
 
     public static string GetAppSettingsContentRootPath(this IConfiguration config)
     {
         var path = config.GetValue<string>("AppSettings:ContentRootPath");
-        return path;
+        return path!;
     }
 
     public static string GetAppSettingsStaticSiteRootPath(this IConfiguration config)
     {
         var path = config.GetValue<string>("AppSettings:StaticSiteRootPath");
-        return path;
+        return path!;
     }
 
     public static string GetAppSettingsFrontendSetup(this IConfiguration config)
     {
         var setup = config.GetValue<string>("AppSettings:FrontendSetup");
-        return setup;
+        return setup!;
     }
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly

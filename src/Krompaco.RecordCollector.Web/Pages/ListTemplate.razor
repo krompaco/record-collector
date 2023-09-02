@@ -3,6 +3,11 @@
 @inject IHttpContextAccessor HttpContextAccessor
 
 @{
+    if (Model == null)
+    {
+        return;
+    }
+
     var linkClasses1 = "rc-link";
     var h1Shown = false;
     var isRootWithCultureSelection = Model.RootCultures?.Count > 0 && Model.CurrentPath == "/";

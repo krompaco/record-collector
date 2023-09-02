@@ -68,7 +68,7 @@ public class ContentController : Controller
         this.currentCulture = CultureInfo.CurrentCulture;
         this.allFiles = fileService.GetAllFileFullNames();
 
-        if (!memoryCache.TryGetValue(AllFilesCacheKey, out List<IRecordCollectorFile> allFileModelsFromCache))
+        if (!memoryCache.TryGetValue(AllFilesCacheKey, out List<IRecordCollectorFile>? allFileModelsFromCache))
         {
             lock (AllFilesLock)
             {
@@ -140,7 +140,7 @@ public class ContentController : Controller
     [HttpGet]
     public IResult Files(string? path)
     {
-        var siteUrl = this.config.GetAppSettingsSiteUrl();;
+        var siteUrl = this.config.GetAppSettingsSiteUrl();
         var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
         this.currentCulture = rqf?.RequestCulture.Culture ?? CultureInfo.CurrentCulture;
         var contentProperties = this.GetContentProperties();
