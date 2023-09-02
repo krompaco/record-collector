@@ -1,0 +1,57 @@
+﻿@if (Model != null && Model.Date != DateTime.MinValue)
+{
+    var authorImage = Model.CustomStringProperties.Keys.Contains("authorimage") ? Model.CustomStringProperties["authorimage"] : string.Empty;
+    var author = Model.CustomStringProperties.Keys.Contains("authorname") ? Model.CustomStringProperties["authorname"] : string.Empty;
+    var hasAuthorImage = !string.IsNullOrWhiteSpace(authorImage);
+    var hasAuthor = !string.IsNullOrWhiteSpace(author);
+
+    if (FrontendSetup == "simplecss")
+    {
+        <blockquote>
+            <p>
+                <time datetime="@Model.Date.ToString("yyyy-MM-dd")">
+                    @Model.Date.ToShortDateString()
+                </time>
+            </p>
+            @if (hasAuthor)
+            {
+                <p><cite>– @author</cite></p>
+            }
+        </blockquote>
+    }
+    else
+    {
+        <div class="mt-6 flex items-center">
+            <div class="mr-3">
+                @if (hasAuthor)
+                {
+                    <p class="text-sm leading-5 font-medium text-gray-900">
+                        @author
+                    </p>
+                }
+                <div class="text-sm leading-5 text-gray-700">
+                    @if (Model.Date != DateTime.MinValue)
+                    {
+                        <time datetime="@Model.Date.ToString("yyyy-MM-dd")">
+                            @Model.Date.ToShortDateString()
+                        </time>
+                    }
+                </div>
+            </div>
+            @if (hasAuthorImage)
+            {
+                <div class="flex-shrink-0">
+                    <img class="h-10 w-10 rounded-full" width="40" height="40" src="@authorImage" alt="@author" />
+                </div>
+            }
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public Krompaco.RecordCollector.Content.Models.SinglePage? Model { get; set; }
+
+    [Parameter]
+    public string? FrontendSetup { get; set; }
+}

@@ -3,7 +3,7 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
 	content: [
 		'./content/**/*.html',
-		'./src/Krompaco.RecordCollector.Web/Views/**/*.cshtml',
+		'./src/Krompaco.RecordCollector.Web/**/*.razor',
 		'./src/stimulus_controllers/**/*.js',
 	],
 	theme: {
