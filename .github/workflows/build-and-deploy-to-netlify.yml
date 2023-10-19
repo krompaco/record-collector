@@ -22,7 +22,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.100-rc.2.23502.2'
 
       - name: Add robots.txt disallow
         shell: pwsh
@@ -61,7 +61,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: '8.0.100-rc.2.23502.2'
 
       - name: Add robots.txt disallow
         shell: pwsh
