@@ -38,9 +38,9 @@ Two options are in the repository. The `default` setup is based on [Tailwind CSS
 * [record-collector.netlify.app](https://record-collector.netlify.app/) is published with `default`
 * [record-collector-simplecss.netlify.app](https://record-collector-simplecss.netlify.app/) is using `simplecss`
 
-## Run the web app in ASP.NET MVC mode
+## Run the web app in ASP.NET mode
 
-When running, Kestrel is recommended and the default URL in the MVC mode is `http://localhost:5000/`.
+When running, Kestrel is recommended and the default URL in the ASP.NET mode is `http://localhost:5000/`.
 
 ### Alternative A: Run using Visual Studio
 
