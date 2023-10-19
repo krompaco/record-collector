@@ -48,7 +48,7 @@ Open the SLN file in repository root. Focus the Web project and switch from IIS 
 
 ### Alternative B: Run using command line
 
-If you have PowerShell you can run `run-mvc-web.ps1` in the repository root or paste this in to your terminal from there:
+If you have PowerShell you can run `run-web.ps1` in the repository root or paste this in to your terminal from there:
 
 ```
 dotnet run --project ./src/Krompaco.RecordCollector.Web/Krompaco.RecordCollector.Web.csproj --configuration Release

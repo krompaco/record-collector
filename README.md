@@ -4,17 +4,17 @@ Record Collector's offical web site is being filled with content and will have a
 
 ## Inspiration
 
-This project is heavily inspired by [Hugo](https://gohugo.io/) and I try to be somewhat compatible with the same content structure and support parsing of TOML, YAML and JSON front matter.
+This project is inspired by [Hugo](https://gohugo.io/) and I try to be somewhat compatible with the same content structure and support parsing of TOML, YAML and JSON front matter.
 
 ## Bright ideas
 
-The content file layer is converted to C# lists and objects and then used in a regular ASP.NET Core MVC project which is also where you can work _live_ on both content preview and templating. This means you now can use your existing ASP.NET MVC and C# skills creating static site templates!
+The content file layer is converted to C# lists and objects and then used in a regular ASP.NET project which is also where you can work _live_ on both content preview and templating. This means you now can use your existing ASP.NET Blazor SSR and C# skills creating static site templates!
 
 In this setup the generation process work using the WebApplicationFactory from the Microsoft.AspNetCore.Mvc.Testing package so I don't have to fall back to a console application or custom web servers for crunching the files and templates which seems to be the norm for static site generation. Feels good to me and generation times are still fast.
 
 ## Open source references
 
-Built using .NET 6.0 (through 3.1 and 5.0) and with these packages and projects. Thank you!
+Built using .NET 8.0 (through 3.1, 5.0 and 6.0) and with these packages and projects. Thank you!
 
 | Project                                                   | License                   |
 |-----------------------------------------------------------|---------------------------|

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /record-collector
 
 COPY src/Krompaco.RecordCollector.Web/ src/Krompaco.RecordCollector.Web/
@@ -7,7 +7,7 @@ COPY src/Krompaco.RecordCollector.Generator/ src/Krompaco.RecordCollector.Genera
 COPY .editorconfig .
 
 # This is where you probably have your own content somewhere
-COPY content/demo-site/ docs/demo-site/
+COPY content/demo-site/ content/demo-site/
 
 ENV ASPNETCORE_ENVIRONMENT Docker
 
