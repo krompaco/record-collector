@@ -12,10 +12,6 @@ This definition will deploy your site to your Netlify by building on GitHub.
 <!--more-->
 It will deploy to production (publish) on **push to main** and deploy a draft that will get a preview URL on push to any other branch.
 
-## Update November 18th 2021
-
-YAML file now has .NET 6.0 support and npm steps for the CSS and JS setup used in the new default templates.
-
 ## Secret variables
 
 You first need to add secrets to you GitHub repo for `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`, these are easily created/found in and copied from your Netlify site settings.
@@ -43,7 +39,7 @@ jobs:
       - name: Setup npm
         uses: actions/setup-node@v2
         with:
-          node-version: 17.1.0
+          node-version: 18.18.2
 
       - run: npm ci
       - run: npm run prodbuild
@@ -51,7 +47,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.100
+          dotnet-version: '8.0.100-rc.2.23502.2'
 
       - name: Add robots.txt disallow
         shell: pwsh
@@ -82,7 +78,7 @@ jobs:
       - name: Setup npm
         uses: actions/setup-node@v2
         with:
-          node-version: 17.1.0
+          node-version: 18.18.2
 
       - run: npm ci
       - run: npm run prodbuild
@@ -90,7 +86,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.100
+          dotnet-version: '8.0.100-rc.2.23502.2'
 
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"
@@ -118,7 +114,6 @@ As you can see the environment name gets set to `Action` so in **appsettings.Act
     "ContentRootPath": "/home/runner/work/record-collector/record-collector/content/demo-site/",
     "StaticSiteRootPath": "/home/runner/work/record-collector/record-collector/artifacts/static-site/",
     "FrontendSetup": "default",
-    "ViewPrefix": "",
     "SectionsToExcludeFromLists": [ "pages", "sidor" ],
     "MainNavigationSections": [ "pages", "sidor" ],
     "PaginationPageCount": 2,

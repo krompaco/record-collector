@@ -4,11 +4,11 @@ title = "What does Record Collector do?"
 description = "The main features and advantages when using Record Collector."
 weight = 15
 +++
-Record Collector reads a typical static site content folder into C# lists and objects and then uses them in a regular ASP.NET Core MVC project.
+Record Collector reads a typical static site content folder into C# lists and objects and then uses them in a regular ASP.NET Core project with Blazor components.
 
 ![Sketch of Record Collector flow](https://record-collector.net/files/flow.png)
 
-This means when you are working with customization of a static site you are in a regular and very familiar ASP.NET MVC application.
+This means when you are working with customization of a static site you are in a regular and very familiar ASP.NET application.
 
 You can also just use the file reading layer and integrate in some other .NET initiative.
 

@@ -21,7 +21,6 @@ Pick one of the example `appsettings.*.json` files or the base file and "save as
 		"ContentRootPath": "C:\\github\\record-collector\\docs\\content-record-collector-net\\",
 		"StaticSiteRootPath": "C:\\github\\record-collector\\artifacts\\static-site\\",
 		"FrontendSetup": "default",
-		"ViewPrefix": "",
 		"SectionsToExcludeFromLists": [ "pages", "sidor" ],
 		"MainNavigationSections": [ "pages", "sidor" ],
 		"PaginationPageCount": 2,
@@ -38,8 +37,6 @@ Two options are in the repository. The `default` setup is based on [Tailwind CSS
 
 * [record-collector.netlify.app](https://record-collector.netlify.app/) is published with `default`
 * [record-collector-simplecss.netlify.app](https://record-collector-simplecss.netlify.app/) is using `simplecss`
-
-If you are using `simplecss` you should remove the two `npm` commands from the Netlify deploy guides.
 
 ## Run the web app in ASP.NET MVC mode
 
@@ -80,26 +77,6 @@ These two blog posts should help with most deployment scenarios using different 
 
 ## Customize templates using the `ViewPrefix` setting
 
-You can of course modify anything existing but there is a also a simple built-in feature to be able to add your own templates with own file names so that updating from the original repository won't overwrite your templates.
-
-This works so that if you change the setting to something like `"ViewPrefix": "MiasTheme"` the default MVC controller will use that setting value in this way:
-
-```
-return this.View(viewPrefix + "List", viewModel);
-```
-
-As you already have figured out you can now put files named `MiasThemeList.cshtml` and `MiasThemeSingle.cshtml` in `Views/Content` and then from those files refer to any layout file you have or custom partial files. Example start of `MiasThemeList.cshtml` file:
-
-```
-@using Krompaco.RecordCollector.Content.Models
-@using Markdig
-
-@model ListPageViewModel
-
-@{
-	Layout = "MiasThemeExtraWideLayout";
-}
-..
-```
+This feature was removed with the move to .NET 8.0 and Blazor SSR.
 
 Thanks for your interest in Record Collector and reading this far!

@@ -10,9 +10,9 @@ authorimage: "/files/jk.jpg"
 ---
 How to set up deployment of a Record Collector site using only Netlify.
 <!--more-->
-I was very happy to notice that the [Netlify build-image](https://github.com/netlify/build-image) now has the .NET 6.0.100 SDK installed.
+The [Netlify build-image](https://github.com/netlify/build-image) is easy to work with and can run .NET 8.0 if you use this guide.
 
-For Record Collector this means that you can get deploys done where Netlify pulls from a Git repository and does the build.
+With this setup, Netlify pulls from a Git repository and does the build.
 
 So no need to handle API keys and an external build agent any more.
 
@@ -31,7 +31,6 @@ This means the config used will come from **appsettings.Netlify.json** and this 
     "ContentRootPath": "/opt/build/repo/content/demo-site/",
     "StaticSiteRootPath": "/opt/build/repo/artifacts/static-site/",
     "FrontendSetup": "default",
-    "ViewPrefix": "",
     "SectionsToExcludeFromLists": [ "pages", "sidor" ],
     "MainNavigationSections": [ "pages", "sidor" ],
     "PaginationPageCount": 2,
@@ -47,13 +46,13 @@ These are settings that work well with the sample site.
 | Setting           | Value                      |
 |-------------------|----------------------------|
 | Base directory    | *Leave empty*              |
-| Build command     | **npm ci && npm run prodbuild && dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"** |
+| Build command     | **./netlify.build.default.sh** |
 | Publish directory | **artifacts/static-site/** |
 | Builds            | *Activate builds*          |
 
-You should also be able to push a Shell script and have more work done, for example setting up a specific dotnet SDK version or do more frontend related things before generating the static site. The build-image has support for a wide variety of languages and runtimes.
+Change **default** to **simplecss** if you are using the Simple CSS version. 
 
-If you use `"FrontendSetup": "simplecss",` you can remove the the two `npm` commands and just have `dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"` as Build command.
+The Shell script should have execute rights, if not, be in your local repository and run `git update-index --chmod=+x netlify.build.default.sh` or `git update-index --chmod=+x netlify.build.simplecss.sh` to set it.
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://record-collector.net/)
 
