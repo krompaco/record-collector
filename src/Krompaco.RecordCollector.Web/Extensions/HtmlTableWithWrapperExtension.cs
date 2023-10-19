@@ -1,6 +1,5 @@
 ﻿using Markdig;
 using Markdig.Extensions.Tables;
-using Markdig.Parsers;
 using Markdig.Renderers;
 
 namespace Krompaco.RecordCollector.Web.Extensions;

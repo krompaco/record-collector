@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Krompaco.RecordCollector.Content.FrontMatterParsers;
+﻿using Krompaco.RecordCollector.Content.FrontMatterParsers;
 using Krompaco.RecordCollector.Content.Models;
 using Krompaco.RecordCollector.Content.Tests.Converters;
 using Xunit;

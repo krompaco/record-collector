@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Krompaco.RecordCollector.Web.Models;
+﻿namespace Krompaco.RecordCollector.Web.Models;
 
 public class CategoryItemViewModel
 {

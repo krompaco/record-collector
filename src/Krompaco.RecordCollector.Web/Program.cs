@@ -133,7 +133,7 @@ app.MapControllerRoute(
     pattern: "rc-content-properties",
     defaults: new { controller = "Content", action = "Properties" });
 
-// This is the catch all action used to serve the correct content or static file
+// This is the catch all action used to serve the correct content, image or document
 app.MapControllerRoute(
     name: "files",
     pattern: "{**path}",

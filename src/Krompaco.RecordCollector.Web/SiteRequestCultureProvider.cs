@@ -1,13 +1,8 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Web.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Krompaco.RecordCollector.Web;

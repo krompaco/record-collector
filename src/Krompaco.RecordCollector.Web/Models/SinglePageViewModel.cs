@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Krompaco.RecordCollector.Content.Models;
+﻿using Krompaco.RecordCollector.Content.Models;
 
 namespace Krompaco.RecordCollector.Web.Models;
 

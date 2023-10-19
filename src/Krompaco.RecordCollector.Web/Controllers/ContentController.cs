@@ -6,12 +6,13 @@ using System.Text.RegularExpressions;
 using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Languages;
 using Krompaco.RecordCollector.Content.Models;
+using Krompaco.RecordCollector.Web.Components.Pages;
 using Krompaco.RecordCollector.Web.Extensions;
 using Krompaco.RecordCollector.Web.ModelBuilders;
 using Krompaco.RecordCollector.Web.Models;
-using Krompaco.RecordCollector.Web.Pages;
 using Krompaco.RecordCollector.Web.Resources;
-using Microsoft.AspNetCore.Components.Endpoints;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
@@ -140,6 +141,14 @@ public class ContentController : Controller
     [HttpGet]
     public IResult Files(string? path)
     {
+        // Hack to avoid error in large pages (?) with .NET 8 RC 1
+        var syncIOFeature = this.HttpContext.Features.Get<IHttpBodyControlFeature>();
+
+        if (syncIOFeature != null)
+        {
+            syncIOFeature.AllowSynchronousIO = true;
+        }
+
         var siteUrl = this.config.GetAppSettingsSiteUrl();
         var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
         this.currentCulture = rqf?.RequestCulture.Culture ?? CultureInfo.CurrentCulture;

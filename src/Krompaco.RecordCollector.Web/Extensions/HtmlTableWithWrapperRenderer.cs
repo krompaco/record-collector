@@ -1,5 +1,4 @@
-﻿using System;
-using Markdig.Extensions.Tables;
+﻿using Markdig.Extensions.Tables;
 using Markdig.Renderers;
 
 namespace Krompaco.RecordCollector.Web.Extensions;
