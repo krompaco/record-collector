@@ -1,15 +1,14 @@
-﻿namespace Krompaco.RecordCollector.Content.Models
+﻿namespace Krompaco.RecordCollector.Content.Models;
+
+public class CascadeVariables
 {
-    public class CascadeVariables
+    public CascadeVariables()
     {
-        public CascadeVariables()
-        {
-            this.CustomArrayProperties = new Dictionary<string, List<string>>();
-            this.CustomStringProperties = new Dictionary<string, string>();
-        }
-
-        public Dictionary<string, string> CustomStringProperties { get; set; }
-
-        public Dictionary<string, List<string>> CustomArrayProperties { get; set; }
+        this.CustomArrayProperties = new Dictionary<string, List<string>>();
+        this.CustomStringProperties = new Dictionary<string, string>();
     }
+
+    public Dictionary<string, string> CustomStringProperties { get; set; }
+
+    public Dictionary<string, List<string>> CustomArrayProperties { get; set; }
 }

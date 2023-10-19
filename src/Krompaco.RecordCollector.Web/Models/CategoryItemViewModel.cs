@@ -1,18 +1,15 @@
-﻿using System;
+﻿namespace Krompaco.RecordCollector.Web.Models;
 
-namespace Krompaco.RecordCollector.Web.Models
+public class CategoryItemViewModel
 {
-    public class CategoryItemViewModel
+    public CategoryItemViewModel()
     {
-        public CategoryItemViewModel()
-        {
-            this.Text = string.Empty;
-        }
-
-        public Uri? RelativeUrl { get; set; }
-
-        public string Text { get; set; }
-
-        public int PageCount { get; set; }
+        this.Text = string.Empty;
     }
+
+    public Uri? RelativeUrl { get; set; }
+
+    public string Text { get; set; }
+
+    public int PageCount { get; set; }
 }

@@ -1,0 +1,134 @@
+﻿@if (Model != null && Model.Items?.Count > 1 && Model.Layout?.Localizer != null)
+{
+    var numbersOpened = false;
+    var numbersClosed = false;
+    var previousShown = false;
+    var nextShown = false;
+
+    @if (FrontendSetup == "simplecss")
+    {
+        <nav class="mt-16 border-t border-gray-200 px-0 flex items-center justify-between" data-id="pagination">
+            <h3>@Model.Layout.Localizer["Page navigation"]</h3>
+            @foreach (var item in Model.Items)
+            {
+                @if (item.IsFirst)
+                {
+                    @*<a href="@item.RelativeUrl">@Model.Layout.Localizer["First"]</a>*@
+                }
+                else if (item.IsLast)
+                {
+                    @*<a href="@item.RelativeUrl">@Model.Layout.Localizer["Last"]</a>*@
+                }
+                else if (item.IsPrevious)
+                {
+                    previousShown = true;
+                    <a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Previous"] (@item.Page)">@Model.Layout.Localizer["Previous"]</a>
+
+                    @(" ")
+                }
+                else if (item.IsNext)
+                {
+                    <a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Next"] (@item.Page)">@Model.Layout.Localizer["Next"]</a>
+                }
+                else if (item.IsSeparator)
+                {
+                }
+                else
+                {
+                    @if (item.IsSelected)
+                    {
+                        <a href="@item.RelativeUrl" aria-current="page" aria-disabled="true">@(item.Page)</a>
+
+                        @(" ")
+                    }
+                    else if (item.IsEllipsis)
+                    {
+                    }
+                    else
+                    {
+                        <a href="@item.RelativeUrl">@item.Page</a>
+
+                        @(" ")
+                    }
+                }
+            }
+        </nav>
+    }
+    else
+    {
+        <nav class="mt-16 border-t border-gray-200 px-0 flex items-center justify-between" aria-label="@Model.Layout.Localizer["Page navigation"]">
+            @foreach (var item in Model.Items)
+            {
+                @if (item.IsFirst)
+                {
+                    @*<a href="@item.RelativeUrl">@Model.Layout.Localizer["First"]</a>*@
+                }
+                else if (item.IsLast)
+                {
+                    @*<a href="@item.RelativeUrl">@Model.Layout.Localizer["Last"]</a>*@
+                }
+                else if (item.IsPrevious)
+                {
+                    previousShown = true;
+                    <span class="w-0 flex-1 flex">
+                        <a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Previous"] (@item.Page)" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:border-gray-400 focus:outline-none hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline">
+                            <svg class="mr-3 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                            </svg>
+                            @Model.Layout.Localizer["Previous"]
+                        </a>
+                    </span>
+                }
+                else if (item.IsNext)
+                {
+                    nextShown = true;
+                    @((MarkupString)(numbersOpened ? "</span>" : string.Empty))
+                    numbersClosed = true;
+                    <span class="w-0 flex-1 flex justify-end">
+                        <a href="@item.RelativeUrl" aria-label="@Model.Layout.Localizer["Next"] (@item.Page)" class="-mt-px border-t-2 border-transparent p-4 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:border-gray-400 focus:outline-none hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline">
+                            @Model.Layout.Localizer["Next"]
+                            <svg class="ml-3 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    </span>
+                }
+                else if (item.IsSeparator)
+                {
+                }
+                else
+                {
+                    @((MarkupString)(previousShown ? string.Empty : @"<span class=""w-0 flex-1 flex""></span>"))
+                    previousShown = true;
+                    @((MarkupString)(numbersOpened ? string.Empty : @"<span class=""hidden md:flex"">"))
+                    numbersOpened = true;
+
+                    @if (item.IsSelected)
+                    {
+                        <a href="@item.RelativeUrl" aria-current="page" class="-mt-px border-t-2 border-blue-500 py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-blue-600 focus:text-gray-900 focus:border-gray-400 focus:outline-none focus:bg-yellow-200 hover:underline focus:underline">@(item.Page)</a>
+                    }
+                    else if (item.IsEllipsis)
+                    {
+                        <span class="-mt-px border-t-2 border-transparent py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-gray-500">
+                            ...
+                        </span>
+                    }
+                    else
+                    {
+                        <a href="@item.RelativeUrl" class="-mt-px border-t-2 border-transparent py-4 px-6 inline-flex items-center text-sm leading-5 font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300 focus:text-gray-900 focus:outline-none hover:bg-yellow-200 focus:bg-yellow-200 hover:underline focus:underline focus:border-gray-400">@item.Page</a>
+                    }
+                }
+            }
+            @((MarkupString)(numbersOpened && !numbersClosed ? "</span>" : string.Empty))
+            @((MarkupString)(nextShown ? string.Empty : @"<span class=""w-0 flex-1 flex justify-end""></span>"))
+        </nav>
+    }
+}
+
+@code {
+    [Parameter]
+    public PaginationViewModel? Model { get; set; }
+
+    [Parameter]
+    public string? FrontendSetup { get; set; }
+}

@@ -1,0 +1,156 @@
+@inject ILogger<ListTemplate> Logger
+@inject NavigationManager NavigationManager
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    if (Model == null)
+    {
+        return;
+    }
+
+    var linkClasses1 = "rc-link";
+    var h1Shown = false;
+    var isRootWithCultureSelection = Model.RootCultures?.Count > 0 && Model.CurrentPath == "/";
+}
+
+<MainLayout Model="@Model">
+    <PageHead>
+        @if (Model.PagedDescendantPages?.Count > 0)
+        {
+            <link rel="alternate" type="application/rss+xml" title="@Model.Title" href="@(Model.ContentProperties.SiteUrl.TrimEnd('/') + Model.CurrentPage?.RelativeUrl)rss.xml">
+        }
+
+        <link rel="canonical" href="@(Model.ContentProperties.SiteUrl.TrimEnd('/') + Model.CurrentPage?.RelativeUrl)">
+    </PageHead>
+    <PageHeader>
+        @if (isRootWithCultureSelection && Model.ContentProperties.FrontendSetup == "simplecss")
+        {
+            <header>
+                <h1>@Model.Localizer["Select language"]</h1>
+                <nav aria-label="@Model.Localizer["Main navigation"]">
+                    @foreach (var c in Model.RootCultures ?? new List<CultureInfo>())
+                    {
+                        <a lang="@c.Name" href="/@c.Name.ToLower(Model.CurrentCulture)/">@c.NativeName.FirstCharToUpper()</a>
+                    }
+                </nav>
+            </header>
+        }
+    </PageHeader>
+    <PageBody>
+        @if (Model.Pagination?.Items?.FirstOrDefault(x => x.IsSelected)?.Page == null || Model.Pagination?.Items?.FirstOrDefault(x => x.IsSelected)?.Page == 1)
+        {
+            h1Shown = true;
+            if (Model.ContentProperties?.FrontendSetup != "simplecss")
+            {
+                <div class="max-w-4xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-4xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-5xl">
+                        @Model.Title
+                    </h1>
+                </div>
+            }
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+                <div class="prose prose-lg max-w-none sm:prose-xl">
+                    @if (Model.CurrentPage?.ContentType == ContentType.Markdown)
+                    {
+                        @((MarkupString)Markdown.ToHtml(Model.CurrentPage?.Content ?? string.Empty, Model.MarkdownPipeline))
+                    }
+                    else
+                    {
+                        @((MarkupString)(Model.CurrentPage?.Content ?? string.Empty))
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.PagedDescendantPages?.Count > 0)
+        {
+            <div class="max-w-4xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
+                @if (h1Shown || Model.ContentProperties?.FrontendSetup == "simplecss")
+                {
+                    <h2 class="text-3xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-4xl">@Model.Localizer["The latest updates"]</h2>
+                }
+                else
+                {
+                    <h1 class="text-4xl leading-tight tracking-tight font-extrabold text-gray-900 sm:text-5xl">@Model.Localizer["The latest updates"]</h1>
+                }
+
+                <div class="mt-8 grid gap-5 max-w-lg mx-auto lg:grid-cols-3 lg:max-w-none">
+                    @foreach (var sp in Model.PagedDescendantPages)
+                    {
+                        @if (Model.ContentProperties?.FrontendSetup == "simplecss")
+                        {
+                            <hr />
+                        }
+
+                        <div class="flex flex-col overflow-hidden">
+                            @if (sp.Images.Count > 0)
+                            {
+                                <div class="flex-shrink-0">
+                                    <img width="960" height="540" loading="lazy" class="h-40 rounded w-full object-cover" src="@sp.Images[0]" alt="" />
+                                </div>
+                            }
+                            <div class="flex-1 bg-white pt-4 pb-8 flex flex-col justify-between">
+                                <div class="flex-1">
+                                    <h3 class="text-xl leading-7 font-semibold">
+                                        <a class="@linkClasses1" href="@sp.RelativeUrl">@sp.Title</a>
+                                    </h3>
+
+                                    @if (@sp.Summary != null)
+                                    {
+                                        <div class="mt-3 text-gray-500 prose max-w-none sm:prose-lg">
+                                            @if (sp.ContentType == ContentType.Markdown)
+                                            {
+                                                @((MarkupString)Markdown.ToHtml(sp.Summary, Model.MarkdownPipeline))
+                                            }
+                                            else
+                                            {
+                                                @((MarkupString)sp.Summary)
+                                            }
+                                        </div>
+                                    }
+                                </div>
+
+                                @if (Model.ContentProperties?.FrontendSetup != "simplecss")
+                                {
+                                    @* Don't link categories from listings, too many links with same text *@
+                                    @if (sp.Categories.Count > 0)
+                                    {
+                                        <div class="mt-6 flex flex-row space-x-2">
+                                            @foreach (var category in sp.Categories)
+                                            {
+                                                <span class="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium leading-5 bg-gray-100 text-gray-800">
+                                                    @category
+                                                </span>
+                                            }
+                                        </div>
+                                    }
+
+                                    <SingleData FrontendSetup="@Model.ContentProperties?.FrontendSetup" Model="@sp" />
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-8">
+                <Pagination FrontendSetup="@Model.ContentProperties?.FrontendSetup" Model="@Model.Pagination" />
+            </div>
+        }
+    </PageBody>
+</MainLayout>
+
+@code {
+    [Parameter]
+    public ListPageViewModel? Model { get; set; }
+
+    // // protected override async Task OnInitializedAsync()
+    // // {
+    // //     Logger.LogInformation("Hello from ListTemplate.OnInitializedAsync()");
+    // // }
+
+    protected override void OnInitialized()
+    {
+        Logger.LogInformation("Hello from ListTemplate.OnInitialized()");
+    }
+}
+

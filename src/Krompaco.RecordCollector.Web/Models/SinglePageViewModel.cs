@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using Krompaco.RecordCollector.Content.Models;
+﻿using Krompaco.RecordCollector.Content.Models;
 
-namespace Krompaco.RecordCollector.Web.Models
+namespace Krompaco.RecordCollector.Web.Models;
+
+public class SinglePageViewModel : LayoutViewModel, IHasCurrentPage<SinglePage>
 {
-    public class SinglePageViewModel : LayoutViewModel, IHasCurrentPage<SinglePage>
+    public SinglePageViewModel()
     {
-        public SinglePageViewModel()
-        {
-            this.Categories = new List<CategoryItemViewModel>();
-        }
-
-        public SinglePage? CurrentPage { get; set; }
-
-        public List<CategoryItemViewModel> Categories { get; set; }
+        this.Categories = new List<CategoryItemViewModel>();
     }
+
+    public SinglePage? CurrentPage { get; set; }
+
+    public List<CategoryItemViewModel> Categories { get; set; }
 }

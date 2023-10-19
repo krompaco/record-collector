@@ -1,53 +1,52 @@
 ﻿using System.Globalization;
 
-namespace Krompaco.RecordCollector.Content.Models
+namespace Krompaco.RecordCollector.Content.Models;
+
+public interface IRecordCollectorFile
 {
-    public interface IRecordCollectorFile
-    {
-        string FullName { get; set; }
+    string FullName { get; set; }
 
-        bool IsVirtual { get; set; }
+    bool IsVirtual { get; set; }
 
-        string? Title { get; set; }
+    string? Title { get; set; }
 
-        string? Section { get; set; }
+    string? Section { get; set; }
 
-        string? ClosestSectionDirectory { get; set; }
+    string? ClosestSectionDirectory { get; set; }
 
-        CultureInfo Culture { get; set; }
+    CultureInfo Culture { get; set; }
 
-        Uri RelativeUrl { get; set; }
+    Uri RelativeUrl { get; set; }
 
-        Uri RelativePath { get; set; }
+    Uri RelativePath { get; set; }
 
-        bool IsSlug { get; set; }
+    bool IsSlug { get; set; }
 
-        bool IsFrontMatterUrl { get; set; }
+    bool IsFrontMatterUrl { get; set; }
 
-        bool IsAlias { get; set; }
+    bool IsAlias { get; set; }
 
-        bool IsExpanded { get; set; }
+    bool IsExpanded { get; set; }
 
-        bool IsSelected { get; set; }
+    bool IsSelected { get; set; }
 
-        bool IsVisibleInNavigation { get; set; }
+    bool IsVisibleInNavigation { get; set; }
 
-        bool IsVisibleInBreadcrumbs { get; set; }
+    bool IsVisibleInBreadcrumbs { get; set; }
 
-        bool IsPage { get; set; }
+    bool IsPage { get; set; }
 
-        SinglePage? ParentPage { get; set; }
+    SinglePage? ParentPage { get; set; }
 
-        SinglePage? PreviousPage { get; set; }
+    SinglePage? PreviousPage { get; set; }
 
-        SinglePage? NextPage { get; set; }
+    SinglePage? NextPage { get; set; }
 
-        List<SinglePage> Siblings { get; set; }
+    List<SinglePage> Siblings { get; set; }
 
-        List<SinglePage> Ancestors { get; set; }
+    List<SinglePage> Ancestors { get; set; }
 
-        List<IRecordCollectorFile> Descendants { get; set; }
+    List<IRecordCollectorFile> Descendants { get; set; }
 
-        int Level { get; set; }
-    }
+    int Level { get; set; }
 }
