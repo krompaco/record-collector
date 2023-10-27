@@ -1,5 +1,5 @@
 +++
-title = "The .NET 6.0 static site toolkit"
+title = "The .NET static site toolkit"
 description = "The documentation and Record Collector demo web site."
 keywords = "C# HTML"
 +++
