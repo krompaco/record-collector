@@ -26,7 +26,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0-rc.2.23479.6" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
