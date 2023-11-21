@@ -29,7 +29,7 @@ public class Workers
     public async Task GenerateStaticSite()
     {
         this.testOutputHelper.WriteLine(string.Empty);
-        this.testOutputHelper.WriteLine("Record Collector Version 2.0");
+        this.testOutputHelper.WriteLine("Record Collector Version 3.0 with Blazor SSR!");
         this.testOutputHelper.WriteLine(string.Empty);
         this.testOutputHelper.WriteLine("Starting to generate site...");
 
