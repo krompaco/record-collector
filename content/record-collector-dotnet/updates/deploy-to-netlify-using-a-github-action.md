@@ -47,7 +47,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.0.100-rc.2.23502.2'
+          dotnet-version: '9.0.100'
 
       - name: Add robots.txt disallow
         shell: pwsh
@@ -86,7 +86,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '8.0.100-rc.2.23502.2'
+          dotnet-version: '9.0.100'
 
       - name: Generate static site
         run: dotnet test ./src/Krompaco.RecordCollector.Generator/Krompaco.RecordCollector.Generator.csproj --logger "console;verbosity=detailed"

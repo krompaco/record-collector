@@ -10,7 +10,7 @@ authorimage: "/files/jk.jpg"
 ---
 How to set up deployment of a Record Collector site using only Netlify.
 <!--more-->
-The [Netlify build-image](https://github.com/netlify/build-image) is easy to work with and can run .NET 8.0 if you use this guide.
+The [Netlify build-image](https://github.com/netlify/build-image) is easy to work with and can run .NET 9.0 if you use this guide.
 
 With this setup, Netlify pulls from a Git repository and does the build.
 

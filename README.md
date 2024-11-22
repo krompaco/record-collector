@@ -14,7 +14,7 @@ In this setup the generation process work using the WebApplicationFactory from t
 
 ## Open source references
 
-Built using .NET 8.0 (through 3.1, 5.0 and 6.0) and with these packages and projects. Thank you!
+Built using .NET 9.0 (through 3.1, 5.0, 6.0 and 8.0) and with these packages and projects. Thank you!
 
 | Project                                                   | License                   |
 |-----------------------------------------------------------|---------------------------|
