@@ -32,10 +32,10 @@
     else
     {
         <link href="/dist/styles.css" rel="stylesheet">
-        <script src="/dist/main.js" async></script>
+        <script src="/dist/main.js"></script>
     }
 </head>
-<body class="bg-white text-gray-900 font-rc" data-script="on keyup if (event.key == 'Escape') then add .hidden to #header-menu then set #hamburger@@aria-expanded to 'false' end">
+<body class="bg-white text-gray-900 font-rc" data-hx-boost="true" data-script="on keyup if (event.key == 'Escape') then add .hidden to #header-menu then set #hamburger@@aria-expanded to 'false' end">
     @if (Model.RootCultures?.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems?.Count > 0)
     {
         @if (Model.ContentProperties?.FrontendSetup == "simplecss")
@@ -86,7 +86,7 @@
                                 <a href="@(Model.RootCultures?.Count > 0 ? $"/{Model.CurrentCulture?.Name}/" : "/")" class="@linkClasses">@Model.Localizer["Home"]</a>
                             }
                         </div>
-                        <div>
+                        <div id="hamburger-wrapper" data-hx-preserve>
                             <button
                                 type="button"
                                 class="p-[4px] rc-menu-link justify-self-end group"
@@ -115,7 +115,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="flex justify-center w-full hidden border-t border-b mt-3" id="header-menu">
+                    <div class="flex justify-center w-full hidden border-t border-b mt-3" id="header-menu" data-hx-preserve>
                         <div class="flex-none flex py-3">
                             <div class="relative flex-1 flex flex-col">
                                 <div class="flex-1" role="navigation">
