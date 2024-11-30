@@ -1,8 +1,15 @@
-@tailwind base;
+@import "tailwindcss";
 
-@tailwind components;
+@plugin "@tailwindcss/forms";
 
-@layer components {
+@plugin "@tailwindcss/typography";
+
+@theme {
+	--font-rc: "-apple-system", "BlinkMacSystemFont", "Avenir Next" , "Avenir", "Nimbus Sans L", "Roboto", "Noto", "Segoe UI", "Arial", "Helvetica", "Helvetica Neue", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--font-mono: "Consolas", "Menlo", "Monaco", "Andale Mono", "Ubuntu Mono", "monospace";
+}
+
+@layer utilities {
 	.prose .table-wrapper {
 		max-width: 100%;
 		overflow-x: auto;
@@ -20,5 +27,3 @@
 		@apply hover:bg-yellow-200 text-gray-900 hover:no-underline hover:outline-none focus:bg-yellow-200 focus:text-gray-900 focus:no-underline focus:outline-none focus:ring-2 focus:ring-black;
 	}
 }
-
-@tailwind utilities;

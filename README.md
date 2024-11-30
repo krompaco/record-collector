@@ -22,11 +22,15 @@ Built using .NET 9.0 (through 3.1, 5.0, 6.0 and 8.0) and with these packages and
 | [Tomlyn](https://github.com/xoofx/Tomlyn)                 | BSD-Clause 2              |
 | [Markdig](https://github.com/lunet-io/markdig)            | BSD-Clause 2              |
 | [Tailwind CSS](https://tailwindcss.com/)                  | MIT                       |
-| [Hotwire](https://hotwired.dev/)                          | MIT                       |
+| [htmx.org](https://htmx.org/)                             | Zero-Clause BSD           |
+| [hyperscript.org](https://hyperscript.org/)               | BSD 2-Clause              |
 | [Simple.css](https://simplecss.org/)                      | MIT                       |
 | [Html Agility Pack](https://html-agility-pack.net/)       | MIT                       |
+| [Webpack](https://webpack.js.org/)                        | MIT                       |
+| [cross-env](https://github.com/kentcdodds/cross-env)      | MIT                       |
+| [npm-run-all](https://github.com/mysticatea/npm-run-all)  | MIT                       |
 
-Other things such as Webpack can be involved too but these are the ones I reference directly.
+Other things can be involved too but these are the ones I take a driect dependency on.
 
 ### Quality control tools
 

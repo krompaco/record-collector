@@ -33,7 +33,7 @@ Note that `C:\github\record-collector\` is where I put the repository on my mach
 
 ### Frontend setup
 
-Two options are in the repository. The `default` setup is based on [Tailwind CSS](https://tailwindcss.com/) and [Hotwire](https://hotwired.dev/) and requires npm steps, you can also use [Simple.css](https://simplecss.org/) by having the line set as `"FrontendSetup": "simplecss",` in your appsettings files.
+Two options are in the repository. The `default` setup is based on [Tailwind CSS](https://tailwindcss.com/), [htmx.org](https://htmx.org/) and [hyperscript.org](https://hyperscript.org/) and requires npm steps, you can also use [Simple.css](https://simplecss.org/) by having the line set as `"FrontendSetup": "simplecss",` in your appsettings files.
 
 * [record-collector.netlify.app](https://record-collector.netlify.app/) is published with `default`
 * [record-collector-simplecss.netlify.app](https://record-collector-simplecss.netlify.app/) is using `simplecss`

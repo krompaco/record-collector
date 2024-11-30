@@ -3,22 +3,34 @@
 }
 
 <li>
-    <div class="flex justify-between w-[calc(100vw-32px)] sm:w-[450px]" data-controller="tree">
+    <div class="flex justify-between w-[calc(100vw-32px)] sm:w-[450px]">
         <div class="@GetClassByLevel() flex items-center">
             <a class="rc-link my-[2px]" href="@Model?.RelativeUrl">@Model?.Text</a>
         </div>
         @if (Model?.ChildItems != null && Model.ChildItems.Count > 0 && Model.Localizer != null)
         {
             <div>
-                <button data-tree-target="button" data-action="click->tree#toggle touch->tree#toggle" type="button"
-                        data-aria-controls="@listId"
-                        class="p-[6px] mt-[3px] rc-menu-link justify-self-end">
-                    <span class="block js-content-collapsed">
-                        <span class="sr-only">@Model.Localizer["Open"] @Model.Text</span>
+                <button
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="@listId"                    
+                    class="group p-[6px] mt-[3px] rc-menu-link justify-self-end"
+                    data-script="on click 
+                        toggle .hidden on #@listId
+                        then if @@aria-expanded == 'true'
+                            set @@aria-expanded to 'false'
+                        else
+                            set @@aria-expanded to 'true'
+                        end
+                        then if @@aria-expanded == 'true'
+                            set @@aria-label to '@Model.Localizer["Close"] @Model.Text'
+                        else
+                            set @@aria-label to '@Model.Localizer["Open"] @Model.Text'
+                        end">
+                    <span class="block group-aria-expanded:hidden">
                         <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                     </span>
-                    <span class="block js-content-expanded hidden">
-                        <span class="sr-only">@Model.Localizer["Close"] @Model.Text</span>
+                    <span class="hidden group-aria-expanded:block">
                         <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
                     </span>
                 </button>
