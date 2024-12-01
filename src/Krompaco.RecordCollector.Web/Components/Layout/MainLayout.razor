@@ -35,7 +35,12 @@
         <script src="/dist/main.js"></script>
     }
 </head>
-<body class="bg-white text-gray-900 font-rc" data-hx-boost="true" data-script="on keyup if (event.key == 'Escape') then add .hidden to #header-menu then set #hamburger@@aria-expanded to 'false' end">
+<body class="bg-white text-gray-900 font-rc" data-hx-boost="true" data-script="on keyup if the event's key is 'Escape'
+            then add .hidden to #header-menu
+            then set #hamburger@@aria-expanded to 'false'
+        end
+        on htmx:afterSettle
+            put #title-change-hidden.innerHTML at the end of #title-change">
     @if (Model.RootCultures?.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems?.Count > 0)
     {
         @if (Model.ContentProperties?.FrontendSetup == "simplecss")
@@ -98,13 +103,10 @@
                                     toggle .hidden on #header-menu
                                     then if @@aria-expanded == 'true'
                                         set @@aria-expanded to 'false'
+                                        set @@aria-label to '@Model.Localizer["Open menu"]'
                                     else
                                         set @@aria-expanded to 'true'
-                                    end
-                                    then if @@aria-expanded == 'true'
                                         set @@aria-label to '@Model.Localizer["Close menu"]'
-                                    else
-                                        set @@aria-label to '@Model.Localizer["Open menu"]'
                                     end">
                                 <span class="block group-aria-expanded:hidden">
                                     <svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
@@ -138,7 +140,7 @@
     <main id="main">
         @PageBody
     </main>
-    <footer class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-gray-500">
+    <footer class="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 text-gray-500" data-hx-boost="false">
         @{
             var footerLinkClasses = "rc-link text-lg";
             var isRootWithCultureSelection = Model.RootCultures?.Count > 0 && Model.CurrentPath == "/";
@@ -162,6 +164,12 @@
                 <a href="https://record-collector.net/" class="@footerLinkClasses">Record Collector</a>
             </p>
         </div>
+
+        @if (Model.ContentProperties?.FrontendSetup != "simplecss")
+        {
+            <span class="sr-only" aria-live="assertive" id="title-change"></span>
+            <span class="hidden" id="title-change-hidden">@Model.Title</span>
+        }
     </footer>
 </body>
 </html>

@@ -20,13 +20,10 @@
                         toggle .hidden on #@listId
                         then if @@aria-expanded == 'true'
                             set @@aria-expanded to 'false'
+                            set @@aria-label to '@Model.Localizer["Open"] @Model.Text'
                         else
                             set @@aria-expanded to 'true'
-                        end
-                        then if @@aria-expanded == 'true'
                             set @@aria-label to '@Model.Localizer["Close"] @Model.Text'
-                        else
-                            set @@aria-label to '@Model.Localizer["Open"] @Model.Text'
                         end">
                     <span class="block group-aria-expanded:hidden">
                         <svg aria-hidden="true" class="w-[20px] h-[20px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
