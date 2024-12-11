@@ -37,7 +37,7 @@ Other things can be involved too but these are the ones I take a driect dependen
 * [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers)
 * [Microsoft.CodeAnalysis.NetAnalyzers](https://github.com/dotnet/roslyn-analyzers)
 
-## [Official web site](https://record-collector.net)
+## [Official web site  ↗](https://record-collector.net)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d83429cd-4060-466a-8491-1afbb1c97149/deploy-status)](https://app.netlify.com/sites/record-collector-ui/deploys)
 
@@ -45,7 +45,7 @@ The official web site is generated and [deployed with Netlify using their build-
 
 It has the `default` frontend.
 
-## [Demo web site with Simple.css frontend](https://record-collector-simplecss.netlify.app)
+## [Demo web site with Simple.css frontend  ↗](https://record-collector-simplecss.netlify.app)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/471c792b-b666-4bb4-aa60-270f22c98180/deploy-status)](https://app.netlify.com/sites/record-collector-simplecss/deploys)
 
@@ -53,7 +53,7 @@ The Simple.css demo web site is generated and deployed with Netlify using their 
 
 It has the `simplecss` frontend configuration.
 
-## [Demo web site with default frontend](https://record-collector.netlify.app)
+## [Demo web site with default frontend  ↗](https://record-collector.netlify.app)
 
 [![Build and deploy to Netlify](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml/badge.svg)](https://github.com/krompaco/record-collector/actions/workflows/build-and-deploy-to-netlify.yml)
 
