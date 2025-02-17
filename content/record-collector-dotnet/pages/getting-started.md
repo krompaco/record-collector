@@ -18,7 +18,7 @@ Pick one of the example `appsettings.*.json` files or the base file and "save as
 {
 	"AppSettings": {
 		"SiteUrl": "http://localhost:5000/",
-		"ContentRootPath": "C:\\github\\record-collector\\docs\\content-record-collector-net\\",
+		"ContentRootPath": "C:\\github\\record-collector\\content\\demo-site\\",
 		"StaticSiteRootPath": "C:\\github\\record-collector\\artifacts\\static-site\\",
 		"FrontendSetup": "default",
 		"SectionsToExcludeFromLists": [ "pages", "sidor" ],
