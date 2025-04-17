@@ -30,7 +30,7 @@ Built using .NET 9.0 (through 3.1, 5.0, 6.0 and 8.0) and with these packages and
 | [cross-env](https://github.com/kentcdodds/cross-env)      | MIT                       |
 | [npm-run-all](https://github.com/mysticatea/npm-run-all)  | MIT                       |
 
-Other things can be involved too but these are the ones I take a driect dependency on.
+Other things can be involved too but these are the ones I take a direct dependency on.
 
 ### Quality control tools
 
