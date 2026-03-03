@@ -13,7 +13,6 @@ builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogL
 
 // Add services to the container
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddHostedService<FileSystemWatcherService>();
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
