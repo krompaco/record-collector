@@ -2,7 +2,7 @@
 set -e
 
 pushd /tmp
-wget https://dotnet.microsoft.com/download/dotnet/scripts/v1/dotnet-install.sh
+wget https://dot.net/v1/dotnet-install.sh
 chmod u+x /tmp/dotnet-install.sh
 /tmp/dotnet-install.sh --channel 10.0
 popd
