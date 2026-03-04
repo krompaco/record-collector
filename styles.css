@@ -5,7 +5,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-	--font-rc: "-apple-system", "BlinkMacSystemFont", "Avenir Next" , "Avenir", "Nimbus Sans L", "Roboto", "Noto", "Segoe UI", "Arial", "Helvetica", "Helvetica Neue", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	--font-rc: "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Noto", "Arial", "Helvetica", "Helvetica Neue", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	--font-mono: "Consolas", "Menlo", "Monaco", "Andale Mono", "Ubuntu Mono", "monospace";
 }
 
