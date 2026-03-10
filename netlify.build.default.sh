@@ -4,7 +4,7 @@ set -e
 pushd /tmp
 wget https://builds.dotnet.microsoft.com/dotnet/scripts/v1/dotnet-install.sh
 chmod u+x /tmp/dotnet-install.sh
-/tmp/dotnet-install.sh --channel 10.0.1xx --install-dir /tmp/dotnet-sdk
+/tmp/dotnet-install.sh --channel 10.0.103 --install-dir /tmp/dotnet-sdk
 popd
 
 /tmp/dotnet-sdk/dotnet --version
