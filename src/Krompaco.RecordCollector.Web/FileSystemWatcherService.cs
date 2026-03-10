@@ -1,12 +1,13 @@
 ﻿using Krompaco.RecordCollector.Web.Controllers;
-using Krompaco.RecordCollector.Web.Extensions;
+using Krompaco.RecordCollector.Web.Models;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 namespace Krompaco.RecordCollector.Web;
 
 public class FileSystemWatcherService : BackgroundService
 {
-    private readonly IConfiguration config;
+    private readonly IOptionsMonitor<AppSettings> monitor;
 
     private readonly ILogger<FileSystemWatcherService> logger;
 
@@ -15,17 +16,17 @@ public class FileSystemWatcherService : BackgroundService
     private FileSystemWatcher fsw;
 
 #pragma warning disable CS8618
-    public FileSystemWatcherService(ILogger<FileSystemWatcherService> logger, IConfiguration config, IMemoryCache memoryCache)
+    public FileSystemWatcherService(ILogger<FileSystemWatcherService> logger, IOptionsMonitor<AppSettings> monitor, IMemoryCache memoryCache)
 #pragma warning restore CS8618
     {
         this.logger = logger;
-        this.config = config;
+        this.monitor = monitor;
         this.memoryCache = memoryCache;
     }
 
     protected override Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        var contentRootPath = this.config.GetAppSettingsContentRootPath();
+        var contentRootPath = this.monitor.CurrentValue.ContentRootPath;
 
         this.fsw = new FileSystemWatcher(contentRootPath, "*.*")
         {

@@ -1,33 +1,31 @@
 ﻿using System.Globalization;
 using Krompaco.RecordCollector.Content.IO;
 using Krompaco.RecordCollector.Content.Languages;
-using Krompaco.RecordCollector.Web.Extensions;
+using Krompaco.RecordCollector.Web.Models;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 
 namespace Krompaco.RecordCollector.Web;
 
 public class SiteRequestCultureProvider : RequestCultureProvider
 {
-    private readonly FileService fileService;
-
-    private readonly ContentCultureService contentCultureService;
-
-    public SiteRequestCultureProvider(IConfiguration config)
-    {
-        this.contentCultureService = new ContentCultureService();
-        this.fileService = new FileService(config.GetAppSettingsContentRootPath(), config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, NullLogger.Instance);
-    }
-
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+    // ReSharper disable once AsyncMethodWithoutAwait
     public override async Task<ProviderCultureResult?> DetermineProviderCultureResult(HttpContext httpContext)
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     {
-        var items = httpContext.Request.Path.ToString().Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        var monitor = httpContext.RequestServices.GetService<IOptionsMonitor<AppSettings>>();
+        var appSettings = monitor!.CurrentValue;
+
+        var contentCultureService = new ContentCultureService();
+        var fileService = new FileService(appSettings.ContentRootPath, appSettings.SectionsToExcludeFromLists.ToList(), contentCultureService, NullLogger.Instance);
+
+        var items = httpContext.Request.Path.ToString().Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
         if (items.Length == 0)
         {
-            var rootCultures = this.fileService.GetRootCultures();
+            var rootCultures = fileService.GetRootCultures();
 
             if (rootCultures.Any())
             {
@@ -41,7 +39,7 @@ public class SiteRequestCultureProvider : RequestCultureProvider
 
         var firstDirectoryInPath = items[0];
 
-        var doesCultureExist = this.contentCultureService.DoesCultureExist(firstDirectoryInPath);
+        var doesCultureExist = contentCultureService.DoesCultureExist(firstDirectoryInPath);
 
         if (!doesCultureExist)
         {

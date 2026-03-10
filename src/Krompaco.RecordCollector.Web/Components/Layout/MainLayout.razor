@@ -1,6 +1,5 @@
 @inject ILogger<MainLayout> Logger
-@using Krompaco.RecordCollector.Web.Extensions
-@using System.Globalization
+@inject Krompaco.RecordCollector.Web.UiFileService uiFileService
 @{
     if (Model == null)
     {
@@ -27,20 +26,23 @@
 
     @if (Model.ContentProperties?.FrontendSetup == "simplecss")
     {
-        <link href="/simple.min.css" rel="stylesheet">
+        <link href="/simple.min.css?v=@uiFileService.GetCacheBustString("simple.min.css")" rel="stylesheet">
     }
     else
     {
-        <link href="/dist/styles.css" rel="stylesheet">
-        <script src="/dist/main.js"></script>
+        <link href="/dist/styles.css?v=@uiFileService.GetCacheBustString("dist/styles.css")" rel="stylesheet">
+        <script src="/dist/main.js?v=@uiFileService.GetCacheBustString("dist/main.js")"></script>
+        <script type="text/hyperscript">
+            on keyup if the event's key is 'Escape'
+                then add .hidden to #header-menu
+                then set #hamburger@aria-expanded to 'false'
+            end
+            on htmx:afterSettle
+                put #title-change-hidden.innerHTML at the end of #title-change
+        </script>
     }
 </head>
-<body class="bg-white text-gray-900 font-rc" data-hx-boost="true" data-script="on keyup if the event's key is 'Escape'
-            then add .hidden to #header-menu
-            then set #hamburger@@aria-expanded to 'false'
-        end
-        on htmx:afterSettle
-            put #title-change-hidden.innerHTML at the end of #title-change">
+<body class="bg-white text-gray-900 font-rc" data-hx-boost="true">
     @if (Model.RootCultures?.Count > 0 && Model.CurrentPath != "/" || Model.NavigationItems?.Count > 0)
     {
         @if (Model.ContentProperties?.FrontendSetup == "simplecss")
@@ -92,6 +94,19 @@
                             }
                         </div>
                         <div id="hamburger-wrapper" data-hx-preserve>
+                            @{
+                                var hamburgerHyperscript = $"""
+                                    on click
+                                    toggle .hidden on #header-menu
+                                    then if @aria-expanded == 'true'
+                                        set @aria-expanded to 'false'
+                                        set @aria-label to '{Model.Localizer["Open menu"]}'
+                                    else
+                                        set @aria-expanded to 'true'
+                                        set @aria-label to '{Model.Localizer["Close menu"]}'
+                                    end
+                                """.ToHyperscript();
+                            }
                             <button
                                 type="button"
                                 class="p-[4px] rc-menu-link justify-self-end group"
@@ -99,15 +114,7 @@
                                 aria-expanded="false"
                                 aria-controls="header-menu"
                                 aria-label="@Model.Localizer["Open menu"]"
-                                data-script="on click
-                                    toggle .hidden on #header-menu
-                                    then if @@aria-expanded == 'true'
-                                        set @@aria-expanded to 'false'
-                                        set @@aria-label to '@Model.Localizer["Open menu"]'
-                                    else
-                                        set @@aria-expanded to 'true'
-                                        set @@aria-label to '@Model.Localizer["Close menu"]'
-                                    end">
+                                data-script="@hamburgerHyperscript">
                                 <span class="block group-aria-expanded:hidden">
                                     <svg class="w-[36px] h-[36px]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                                 </span>

@@ -1,19 +1,25 @@
 ﻿using System.Globalization;
 using HtmlAgilityPack;
 using Krompaco.RecordCollector.Web;
-using Krompaco.RecordCollector.Web.Extensions;
+using Krompaco.RecordCollector.Web.Models;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace);
 
+builder.Services.AddOptions<AppSettings>()
+    .Bind(builder.Configuration.GetSection(nameof(AppSettings)))
+    .ValidateDataAnnotations()
+    .ValidateOnStart();
+
 // Add services to the container
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddHostedService<FileSystemWatcherService>();
+builder.Services.AddSingleton<UiFileService>();
 
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
@@ -25,7 +31,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
     options.RequestCultureProviders.Clear();
-    options.RequestCultureProviders.Add(new SiteRequestCultureProvider(builder.Configuration));
+    options.RequestCultureProviders.Add(new SiteRequestCultureProvider());
 });
 
 builder.Services.AddLocalization();
@@ -54,9 +60,13 @@ app.UseRouting();
 
 app.UseAntiforgery();
 
-var frontendSetup = app.Configuration.GetAppSettingsFrontendSetup();
+#pragma warning disable IDE0007
+AppSettings appSettings = builder.Configuration
+    .GetSection(nameof(AppSettings))
+    .Get<AppSettings>() ?? throw new InvalidOperationException("AppSettings configuration is missing.");
+#pragma warning restore IDE0007
 
-if (frontendSetup == "simplecss")
+if (appSettings.FrontendSetup == "simplecss")
 {
     // Trying out a way to strip class attributes from HTML if Simple.css is used
     app.Use(async (context, next) =>
@@ -138,7 +148,7 @@ app.MapControllerRoute(
     pattern: "{**path}",
     defaults: new { controller = "Content", action = "Files" });
 
-logger.LogInformation($"In {app.Environment.EnvironmentName} using content from {builder.Configuration.GetAppSettingsContentRootPath()}");
+logger.LogInformation($"In {app.Environment.EnvironmentName} using content from {appSettings.ContentRootPath}");
 
 app.Run();
 

@@ -20,7 +20,7 @@ public class FileService
 
     private readonly List<string> sectionsToExcludeFromLists;
 
-    private readonly object allFileModelsLock = new object();
+    private readonly Lock allFileModelsLock = new();
 
 #pragma warning disable SA1011 // Closing square brackets should be spaced correctly
     private string[]? allFilesField = null;

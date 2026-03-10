@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 
 namespace Krompaco.RecordCollector.Web.Controllers;
 
@@ -33,7 +34,7 @@ public class ContentController : Controller
 
     private readonly IWebHostEnvironment env;
 
-    private readonly IConfiguration config;
+    private readonly AppSettings appSettings;
 
     private readonly ContentCultureService contentCultureService;
 
@@ -51,20 +52,20 @@ public class ContentController : Controller
 
     private CultureInfo currentCulture;
 
-    public ContentController(ILogger<ContentController> logger, IConfiguration config, IMemoryCache memoryCache, IWebHostEnvironment env, IStringLocalizerFactory factory)
+    public ContentController(ILogger<ContentController> logger, IOptionsMonitor<AppSettings> monitor, IMemoryCache memoryCache, IWebHostEnvironment env, IStringLocalizerFactory factory)
     {
         this.logger = logger;
-        this.config = config;
         this.env = env;
+        this.appSettings = monitor.CurrentValue;
 
         this.localizer = factory.Create(typeof(SharedResource));
 
         this.stopwatch = new Stopwatch();
         this.stopwatch.Start();
 
-        this.contentRoot = this.config.GetAppSettingsContentRootPath();
+        this.contentRoot = this.appSettings.ContentRootPath;
         this.contentCultureService = new ContentCultureService();
-        var fileService = new FileService(this.contentRoot, this.config.GetAppSettingsSectionsToExcludeFromLists(), this.contentCultureService, logger);
+        var fileService = new FileService(this.contentRoot, this.appSettings.SectionsToExcludeFromLists.ToList(), this.contentCultureService, logger);
         this.rootCultures = fileService.GetRootCultures();
         this.currentCulture = CultureInfo.CurrentCulture;
         this.allFiles = fileService.GetAllFileFullNames();
@@ -141,15 +142,11 @@ public class ContentController : Controller
     [HttpGet]
     public IResult Files(string? path)
     {
-        // Hack to avoid error in large pages (?) with .NET 8 RC 1
+        // Hack to avoid error in large pages (?)
         var syncIOFeature = this.HttpContext.Features.Get<IHttpBodyControlFeature>();
+        syncIOFeature?.AllowSynchronousIO = true;
 
-        if (syncIOFeature != null)
-        {
-            syncIOFeature.AllowSynchronousIO = true;
-        }
-
-        var siteUrl = this.config.GetAppSettingsSiteUrl();
+        var siteUrl = this.appSettings.SiteUrl;
         var rqf = this.Request.HttpContext.Features.Get<IRequestCultureFeature>();
         this.currentCulture = rqf?.RequestCulture.Culture ?? CultureInfo.CurrentCulture;
         var contentProperties = this.GetContentProperties();
@@ -172,7 +169,7 @@ public class ContentController : Controller
         path = RemovePaginationFromPath(path);
 
         // Main navigation
-        var mainNavigationSections = this.config.GetAppSettingsMainNavigationSections();
+        var mainNavigationSections = this.appSettings.MainNavigationSections;
 
         if (mainNavigationSections.Any())
         {
@@ -250,8 +247,8 @@ public class ContentController : Controller
                 .WithMarkdownPipeline()
                 .WithMeta()
                 .WithPaginationItems(
-                    this.config.GetAppSettingsPaginationPageCount(),
-                    this.config.GetAppSettingsPaginationPageSize())
+                    this.appSettings.PaginationPageCount,
+                    this.appSettings.PaginationPageSize)
                 .WithNavigationItems(this.pagesForNavigation)
                 .GetViewModel();
 
@@ -273,7 +270,7 @@ public class ContentController : Controller
             return new RazorComponentResult<ListTemplate>(listViewModel.ToReadOnlyDictionary());
         }
 
-        var items = path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+        var items = path.Split(['/'], StringSplitOptions.RemoveEmptyEntries);
 
         if (items.Length == 1)
         {
@@ -297,8 +294,8 @@ public class ContentController : Controller
                     .WithMarkdownPipeline()
                     .WithMeta()
                     .WithPaginationItems(
-                        this.config.GetAppSettingsPaginationPageCount(),
-                        this.config.GetAppSettingsPaginationPageSize())
+                        this.appSettings.PaginationPageCount,
+                        this.appSettings.PaginationPageSize)
                     .WithNavigationItems(this.pagesForNavigation)
                     .GetViewModel();
 
@@ -395,8 +392,8 @@ public class ContentController : Controller
                 .WithMarkdownPipeline()
                 .WithMeta()
                 .WithPaginationItems(
-                    this.config.GetAppSettingsPaginationPageCount(),
-                    this.config.GetAppSettingsPaginationPageSize())
+                    this.appSettings.PaginationPageCount,
+                    this.appSettings.PaginationPageSize)
                 .WithNavigationItems(this.pagesForNavigation)
                 .GetViewModel();
 
@@ -514,11 +511,11 @@ public class ContentController : Controller
         var model = new ContentProperties
         {
             ContentRootPath = this.contentRoot,
-            StaticSiteRootPath = this.config.GetAppSettingsStaticSiteRootPath(),
-            SectionsToExcludeFromLists = this.config.GetAppSettingsSectionsToExcludeFromLists(),
+            StaticSiteRootPath = this.appSettings.StaticSiteRootPath,
+            SectionsToExcludeFromLists = this.appSettings.SectionsToExcludeFromLists.ToList(),
             EnvironmentProjectWebRootPath = this.env.WebRootPath,
-            SiteUrl = this.config.GetAppSettingsSiteUrl(),
-            FrontendSetup = this.config.GetAppSettingsFrontendSetup(),
+            SiteUrl = this.appSettings.SiteUrl,
+            FrontendSetup = this.appSettings.FrontendSetup,
         };
 
         return model;
